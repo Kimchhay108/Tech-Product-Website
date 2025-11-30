@@ -1,19 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 
 :root {
     --text: #101818;
-    --background: #f5f8f9;
+    --background: #FFFFFF;
     --primary: #101818;
     --secondary: #A4A4A4;
     --accent: #2E2E2E;
+    --font-ui: 'Inter', sans-serif;
 }
 
 body {
     background-color: var(--background);
 
-    font-family: 'Roboto', sans-serif;
+    font-family: var(--font-ui);
     
     margin: 0;
     padding: 0;

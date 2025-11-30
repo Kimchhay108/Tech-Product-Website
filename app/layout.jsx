@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 
 export const metadata = {
   title: "Tech Product Website",
-  description: "Your tech product store",
+  description: "Cyber store",
 };
 
 export default function RootLayout({ children }) {

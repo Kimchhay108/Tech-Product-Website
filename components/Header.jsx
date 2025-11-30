@@ -20,11 +20,11 @@ export default function Header() {
     return (
         <header>
             {/* TOP HEADER */}
-            <div className="bg-white w-full mx-auto px-4 py-4 flex items-center justify-around">
+            <div className="bg-white w-full h-full mx-auto px-4 py-4 flex items-center justify-around">
 
                 {/* Logo */}
                 <Link href="/">
-                    <Image src={Logo} alt="logo" className="h-10" width={100} height={100} />
+                    <Image src={Logo} alt="logo" className="max-w-xs min-w-[120px] h-auto"/>
                 </Link>
 
                 {/* Search (Desktop) */}
@@ -74,7 +74,7 @@ export default function Header() {
             {/* MOBILE DROPDOWN */}
             <div
                 className={`
-                md:hidden bg-white px-4 pb-4 space-y-4 overflow-hidden
+                md:hidden bg-white px-4 overflow-hidden
                 transition-all duration-300
                 ${open ? "max-h-[500px] opacity-100 translate-y-0" : "max-h-0 opacity-0 -translate-y-3"}
                 `}
@@ -90,7 +90,7 @@ export default function Header() {
                 </div>
 
                 {/* Mobile Links */}
-                <ul className="space-y-3 text-[var(--secondary)]">
+                <ul className=" py-4 space-y-3 text-[var(--secondary)]">
                     <li><Link href="#" className="block text-black">Laptops</Link></li>
                     <li><Link href="#" className="block text-black">Desktops</Link></li>
                     <li><Link href="#" className="block text-black">Phones</Link></li>
@@ -103,7 +103,7 @@ export default function Header() {
 
             {/* CATEGORY BAR */}
             <div className="hidden md:block bg-[var(--accent)] py-2 overflow-hidden">
-                <ul className="flex justify-center items-center space-x-14">
+                <ul className="flex justify-center items-center space-x-14 text-lg">
                     <li>
                         <Link href="#" className="flex items-center space-x-2 text-[var(--secondary)] hover:font-bold">
                             <FaLaptop size={20} />
