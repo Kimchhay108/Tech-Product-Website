@@ -11,7 +11,7 @@ export default function Footer() {
 
                 {/* Logo / About */}
                 <div className="space-y-4">
-                    <Image src={LogoWhite} alt="logo" className="h-10" width={100} height={100} />
+                    <Image src={LogoWhite} alt="logo" className="max-w-xs min-w-[120px] h-auto"/>
                     <p className="text-sm font-light leading-relaxed">
                         We are connecting you with technology that makes life easier.
                     </p>

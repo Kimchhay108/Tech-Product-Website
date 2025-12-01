@@ -22,7 +22,11 @@ body {
 }
 
 
-img {
-    max-width: 100%;
-    height: auto;
+
+
+p.active {
+  color: #000000; /* active link black */
+  font-weight: 600; /* semi-bold for active */
 }
+
+

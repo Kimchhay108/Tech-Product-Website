@@ -5,9 +5,32 @@ import Airpods from "../../assets/home/Airpods.png"
 import Ps5 from "../../assets/home/Ps5.png"
 import Vision from "../../assets/home/Vision.png"
 import MacbookPro from "../../assets/home/MacbookPro.png"
+import Earbud from "../../assets/home/EarBud.png"
+import Ip14prm from "../../assets/home/Ip14prm.png"
+import Watches from "../../assets/home/Watches.png"
+import ZFold from "../../assets/home/ZFold.png"
+import Samsung from "../../assets/home/Samsung.png"
+import Ipad from "../../assets/home/Ipad.png"
+
+import { FaLaptop } from "react-icons/fa6";
+import {
+    FiMonitor,
+    FiSmartphone,
+    FiTablet,
+    FiWatch,
+    FiHeadphones,
+    FiPhone,
+    } from "react-icons/fi";
 
 
 export default function HomePage() {
+
+    //const router = useRouter();
+
+    const goToProducts = () => {
+        router.push("/productpage"); // Navigate to Product page
+    };
+    
     return (
         <>
             {/* Hero Section */}
@@ -20,7 +43,7 @@ export default function HomePage() {
                         <h1 className="text-white my-2 text-6xl">IPhone 14 <b>Pro</b></h1>
                         <p className="text-[var(--secondary)] text-xs">Created to change everything for the better. For everyone</p>
                         <a href="/">
-                            <button className="text-white border border-white rounded-lg py-3 px-9 my-3 cursor-pointer">Shop Now</button>
+                            <button className="text-white border border-white rounded-lg py-3 px-9 my-3 cursor-pointer" onClick={goToProducts}>Shop Now</button>
                         </a>
                         
                     </div>
@@ -36,9 +59,9 @@ export default function HomePage() {
                         />
                     </div>
                 </div>
-                
             </section>
 
+            {/* Display */}
             <section className="bg-white">
                 <div className="max-w-8xl mx-auto flex flex-col md:flex-row">
                     
@@ -67,15 +90,15 @@ export default function HomePage() {
                         </div>
 
                         {/* Airpods */}
-                        <div className="flex flex-col md:flex-row items-center justify-center bg-[#EDEDED] py-10">
+                        <div className="flex flex-col md:flex-row items-center justify-center bg-[#EDEDED] py-10 md:py-0">
                             {/* Image */}
-                            <div className="w-full md:w-1/2 flex items-center justify-center py-3">
+                            <div className="w-full md:w-1/2 flex items-center justify-center md:justify-end md:overflow-hidden">
                                 <Image
                                     src={Airpods}
                                     alt="Airpods"
                                     width={600}
                                     height={600}
-                                    className="w-64 sm:w-80 md:max-w-md lg:max-w-lg h-auto object-contain"
+                                    className="w-64 sm:w-80 md:max-w-md lg:max-w-lg h-auto object-contain md:me-5"
 
                                 />
                             </div>
@@ -89,15 +112,15 @@ export default function HomePage() {
                         </div>
 
                         {/* Macbook Pro */}
-                        <div className="flex flex-col md:flex-row items-center justify-center bg-[#353535] py-10">
+                        <div className="flex flex-col md:flex-row items-center justify-center bg-[#353535] py-10 md:py-0">
                             {/* Image */}
-                            <div className="w-full md:w-1/2 flex items-center justify-center py-3">
+                            <div className="w-full md:w-1/2 flex items-center justify-center md:justify-end md:overflow-hidden">
                                 <Image
                                     src={MacbookPro}
                                     alt="MacbookPro"
                                     width={600}
                                     height={600}
-                                    className="w-64 sm:w-80 md:max-w-md lg:max-w-lg h-auto object-contain"
+                                    className="w-64 sm:w-80 md:max-w-md lg:max-w-lg h-auto object-contain md:me-5"
 
                                 />
                             </div>
@@ -118,8 +141,8 @@ export default function HomePage() {
                         <div className="w-full h-full flex flex-col md:flex-row justify-center items-center py-10">
                             {/* Text */}
                             <div className="w-full md:w-1/2 flex flex-col justify-center items-center md:items-start pl-10 ">
-                                <h1 className="text-5xl sm:text-5xl md:text-6xl lg:text-7xl">Vision <b>Pro</b></h1>
-                                <p className="text-[var(--secondary)] text-base sm:text-base md:text-sm lg:text-base py-3">An immersive way to experience entertainment</p>
+                                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl">Vision <b>Pro</b></h1>
+                                <p className="text-[var(--secondary)] text-base sm:text-base md:text-sm lg:text-base py-3 ">An immersive way to experience entertainment</p>
                                 <div>
                                     <a href="/">
                                         <button className="
@@ -132,20 +155,22 @@ export default function HomePage() {
                                             py-3 px-9 my-3
                                             cursor-pointer
                                             hidden md:block
-                                        ">
+                                        "
+                                            onClick={goToProducts}
+                                        >
                                             Shop Now
                                         </button>
                                      </a>
                                 </div>
                             </div>
                             {/* Image */}
-                            <div className="w-64 sm:w-80 md:max-w-md lg:max-w-lg flex justify-center">
+                            <div className="w-full md:w-1/2 flex items-center justify-center py-3">
                                 <Image
                                     src={Vision}
                                     alt="Vision"
                                     width={600}
                                     height={600}
-                                    className="w-full h-auto object-contain"
+                                    className="w-72 md:w-full h-auto object-contain"
                                 />
                             </div>
 
@@ -163,17 +188,268 @@ export default function HomePage() {
                                         py-3 px-9 my-3
                                         cursor-pointer
                                         md:hidden
-                                    ">
+                                    "
+                                        onClick={goToProducts}
+                                    >
                                         Shop Now
                                     </button>
                                     </a>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </section>
 
+            {/* Browse By Category */}
+            <section className="bg-[#FAFAFA] px-5 ">
+                <div className="max-w-7xl mx-auto py-15  ">
+                    <h1 className="text-2xl md:text-3xl font-bold mb-10 text-center md:text-left">Browse By Category</h1>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-10">
+                        <a href="" className="bg-[#EDEDED] p-8 rounded shadow flex flex-col justify-center items-center">  
+                            <FaLaptop className="text-4xl sm:text-4xl md:text-4xl" />
+                            <p className="text-base md:text-lg lg:text-lg font-bold mt-2">Laptops</p>               
+                        </a>
+                        <a href="" className="bg-[#EDEDED] p-8 rounded shadow flex flex-col justify-center items-center">
+                            <FiMonitor className="text-4xl" />
+                            <p className="text-base md:text-lg lg:text-lg font-bold mt-2">Desktops</p>                  
+                        </a>
+                        <a href="" className="bg-[#EDEDED] p-8 rounded shadow flex flex-col justify-center items-center">             
+                            <FiSmartphone className="text-4xl" />
+                            <p className="text-base md:text-lg lg:text-lg font-bold mt-2">Phones</p>                           
+                        </a>
+                        <a href="" className="bg-[#EDEDED] p-8 rounded shadow flex flex-col justify-center items-center">
+                            <FiTablet className="text-4xl" />
+                            <p className="text-base md:text-lg lg:text-lg font-bold mt-2">Tablets</p>                          
+                        </a>
+                        <a href="" className="bg-[#EDEDED] p-8 rounded shadow flex flex-col justify-center items-center">
+                            <FiWatch className="text-4xl" />
+                            <p className="text-base md:text-lg lg:text-lg font-bold mt-2 text-center">Smart Watch</p>                      
+                        </a>
+                        <a href="" className="bg-[#EDEDED] p-8 rounded shadow flex flex-col justify-center items-center">             
+                            <FiHeadphones className="text-4xl" />
+                            <p className="text-base md:text-lg lg:text-lg font-bold mt-2">Gaming</p>
+                        </a>
+                    </div>
+                </div> 
+            </section>
+            <section className="px-3">
+                <div className="max-w-7xl mx-auto py-15  ">
+                    {/* Header */}
+                    <div className="flex space-x-7 justify-center md:justify-start items-center text-start mb-5">
+                        <a href="">
+                            <p className="text-base md:text-lg lg:text-xl text-[#8B8B8B] active">New Arrival</p>
+                        </a>
+
+                        <a href="">
+                            <p className="text-base md:text-lg lg:text-xl text-[#8B8B8B] hover:text-black">BestSeller</p>
+                        </a>
+
+                        <a href="">
+                            <p className="text-base md:text-lg lg:text-xl text-[#8B8B8B] hover:text-black">Special Offers</p>
+                        </a>
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        {/* 1 */}
+                        <div className="bg-[#F6F6F6] p-5 rounded text-center text-black hover:shadow-md flex flex-col h-full">
+                            <Image
+                                src={Ip14prm}
+                                alt="Iphone 14 pro max"    
+                                width={600}
+                                height={600}                       
+                                className="w-64 h-auto object-contain mx-auto p-5"
+                            />
+                            <h1 className="text-base sm:text-md md:text-lg font-semibold mb-auto">Apple iPhone 14 Pro Max 128GB Deep Purple</h1>
+                            <h1 className="text-3xl font-semibold my-3">$900</h1>
+                            <a href="" className="flex items-center justify-center">
+                                <button className="bg-black text-white text-sm sm:text-base py-4 px-10 rounded-2xl cursor-pointer ">Buy Now</button>
+                            </a>                     
+                        </div>
+                        {/* 2 */}
+                        <div className="bg-[#F6F6F6] p-5 rounded text-center text-black hover:shadow-md flex flex-col h-full">
+                            <Image
+                                src={ZFold}
+                                alt="Z fold" 
+                                width={800}
+                                height={600}          
+                                className="w-64 h-auto object-contain mx-auto p-5"
+                            />
+                            <h1 className="text-base sm:text-md md:text-lg font-semibold mb-auto">Galaxy Z Fold5 Unlocked | 256GB | Phantom Black</h1>
+                            <h1 className="text-3xl font-semibold my-3">$1799</h1>
+                            <a href="" className="flex items-center justify-center">
+                                <button className="bg-black text-white text-sm sm:text-base py-4 px-8 rounded-2xl cursor-pointer ">Buy Now</button>
+                            </a>                     
+                        </div>
+                        {/* 3 */}
+                        <div className="bg-[#F6F6F6] p-5 rounded text-center text-black hover:shadow-md flex flex-col h-full">
+                            <Image
+                                src={Watches}
+                                alt="Vision"
+                                width={600}
+                                height={600}
+                                className="w-64 h-auto object-contain mx-auto p-5"
+                            />
+                            <h1 className="text-base sm:text-md md:text-lg font-semibold mb-auto "> Apple Watch Series 9 GPS 41mm Starlight Aluminium Case</h1>
+                            <h1 className="text-3xl font-semibold my-3">$399</h1>
+                            <a href="" className="flex items-center justify-center">
+                                <button className="bg-black text-white text-sm sm:text-base py-4 px-8 rounded-2xl cursor-pointer ">Buy Now</button>
+                            </a>                     
+                        </div>
+                        {/* 4 */}
+                        <div className="bg-[#F6F6F6] p-5 rounded text-center text-black hover:shadow-md flex flex-col h-full">
+                            <Image
+                                src={Earbud}
+                                alt="Vision"
+                                width={600}
+                                height={600}
+                                className="w-64 h-auto object-contain mx-auto p-5"
+                            />
+                            <h1 className="text-base sm:text-md md:text-lg font-semibold mb-auto">Galaxy Buds FE Graphite</h1>
+                            <h1 className="text-3xl font-semibold my-3">$99.99</h1>
+                            <a href="" className="flex items-center justify-center">
+                                <button className="bg-black text-white text-sm sm:text-base py-4 px-8 rounded-2xl cursor-pointer ">Buy Now</button>
+                            </a>                     
+                        </div>
+                        {/* 5 */}
+                        <div className="bg-[#F6F6F6] p-5 rounded text-center text-black hover:shadow-md flex flex-col h-full">
+                            <Image
+                                src={Ip14prm}
+                                alt="Iphone 14 pro max"    
+                                width={600}
+                                height={600}                       
+                                className="w-64 h-auto object-contain mx-auto p-5"
+                            />
+                            <h1 className="text-base sm:text-md md:text-lg font-semibold mb-auto">Apple iPhone 14 Pro Max 128GB Deep Purple</h1>
+                            <h1 className="text-3xl font-semibold my-3">$900</h1>
+                            <a href="" className="flex items-center justify-center">
+                                <button className="bg-black text-white text-sm sm:text-base py-4 px-10 rounded-2xl cursor-pointer ">Buy Now</button>
+                            </a>                     
+                        </div>
+                        {/* 6 */}
+                        <div className="bg-[#F6F6F6] p-5 rounded text-center text-black hover:shadow-md flex flex-col h-full">
+                            <Image
+                                src={ZFold}
+                                alt="Z fold" 
+                                width={800}
+                                height={600}          
+                                className="w-64 h-auto object-contain mx-auto p-5"
+                            />
+                            <h1 className="text-base sm:text-md md:text-lg font-semibold mb-auto">Galaxy Z Fold5 Unlocked | 256GB | Phantom Black</h1>
+                            <h1 className="text-3xl font-semibold my-3">$1799</h1>
+                            <a href="" className="flex items-center justify-center">
+                                <button className="bg-black text-white text-sm sm:text-base py-4 px-8 rounded-2xl cursor-pointer ">Buy Now</button>
+                            </a>                     
+                        </div>
+                        {/* 7 */}
+                        <div className="bg-[#F6F6F6] p-5 rounded text-center text-black hover:shadow-md flex flex-col h-full">
+                            <Image
+                                src={Watches}
+                                alt="Vision"
+                                width={600}
+                                height={600}
+                                className="w-64 h-auto object-contain mx-auto p-5"
+                            />
+                            <h1 className="text-base sm:text-md md:text-lg font-semibold mb-auto "> Apple Watch Series 9 GPS 41mm Starlight Aluminium Case</h1>
+                            <h1 className="text-3xl font-semibold my-3">$399</h1>
+                            <a href="" className="flex items-center justify-center">
+                                <button className="bg-black text-white text-sm sm:text-base py-4 px-8 rounded-2xl cursor-pointer ">Buy Now</button>
+                            </a>                     
+                        </div>
+                        {/* 8 */}
+                        <div className="bg-[#F6F6F6] p-5 rounded text-center text-black hover:shadow-md flex flex-col h-full">
+                            <Image
+                                src={Earbud}
+                                alt="Vision"
+                                width={600}
+                                height={600}
+                                className="w-64 h-auto object-contain mx-auto p-5"
+                            />
+                            <h1 className="text-base sm:text-md md:text-lg font-semibold mb-auto">Galaxy Buds FE Graphite</h1>
+                            <h1 className="text-3xl font-semibold my-3">$99.99</h1>
+                            <a href="" className="flex items-center justify-center">
+                                <button className="bg-black text-white text-sm sm:text-base py-4 px-8 rounded-2xl cursor-pointer ">Buy Now</button>
+                            </a>                     
+                        </div>            
+                    </div>
+                </div>
+            </section>
+             <section>
+                <div className="flex flex-col md:flex-row w-full ">
+                    <div className="bg-[#FFFFFF] md:w-1/4 p-5 flex flex-col justify-between space-y-10">
+                        <div>
+                            <Image
+                                src={Ip14prm}
+                                width={600}
+                                height={600}
+                                alt="Apple iPhone 14 Pro Max"
+                                 className="max-w-full max-h-84 mx-auto object-contain "
+                            />
+                        </div>
+                        <div className="text-center md:text-start ">
+                            <h1 className="text-2xl">Apple iPhone 14 Pro Max</h1>
+                            <h1 className="text-xs text-[#909090] my-3">Think different, everything different.</h1>
+                            <button className="border-1 border-black-500 px-8 py-3 font-semibold rounded-md cursor-pointer" onClick={goToProducts}>
+                               Shop Now
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="bg-[#F9F9F9] md:w-1/4 p-5 flex flex-col  justify-between space-y-10">
+                        <div>
+                            <Image
+                                src={Ipad}
+                                width={600}
+                                height={600}
+                                alt="Ipad Pro"
+                                 className="max-w-full max-h-84 mx-auto object-contain"
+                            />
+                        </div>
+                        <div className="text-center md:text-start ">
+                            <h1 className="text-2xl">Ipad Pro</h1>
+                            <h1 className="text-xs text-[#909090] my-3">iPad combines a magnificent 10.2-inch Retina display, incredible performance, multitasking and ease of use.</h1>
+                            <button className="border-1 border-black-500 px-8 py-3 font-semibold rounded-md cursor-pointer" onClick={goToProducts}>
+                               Shop Now
+                            </button>
+                        </div>
+                    </div>
+                    <div className="bg-[#EAEAEA] md:w-1/4 p-5 flex flex-col justify-between space-y-10">
+                        <div>
+                            <Image
+                                src={Watches}
+                                width={600}
+                                height={600}
+                                alt="Apple Watch Series 9"
+                                className="max-w-full max-h-84 mx-auto object-contain"
+                            />
+                        </div>
+                        <div className="text-center md:text-start ">
+                            <h1 className="text-2xl">Apple Watch Series 9</h1>
+                            <h1 className="text-xs text-[#909090] my-3">Introducing Apple Watch Series 9</h1>
+                            <button className="border-1 border-black-500 px-8 py-3 font-semibold rounded-md cursor-pointer" onClick={goToProducts}>
+                               Shop Now
+                            </button>
+                        </div>
+                    </div>
+                    <div className="bg-[#2C2C2C] md:w-1/4 p-5 flex flex-col justify-between space-y-10 ">
+                        <div>
+                            <Image
+                                src={ZFold}
+                                width={800}
+                                height={800}
+                                alt="Galaxy Z Fold5"
+                                className="max-w-full max-h-84 mx-auto object-contain"
+                            />
+                        </div>
+                        <div className="text-center md:text-start ">
+                            <h1 className="text-white text-2xl">Galaxy Z Fold5</h1>
+                            <h1 className="text-xs text-[#909090] my-3">Join the flip side</h1>
+                            <button className="border-1 text-white px-8 py-3 font-semibold rounded-md cursor-pointer" onClick={goToProducts}>
+                               Shop Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </>
     );
 }
