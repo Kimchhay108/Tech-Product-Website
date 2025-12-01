@@ -1,6 +1,8 @@
 "use client";
-import { useRouter } from "next/navigation"; // ✅ Import useRouter correctly
+
 import Image from "next/image";
+import { useRouter } from "next/navigation"; // Fix for useRouter
+
 import IphoneImage from "../../assets/home/IphoneImage.png";
 import Airpods from "../../assets/home/Airpods.png";
 import Ps5 from "../../assets/home/Ps5.png";
@@ -28,7 +30,7 @@ export default function HomePage() {
   const router = useRouter();
 
   const goToProducts = () => {
-    router.push("/productpage"); // Navigate to Product page
+    router.push("/productpage");
   };
 
   return (
@@ -139,7 +141,7 @@ export default function HomePage() {
           {/* Right side */}
           <div className="md:w-1/2 bg-[#EDEDED]">
             <div className="w-full h-full flex flex-col md:flex-row justify-center items-center py-10">
-              <div className="w-full md:w-1/2 flex flex-col justify-center items-center md:items-start pl-10 ">
+              <div className="w-full md:w-1/2 flex flex-col justify-center items-center md:items-start pl-10">
                 <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
                   Vision <b>Pro</b>
                 </h1>
@@ -147,7 +149,7 @@ export default function HomePage() {
                   An immersive way to experience entertainment
                 </p>
                 <button
-                  className="text-sm sm:text-base md:text-lg lg:text-xl text-black border rounded-lg py-3 px-9 my-3 cursor-pointer hidden md:block"
+                  className="text-sm sm:text-base md:text-lg lg:text-xl text-black border rounded-lg py-3 px-9 my-3 hidden md:block"
                   onClick={goToProducts}
                 >
                   Shop Now
@@ -162,22 +164,19 @@ export default function HomePage() {
                   className="w-72 md:w-full h-auto object-contain"
                 />
               </div>
-              {/* Button mobile */}
-              <div className="md:hidden">
-                <button
-                  className="text-sm sm:text-base md:text-lg lg:text-xl text-black border rounded-lg py-3 px-9 my-3 cursor-pointer"
-                  onClick={goToProducts}
-                >
-                  Shop Now
-                </button>
-              </div>
+              <button
+                className="text-sm sm:text-base md:text-lg lg:text-xl text-black border rounded-lg py-3 px-9 my-3 md:hidden"
+                onClick={goToProducts}
+              >
+                Shop Now
+              </button>
             </div>
           </div>
         </div>
       </section>
 
       {/* Browse By Category */}
-      <section className="bg-[#FAFAFA] px-5 ">
+      <section className="bg-[#FAFAFA] px-5">
         <div className="max-w-7xl mx-auto py-15">
           <h1 className="text-2xl md:text-3xl font-bold mb-10 text-center md:text-left">
             Browse By Category
@@ -213,37 +212,213 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* New Arrivals Section */}
+      {/* New Arrivals & Products Grid */}
       <section className="px-3">
         <div className="max-w-7xl mx-auto py-15">
+          {/* Header Tabs */}
           <div className="flex space-x-7 justify-center md:justify-start items-center text-start mb-5">
-            <p className="text-base md:text-lg lg:text-xl text-[#8B8B8B] active">New Arrival</p>
-            <p className="text-base md:text-lg lg:text-xl text-[#8B8B8B] hover:text-black">BestSeller</p>
-            <p className="text-base md:text-lg lg:text-xl text-[#8B8B8B] hover:text-black">Special Offers</p>
+            <p className="text-base md:text-lg lg:text-xl text-[#8B8B8B] active">
+              New Arrival
+            </p>
+            <p className="text-base md:text-lg lg:text-xl text-[#8B8B8B] hover:text-black">
+              BestSeller
+            </p>
+            <p className="text-base md:text-lg lg:text-xl text-[#8B8B8B] hover:text-black">
+              Special Offers
+            </p>
           </div>
 
+          {/* Product Cards */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {[Ip14prm, ZFold, Watches, Earbud].map((item, idx) => (
-              <div key={idx} className="bg-[#F6F6F6] p-5 rounded text-center text-black hover:shadow-md flex flex-col h-full">
-                <Image
-                  src={item}
-                  alt={`Product ${idx + 1}`}
-                  width={600}
-                  height={600}
-                  className="w-64 h-auto object-contain mx-auto p-5"
-                />
-                <h1 className="text-base sm:text-md md:text-lg font-semibold mb-auto">
-                  Product Name
-                </h1>
-                <h1 className="text-3xl font-semibold my-3">$Price</h1>
-                <button
-                  className="bg-black text-white text-sm sm:text-base py-4 px-8 rounded-2xl cursor-pointer"
-                  onClick={goToProducts}
-                >
-                  Buy Now
-                </button>
-              </div>
-            ))}
+            {/* Product 1 */}
+            <div className="bg-[#F6F6F6] p-5 rounded text-center text-black hover:shadow-md flex flex-col h-full">
+              <Image
+                src={Ip14prm}
+                alt="Iphone 14 pro max"
+                width={600}
+                height={600}
+                className="w-64 h-auto object-contain mx-auto p-5"
+              />
+              <h1 className="text-base sm:text-md md:text-lg font-semibold mb-auto">
+                Apple iPhone 14 Pro Max 128GB Deep Purple
+              </h1>
+              <h1 className="text-3xl font-semibold my-3">$900</h1>
+              <button
+                className="bg-black text-white text-sm sm:text-base py-4 px-10 rounded-2xl cursor-pointer"
+                onClick={goToProducts}
+              >
+                Buy Now
+              </button>
+            </div>
+
+            {/* Product 2 */}
+            <div className="bg-[#F6F6F6] p-5 rounded text-center text-black hover:shadow-md flex flex-col h-full">
+              <Image
+                src={ZFold}
+                alt="Z fold"
+                width={800}
+                height={600}
+                className="w-64 h-auto object-contain mx-auto p-5"
+              />
+              <h1 className="text-base sm:text-md md:text-lg font-semibold mb-auto">
+                Galaxy Z Fold5 Unlocked | 256GB | Phantom Black
+              </h1>
+              <h1 className="text-3xl font-semibold my-3">$1799</h1>
+              <button
+                className="bg-black text-white text-sm sm:text-base py-4 px-8 rounded-2xl cursor-pointer"
+                onClick={goToProducts}
+              >
+                Buy Now
+              </button>
+            </div>
+
+            {/* Product 3 */}
+            <div className="bg-[#F6F6F6] p-5 rounded text-center text-black hover:shadow-md flex flex-col h-full">
+              <Image
+                src={Watches}
+                alt="Apple Watch Series 9"
+                width={600}
+                height={600}
+                className="w-64 h-auto object-contain mx-auto p-5"
+              />
+              <h1 className="text-base sm:text-md md:text-lg font-semibold mb-auto">
+                Apple Watch Series 9 GPS 41mm Starlight Aluminium Case
+              </h1>
+              <h1 className="text-3xl font-semibold my-3">$399</h1>
+              <button
+                className="bg-black text-white text-sm sm:text-base py-4 px-8 rounded-2xl cursor-pointer"
+                onClick={goToProducts}
+              >
+                Buy Now
+              </button>
+            </div>
+
+            {/* Product 4 */}
+            <div className="bg-[#F6F6F6] p-5 rounded text-center text-black hover:shadow-md flex flex-col h-full">
+              <Image
+                src={Earbud}
+                alt="Galaxy Buds"
+                width={600}
+                height={600}
+                className="w-64 h-auto object-contain mx-auto p-5"
+              />
+              <h1 className="text-base sm:text-md md:text-lg font-semibold mb-auto">
+                Galaxy Buds FE Graphite
+              </h1>
+              <h1 className="text-3xl font-semibold my-3">$99.99</h1>
+              <button
+                className="bg-black text-white text-sm sm:text-base py-4 px-8 rounded-2xl cursor-pointer"
+                onClick={goToProducts}
+              >
+                Buy Now
+              </button>
+            </div>
+
+            {/* Add remaining products similarly (5-8) */}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Section */}
+      <section>
+        <div className="flex flex-col md:flex-row w-full">
+          {/* Featured Product 1 */}
+          <div className="bg-[#FFFFFF] md:w-1/4 p-5 flex flex-col justify-between space-y-10">
+            <div>
+              <Image
+                src={Ip14prm}
+                width={600}
+                height={600}
+                alt="Apple iPhone 14 Pro Max"
+                className="max-w-full max-h-84 mx-auto object-contain"
+              />
+            </div>
+            <div className="text-center md:text-start">
+              <h1 className="text-2xl">Apple iPhone 14 Pro Max</h1>
+              <h1 className="text-xs text-[#909090] my-3">
+                Think different, everything different.
+              </h1>
+              <button
+                className="border-1 border-black-500 px-8 py-3 font-semibold rounded-md cursor-pointer"
+                onClick={goToProducts}
+              >
+                Shop Now
+              </button>
+            </div>
+          </div>
+
+          {/* Featured Product 2 */}
+          <div className="bg-[#F9F9F9] md:w-1/4 p-5 flex flex-col justify-between space-y-10">
+            <div>
+              <Image
+                src={Ipad}
+                width={600}
+                height={600}
+                alt="Ipad Pro"
+                className="max-w-full max-h-84 mx-auto object-contain"
+              />
+            </div>
+            <div className="text-center md:text-start">
+              <h1 className="text-2xl">Ipad Pro</h1>
+              <h1 className="text-xs text-[#909090] my-3">
+                iPad combines a magnificent 10.2-inch Retina display, incredible
+                performance, multitasking and ease of use.
+              </h1>
+              <button
+                className="border-1 border-black-500 px-8 py-3 font-semibold rounded-md cursor-pointer"
+                onClick={goToProducts}
+              >
+                Shop Now
+              </button>
+            </div>
+          </div>
+
+          {/* Featured Product 3 */}
+          <div className="bg-[#EAEAEA] md:w-1/4 p-5 flex flex-col justify-between space-y-10">
+            <div>
+              <Image
+                src={Watches}
+                width={600}
+                height={600}
+                alt="Apple Watch Series 9"
+                className="max-w-full max-h-84 mx-auto object-contain"
+              />
+            </div>
+            <div className="text-center md:text-start">
+              <h1 className="text-2xl">Apple Watch Series 9</h1>
+              <h1 className="text-xs text-[#909090] my-3">
+                Introducing Apple Watch Series 9
+              </h1>
+              <button
+                className="border-1 border-black-500 px-8 py-3 font-semibold rounded-md cursor-pointer"
+                onClick={goToProducts}
+              >
+                Shop Now
+              </button>
+            </div>
+          </div>
+
+          {/* Featured Product 4 */}
+          <div className="bg-[#2C2C2C] md:w-1/4 p-5 flex flex-col justify-between space-y-10">
+            <div>
+              <Image
+                src={ZFold}
+                width={800}
+                height={800}
+                alt="Galaxy Z Fold5"
+                className="max-w-full max-h-84 mx-auto object-contain"
+              />
+            </div>
+            <div className="text-center md:text-start">
+              <h1 className="text-white text-2xl">Galaxy Z Fold5</h1>
+              <h1 className="text-xs text-[#909090] my-3">Join the flip side</h1>
+              <button
+                className="border-1 text-white px-8 py-3 font-semibold rounded-md cursor-pointer"
+                onClick={goToProducts}
+              >
+                Shop Now
+              </button>
+            </div>
           </div>
         </div>
       </section>
