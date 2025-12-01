@@ -25,7 +25,7 @@ import {
 
 export default function HomePage() {
 
-    //const router = useRouter();
+    // const router = useRouter();
 
     const goToProducts = () => {
         router.push("/productpage"); // Navigate to Product page
