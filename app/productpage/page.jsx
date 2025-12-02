@@ -1,99 +1,107 @@
-import React from "react";
+'use client'
+import Image from "next/image"
+import React, { useState } from "react";
+import { FiChevronDown, FiChevronRight, FiChevronLeft } from "react-icons/fi";
 
+import Ip14prm from "../../assets/home/Ip14prm.png";
+import Ip14Gold from "../../assets/home/Ip14Gold.png";
+import ZFold from "../../assets/home/ZFold.png";
+import Ipad from "../../assets/home/Ipad.png";
 export default function ProductsPage() {
   const products = [
-    { id: 1, name: "Apple iPhone 14 Pro 512GB Gold (MQ233)", price: 1437, img: "https://istore.co.na/cdn/shop/products/iPhone14Pro_Gold_539b3565-8ff0-474b-a0df-d504951871a2_1200x.png?v=1664344101" },
-    { id: 2, name: "Apple iPhone 11 128GB White (MQ223)", price: 510, img: "/iphone11-white.png" },
-    { id: 3, name: "Apple iPhone 11 128GB White (MQ233)", price: 550, img: "/iphone11-blue.png" },
-    { id: 4, name: "Apple iPhone 14 Pro 1TB Gold (MQ293)", price: 1499, img: "/iphone14pro-gold2.png" },
-    { id: 5, name: "Apple iPhone 14 Pro 1TB Gold (MQ299)", price: 1399, img: "/iphone14pro-gold3.png" },
-    { id: 6, name: "Apple iPhone 14 Pro 128GB Deep Purple (MQ023)", price: 1600, img: "/iphone14pro-purple.png" },
-    { id: 7, name: "Apple iPhone 13 mini 128GB Pink (MLK23)", price: 850, img: "/iphone13mini-pink.png" },
-    { id: 8, name: "Apple iPhone 14 Pro 256GB Space Black (M0G73)", price: 1399, img: "/iphone14pro-black.png" },
-    { id: 9, name: "Apple iPhone 14 Pro 256GB Silver (MQ103)", price: 1399, img: "/iphone14pro-silver.png" },
+    { id: 1, name: "Apple iPhone 14 Pro 128GB Deep Purple", price: 1599, img: Ip14prm },
+	{ id: 2, name: "Apple iPhone 14 Pro 1TB Gold ", price: 1399, img: Ip14Gold },
+    { id: 3, name: "Galaxy Z Fold5 256GB Phantom Black", price: 1799, img: ZFold },
+   	{ id: 4, name: "Apple iPad 9 10.2 64GB Wi-Fi Silver 2021", price: 1499, img: Ipad },
+
   ];
 
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [filter, setFilter] = useState(""); // current filter option
+
+  // Sort products based on filter
+  const sortedProducts = [...products].sort((a, b) => {
+    if (filter === "low-to-high") return a.price - b.price;
+    if (filter === "high-to-low") return b.price - a.price;
+    return 0; // default = original order
+  });
+
+
   return (
-    <div className="bg-[#F8F8F8] min-h-screen px-6 py-10">
-      
-      <div className="max-w-7xl mx-auto grid grid-cols-12 gap-8">
-        
-        {/* Sidebar Filters */}
-        <aside className="col-span-3 bg-white p-5 rounded-xl shadow h-fit">
-          <h2 className="font-semibold mb-3">Price</h2>
-          <div className="flex gap-2 mb-5">
-            <input className="border p-2 rounded w-full" placeholder="From" />
-            <input className="border p-2 rounded w-full" placeholder="To" />
-          </div>
+    <section className="px-4">
+		{/* Header */}
+		<div className="flex justify-around space-x-3 items-center pt-4">
+			{/* Category */}
+			<div className="flex items-center space-x-4 ">
+				<h1 className="text-[#A4A4A4] font-medium">Category</h1>
+				<FiChevronRight size={20} className="text-[#A4A4A4]"/>
+				<h1 className="text-black font-medium">Laptops</h1>
+			</div>
 
-          <h2 className="font-semibold mb-3">Brand</h2>
-          <div className="space-y-2">
-            {["Apple", "Samsung", "Xiaomi", "OPPO", "Nokia"].map((brand) => (
-              <label key={brand} className="flex items-center gap-2 text-sm">
-                <input type="checkbox" /> {brand}
-              </label>
-            ))}
-          </div>
+			{/* Dropdown Filter */}
+			<div className="relative inline-block w-48 shadow-md">
+				<button
+					onClick={() => setDropdownOpen(!dropdownOpen)}
+					className="w-full rounded-lg border p-2 bg-white text-base flex justify-between items-center shadow-xs hover:bg-gray-50"
+				>
+					{filter === "low-to-high" ? "Price: Low → High": 
+					filter === "high-to-low" ? "Price: High → Low": "Filter"}
+					<span className={`ml-2 transform transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`}><FiChevronDown size={20}/></span>
+				</button>
 
-          <h2 className="font-semibold mt-5 mb-3">Built-in Memory</h2>
-          <div className="space-y-2">
-            {["64GB", "128GB", "256GB", "512GB", "1TB"].map((mem) => (
-              <label key={mem} className="flex items-center gap-2 text-sm">
-                <input type="checkbox" /> {mem}
-              </label>
-            ))}
-          </div>
-        </aside>
+				<div
+					className={`absolute mt-2 w-full rounded-lg bg-white shadow-lg origin-top transition-all duration-200 ${
+						dropdownOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
+					}`}
+				>
+					<button
+						className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+						onClick={() => { setFilter("low-to-high"); setDropdownOpen(false); }}
+					>
+						Price: Low → High
+					</button>
+					<button
+						className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+						onClick={() => { setFilter("high-to-low"); setDropdownOpen(false); }}
+					>
+						Price: High → Low
+					</button>
+				</div>
+			</div>
+		</div>
 
-        {/* Product Grid */}
-        <main className="col-span-9">
-          <div className="flex justify-between mb-5">
-            <p>
-              Selected Products: <b>85</b>
-            </p>
-            <select className="border p-2 rounded">
-              <option>By rating</option>
-              <option>Price low → high</option>
-              <option>Price high → low</option>
-            </select>
-          </div>
+		{/*Product Lists */}
+		<div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 py-10 max-w-7xl mx-auto w-full">
+			{sortedProducts.map((product) => (
+				<div key={product.id} className="bg-white rounded-lg shadow-md flex flex-col justify-between items-center text-center p-6 hover:shadow-xl transition-all duration-300">
+					<div>
+						<Image 
+							src={product.img} 
+							alt={product.name} 
+							width={800}
+							height={800}
+							className="w-full h-50 md:h-64 object-contain sm:mb-4"
+							/>
+					</div>
+					<div>
+						<h2 className="text-md md:text-lg font-semibold">{product.name}</h2>
+						<h1 className="text-black font-semibold text-xl sm:text-2xl mt-2 mb-4">${product.price}</h1>
+						<button className="bg-black text-sm sm:text-base text-white rounded-lg py-3 px-8 md:px-12 whitespace-nowrap hover:bg-gray-100 transition-colors duration-200">
+						Buy Now
+						</button>
+					</div>
+				</div>
+			))}
+		</div>
 
-          <div className="grid grid-cols-3 gap-6">
-            {products.map((p) => (
-              <div
-                key={p.id}
-                className="bg-white rounded-xl p-5 shadow hover:shadow-lg transition cursor-pointer"
-              >
-                <div className="w-full h-48 flex justify-center items-center">
-                  <img src={p.img} alt={p.name} className="h-full object-contain" />
-                </div>
-
-                <h3 className="mt-3 text-sm font-medium leading-tight">{p.name}</h3>
-                <p className="text-xl font-bold mt-2">${p.price}</p>
-
-                <button className="mt-3 bg-black text-white w-full py-2 rounded-lg">
-                  Buy Now
-                </button>
-              </div>
-            ))}
-          </div>
-
-          {/* Pagination */}
-          <div className="flex justify-center gap-3 mt-10">
-            {[1, 2, 3, "...", 12].map((n, i) => (
-              <button
-                key={i}
-                className={`px-4 py-2 border rounded ${
-                  n === 1 ? "bg-black text-white" : "bg-white"
-                }`}
-              >
-                {n}
-              </button>
-            ))}
-          </div>
-        </main>
-      </div>
-
-    </div>
+		{/* Pagination */}
+		<div className="flex justify-center items-center space-x-3 my-5">		
+				<button className="mr-4 py-2 cursor-pointer "><FiChevronLeft size={20}/></button>
+				<button className="px-4 py-2 cursor-pointer text-center rounded-lg bg-black text-white">1</button>
+				<button className="px-4 py-2 cursor-pointer text-center rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">2</button>
+				<button className="px-4 py-2 cursor-pointer text-center rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">3</button>
+				<button className="mr-4 py-2 cursor-pointer "><FiChevronRight size={20}/></button>
+		</div>
+    </section>
   );
 }
