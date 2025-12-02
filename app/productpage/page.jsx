@@ -30,9 +30,9 @@ export default function ProductsPage() {
   return (
     <section className="px-4">
 		{/* Header */}
-		<div className="flex justify-around space-x-3 items-center pt-4">
+		<div className="flex justify-end sm:justify-around space-x-3 items-center pt-4">
 			{/* Category */}
-			<div className="flex items-center space-x-4 ">
+			<div className="hidden sm:flex items-center space-x-4 ">
 				<h1 className="text-[#A4A4A4] font-medium">Category</h1>
 				<FiChevronRight size={20} className="text-[#A4A4A4]"/>
 				<h1 className="text-black font-medium">Laptops</h1>
