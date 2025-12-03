@@ -1,5 +1,7 @@
 'use client'
 import Image from "next/image"
+import { useRouter } from "next/navigation"; // For useRouter
+
 import React, { useState } from "react";
 import { FiChevronDown, FiChevronRight, FiChevronLeft } from "react-icons/fi";
 
@@ -8,24 +10,29 @@ import Ip14Gold from "../../assets/home/Ip14Gold.png";
 import ZFold from "../../assets/home/ZFold.png";
 import Ipad from "../../assets/home/Ipad.png";
 export default function ProductsPage() {
-  const products = [
-    { id: 1, name: "Apple iPhone 14 Pro 128GB Deep Purple", price: 1599, img: Ip14prm },
-	{ id: 2, name: "Apple iPhone 14 Pro 1TB Gold ", price: 1399, img: Ip14Gold },
-    { id: 3, name: "Galaxy Z Fold5 256GB Phantom Black", price: 1799, img: ZFold },
-   	{ id: 4, name: "Apple iPad 9 10.2 64GB Wi-Fi Silver 2021", price: 1499, img: Ipad },
+	const products = [
+		{ id: 1, name: "Apple iPhone 14 Pro 128GB Deep Purple", price: 1599, img: Ip14prm },
+		{ id: 2, name: "Apple iPhone 14 Pro 1TB Gold ", price: 1399, img: Ip14Gold },
+		{ id: 3, name: "Galaxy Z Fold5 256GB Phantom Black", price: 1799, img: ZFold },
+		{ id: 4, name: "Apple iPad 9 10.2 64GB Wi-Fi Silver 2021", price: 1499, img: Ipad },
 
-  ];
+	];
 
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [filter, setFilter] = useState(""); // current filter option
+	const [dropdownOpen, setDropdownOpen] = useState(false);
+	const [filter, setFilter] = useState(""); // current filter option
 
-  // Sort products based on filter
-  const sortedProducts = [...products].sort((a, b) => {
-    if (filter === "low-to-high") return a.price - b.price;
-    if (filter === "high-to-low") return b.price - a.price;
-    return 0; // default = original order
-  });
+	// Sort products based on filter
+	const sortedProducts = [...products].sort((a, b) => {
+		if (filter === "low-to-high") return a.price - b.price;
+		if (filter === "high-to-low") return b.price - a.price;
+		return 0; // default = original order
+	});
 
+	const router = useRouter();
+		
+	const goToProductsDetail = () => {
+		router.push("/productDetail");
+	};
 
   return (
     <section className="px-4">
@@ -73,7 +80,7 @@ export default function ProductsPage() {
 		{/*Product Lists */}
 		<div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 py-10 max-w-7xl mx-auto w-full">
 			{sortedProducts.map((product) => (
-				<div key={product.id} className="bg-white rounded-lg shadow-md flex flex-col justify-between items-center text-center p-6 hover:shadow-xl transition-all duration-300">
+				<div key={product.id} className="bg-[#F6F6F6] rounded-lg shadow-md flex flex-col justify-between items-center text-center p-6 hover:shadow-xl transition-all duration-300">
 					<div>
 						<Image 
 							src={product.img} 
@@ -86,7 +93,10 @@ export default function ProductsPage() {
 					<div>
 						<h2 className="text-md md:text-lg font-semibold">{product.name}</h2>
 						<h1 className="text-black font-semibold text-xl sm:text-2xl mt-2 mb-4">${product.price}</h1>
-						<button className="bg-black text-sm sm:text-base text-white rounded-lg py-3 px-8 md:px-12 whitespace-nowrap hover:bg-gray-100 transition-colors duration-200">
+						<button 
+							className="bg-black text-sm sm:text-base text-white rounded-lg py-3 px-8 md:px-12 whitespace-nowrap cursor-pointer"
+							onClick={goToProductsDetail}
+						>
 						Buy Now
 						</button>
 					</div>
