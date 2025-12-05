@@ -1,6 +1,8 @@
 import "../styles/global.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { CartProvider } from "./context/CartContext";
+
 
 export const metadata = {
   title: "Tech Product Website",
@@ -8,13 +10,15 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-  return (
-    <html lang="en">
-      <body className="bg-[var(--background)] text-[var(--text)]">
-        <Header />
-        <main>{children}</main>
-        <Footer />
-      </body>
-    </html>
-  );
+    return (
+        <html lang="en">
+            <body className="bg-[var(--background)] text-[var(--text)]">
+                <CartProvider>
+                    <Header />
+                    <main>{children}</main>
+                    <Footer />
+                </CartProvider>
+            </body>
+        </html>
+    );
 }

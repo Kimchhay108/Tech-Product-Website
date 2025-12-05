@@ -1,6 +1,8 @@
 'use client'
 import { useState } from "react";
+import { useRouter } from "next/navigation"; // For useRouter
 import Image from "next/image"
+import { useCartDispatch, CartActions } from "../context/CartContext";
 
 import IP14prm from "../../assets/productDetail/IP14prm.png";
 import FrontIP14prm from "../../assets/productDetail/FrontIP14prm.png";
@@ -8,7 +10,17 @@ import BackIP14prm from "../../assets/productDetail/BackIP14prm.png";
 import SideIP14prm from "../../assets/productDetail/SideIP14prm.png";
 import { FiPlus, FiMinus} from "react-icons/fi";
 
-export default function ProductsDetai(){
+export default function ProductsDetail(){
+
+    const router = useRouter();
+
+    const goToCart = () => {
+        router.push("/shoppingCart");
+    };
+
+    //Get the dispatch function
+    const dispatch = useCartDispatch();
+
 
     //Left Side
     const images = [IP14prm, FrontIP14prm, BackIP14prm, SideIP14prm];
@@ -22,7 +34,6 @@ export default function ProductsDetai(){
 
     //Save selected memory
     const memories = ["128GB", "256GB", "512GB", "1TB"];
-    //Same flow...
     const [selectedMemory, setSelectedMemory] = useState("128GB");
     
     const phoneDetails = [
@@ -110,10 +121,14 @@ export default function ProductsDetai(){
                     </div>
                     {/* Right Side */}
                     <div className="md:w-1/2 mx-auto flex flex-col space-y-3 my-4">
+
+                        {/* Title */}
                         <div >
                             <h1 className="mb-3 text-3xl font-bold">Apple iPhone 14 Pro Max</h1>
                             <h2 className="text-2xl font-semibold">$1399</h2>
                         </div>
+
+                        {/* Choose Color */}
                         <div className="flex gap-3 items-center">
                             <p>Select color:</p>
                             {colors.map((color, index) => (
@@ -143,6 +158,7 @@ export default function ProductsDetai(){
                             ))}
                         </div>
 
+                        {/* Phone detail */}
                         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {phoneDetails.map((phoneDetail, index) => (
                                 <div 
@@ -179,7 +195,25 @@ export default function ProductsDetai(){
                             </div>
                             <div >
                                 
-                                <button className="w-full py-3 bg-black text-white font-semibold rounded-lg cursor-pointer">Add to Cart</button>
+                                <button 
+                                    className="w-full py-3 bg-black text-white font-semibold rounded-lg cursor-pointer"
+                                    onClick={() => {
+                                            dispatch({
+                                                type: CartActions.ADD,
+                                                payload: {
+                                                    id: Date.now(),
+                                                    name: "iPhone 14 Pro Max",
+                                                    price: 1399,
+                                                    color: selectedColor,
+                                                    memory: selectedMemory,
+                                                    quantity: quantity,
+                                                    image: bigImage
+                                                    }
+                                                });
+                                                router.push('shoppingCart');  
+                                            }             
+                                        }    
+                                >Add to Cart</button>
                             </div>
                         </div>
 

@@ -10,6 +10,13 @@ import Ip14Gold from "../../assets/home/Ip14Gold.png";
 import ZFold from "../../assets/home/ZFold.png";
 import Ipad from "../../assets/home/Ipad.png";
 export default function ProductsPage() {
+
+	const router = useRouter();
+		
+	const goToProductsDetail = () => {
+		router.push("/productDetail");
+	};
+	
 	const products = [
 		{ id: 1, name: "Apple iPhone 14 Pro 128GB Deep Purple", price: 1599, img: Ip14prm },
 		{ id: 2, name: "Apple iPhone 14 Pro 1TB Gold ", price: 1399, img: Ip14Gold },
@@ -27,12 +34,6 @@ export default function ProductsPage() {
 		if (filter === "high-to-low") return b.price - a.price;
 		return 0; // default = original order
 	});
-
-	const router = useRouter();
-		
-	const goToProductsDetail = () => {
-		router.push("/productDetail");
-	};
 
   return (
     <section className="px-4">
