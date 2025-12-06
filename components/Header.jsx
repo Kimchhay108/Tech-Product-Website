@@ -17,13 +17,14 @@ import Logo from "../assets/Logo.png"; // Keep this path correct relative to you
 export default function Header() {
     const [open, setOpen] = useState(false);
 
+
     return (
-        <header>
+        <header id="header" className="sticky top-0 z-50 shadow">
             {/* TOP HEADER */}
             <div className="bg-white w-full h-full mx-auto px-4 py-4 flex items-center justify-around">
 
                 {/* Logo */}
-                <Link href="/">
+                <Link href="/home">
                     <Image src={Logo} alt="logo" className="max-w-xs min-w-[120px] h-auto"/>
                 </Link>
 
@@ -40,30 +41,30 @@ export default function Header() {
                 {/* Nav + Icons (Desktop) */}
                 <nav className="hidden md:flex items-center space-x-10 text-[var(--secondary)]">
                     <ul className="flex space-x-8">
-                        <li><Link href="#" className="hover:text-black">Home</Link></li>
-                        <li><Link href="#" className="hover:text-black">About</Link></li>
-                        <li><Link href="#" className="hover:text-black whitespace-nowrap">Contact Us</Link></li>
+                        <li><a href="/home" className="hover:text-black">Home</a></li>
+                        <li><a href="#footer" className="hover:text-black">About</a></li>
+                        <li><a href="#footer" className="hover:text-black whitespace-nowrap">Contact Us</a></li>
                     </ul>
                     <div className="flex items-center space-x-6">
-                        <Link href="#" className="text-black">
+                        <a href="/shoppingCart" className="text-black">
                             <FiShoppingCart size={25} />
-                        </Link>
+                        </a>
                         <Link href="#" className="text-black">
                             <FiUser size={25} />
                         </Link>
                     </div>
                 </nav>
 
-                {/* Mobile Menu */}
+                {/* Nav + Icons (Mobile) */}
                 <div className="md:hidden flex space-x-6">
                     <button className="md:hidden text-3xl" onClick={() => setOpen(!open)}>
                         {open ? <FiX /> : <FiMenu />}
                     </button>
 
                     <div className="md:hidden flex items-center space-x-6">
-                        <Link href="#" className="text-black">
+                        <a href="/shoppingCart" className="text-black">
                             <FiShoppingCart size={25} />
-                        </Link>
+                        </a>
                         <Link href="#" className="text-black">
                             <FiUser size={25} />
                         </Link>
@@ -91,13 +92,13 @@ export default function Header() {
 
                 {/* Mobile Links */}
                 <ul className=" py-4 space-y-3 text-[var(--secondary)]">
-                    <li><Link href="#" className="block text-black">Laptops</Link></li>
-                    <li><Link href="#" className="block text-black">Desktops</Link></li>
-                    <li><Link href="#" className="block text-black">Phones</Link></li>
-                    <li><Link href="#" className="block text-black">Tablets</Link></li>
-                    <li><Link href="#" className="block text-black">Smart Watches</Link></li>
-                    <li><Link href="#" className="block text-black">Gaming</Link></li>
-                    <li><Link href="#" className="block text-black">About Us</Link></li>
+                    <li><a href="/productpage" className="block text-black">Laptops</a></li>
+                    <li><a href="/productpage" className="block text-black">Desktops</a></li>
+                    <li><a href="/productpage" className="block text-black">Phones</a></li>
+                    <li><a href="/productpage" className="block text-black">Tablets</a></li>
+                    <li><a href="/productpage" className="block text-black">Smart Watches</a></li>
+                    <li><a href="/productpage" className="block text-black">Gaming</a></li>
+                    <li><a href="/productpage" className="block text-black">About Us</a></li>
                 </ul>
             </div>
 
@@ -105,40 +106,40 @@ export default function Header() {
             <div className="hidden md:block bg-[var(--accent)] py-2 overflow-hidden">
                 <ul className="flex justify-center items-center space-x-14 text-lg">
                     <li>
-                        <Link href="#" className="flex items-center space-x-2 text-[var(--secondary)] hover:font-bold">
+                        <a href="/productpage" className="flex items-center space-x-2 text-[var(--secondary)] hover:font-bold">
                             <FaLaptop size={20} />
                             <span>Laptops</span>
-                        </Link>
+                        </a>
                     </li>
                     <li>
-                        <Link href="#" className="flex items-center space-x-2 text-[var(--secondary)] hover:font-bold">
+                        <a href="/productpage" className="flex items-center space-x-2 text-[var(--secondary)] hover:font-bold">
                             <FiMonitor size={20} />
                             <span>Desktops</span>
-                        </Link>
+                        </a>
                     </li>
                     <li>
-                        <Link href="#" className="flex items-center space-x-2 text-[var(--secondary)] hover:font-bold">
+                        <a href="/productpage" className="flex items-center space-x-2 text-[var(--secondary)] hover:font-bold">
                             <FiSmartphone size={20} />
                             <span>Phones</span>
-                        </Link>
+                        </a>
                     </li>
                     <li>
-                        <Link href="#" className="flex items-center space-x-2 text-[var(--secondary)] hover:font-bold">
+                        <a href="/productpage" className="flex items-center space-x-2 text-[var(--secondary)] hover:font-bold">
                             <FiTablet size={20} />
                             <span>Tablets</span>
-                        </Link>
+                        </a>
                     </li>
                     <li>
-                        <Link href="#" className="flex items-center space-x-2 text-[var(--secondary)] hover:font-bold whitespace-nowrap">
+                        <a href="/productpage" className="flex items-center space-x-2 text-[var(--secondary)] hover:font-bold whitespace-nowrap">
                             <FiWatch size={20}/>
                             <span>Smart Watches</span>
-                        </Link>
+                        </a>
                     </li>
                     <li>
-                        <Link href="#" className="flex items-center space-x-2 text-[var(--secondary)] hover:font-bold">
+                        <a href="/productpage" className="flex items-center space-x-2 text-[var(--secondary)] hover:font-bold">
                             <FiHeadphones size={20} />
                             <span>Gaming</span>
-                        </Link>
+                        </a>
                     </li>
                 </ul>
             </div>

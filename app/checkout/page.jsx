@@ -4,11 +4,25 @@ import React, { useState, useRef, useEffect } from "react";
 import { useCartState } from "../context/CartContext";
 import { FiChevronRight, FiX, FiChevronDown, FiSend, FiPhone, FiDollarSign } from "react-icons/fi";
 import Image from "next/image";
-import IP14prm from "../../assets/productDetail/IP14prm.png";
 import CreditCard from "../../assets/productDetail/CreditCard.png";
 import KHQR from "../../assets/productDetail/KHQR.jpg";
 
 export default function checkoutPage(){
+
+
+    // ================ Summary ================
+
+    const cart = useCartState(); // get real cart items
+    const delivery = 1.5;
+    const subTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const total = cart.reduce((sum, item) => sum + item.price * item.quantity + delivery, 0);
+    const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+    // ================ Payment State ================
+
+    const [selectedPayment, setSelectedPayment] = useState("card");
+
+    // =====================================
 
     const [address, setAddress] = useState("None");
     const [modalOpen, setModalOpen] = useState(false);
@@ -47,21 +61,6 @@ export default function checkoutPage(){
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
-
-    // =====================================
-
-    // ================ Summary ================
-
-    const cart = useCartState(); // get real cart items
-    const delivery = 1.5;
-    const subTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const total = cart.reduce((sum, item) => sum + item.price * item.quantity + delivery, 0);
-    const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-    // ================ Payment State ================
-
-    const [selectedPayment, setSelectedPayment] = useState("card");
-
 
     // =====================================
 
@@ -456,9 +455,9 @@ export default function checkoutPage(){
                         onClick={() => {
                             const formattedAddress = `
                         ${firstName} ${lastName}
+                        ${phoneNumber}
                         ${fullAddress}
                         ${selectedProvince}
-                        ${phoneNumber}
                                 `.trim();
 
                                 setAddress(formattedAddress);

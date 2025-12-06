@@ -36,21 +36,24 @@ export default function CartPage() {
 
     if (!cart || cart.length === 0) {
         return (
-            <div className="flex flex-col items-center p-8">
+        <div className="flex flex-col min-h-screen">
+            <div className="flex-1 flex flex-col justify-start items-center p-8">
                 <h1 className="text-2xl font-bold">Your cart is empty</h1>
-                <h1 className="my-4">Check out our lasted product with best price and quality</h1>
+                <h1 className="my-4">Check out our latest products with best price and quality</h1>
                 <button
-                className="px-6 py-2 bg-black text-white rounded-lg cursor-pointer"
-                onClick={goToHome}
+                    className="px-6 py-2 bg-black text-white rounded-lg cursor-pointer"
+                    onClick={goToHome}
                 >
                     Continue Shopping
                 </button>
             </div>
-        );
+          
+        </div>
+    );
     }
 
    return (
-            <div className=" flex flex-col md:flex-row justify-center gap-10 p-8 ">
+            <div className=" flex flex-col md:flex-row justify-center gap-10 p-8 md:min-h-screen">
 
                 {/* Left Side */}
                 <div className="space-y-4 md:w-1/2">
@@ -124,7 +127,7 @@ export default function CartPage() {
 
                 {/* Right Side */}
                 <div className="md:w-1/3">
-                    <div className="p-8 border-2 border-[#EBEBEB] rounded-xl space-y-4 sticky top-10">
+                    <div className="p-8 border-2 border-[#EBEBEB] rounded-xl space-y-4 sticky top-30">
                         <h1 className="text-xl font-bold">Order Summary</h1>
 
                         <div className="flex justify-between text-lg font-semibold">

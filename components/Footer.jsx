@@ -6,7 +6,7 @@ import LogoWhite from "../assets/LogoWhite.png"; // adjust path if needed
 
 export default function Footer() {
     return (
-        <footer className="bg-[var(--primary)] text-white py-12">
+        <footer id="footer" className="bg-[var(--primary)] text-white py-12">
             <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
 
                 {/* Logo / About */}
@@ -23,7 +23,7 @@ export default function Footer() {
                     <ul className="space-y-2">
                         {["Laptops", "Desktops", "Phones", "Tablets", "Smart Watches", "Gaming"].map((item) => (
                         <li key={item}>
-                            <a href="#" className="text-sm hover:font-bold transition-colors">
+                            <a href="/productpage" className="text-sm hover:font-bold transition-colors">
                                 {item}
                             </a>
                         </li>
