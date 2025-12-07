@@ -1,5 +1,5 @@
 "use client";
-
+import Link from "next/link";
 import Image from "next/image";
 import { FiMail, FiPhone, FiFacebook, FiInstagram, FiTwitter, FiLinkedin } from "react-icons/fi";
 import LogoWhite from "../assets/LogoWhite.png"; // adjust path if needed
@@ -11,7 +11,9 @@ export default function Footer() {
 
                 {/* Logo / About */}
                 <div className="space-y-4">
-                    <Image src={LogoWhite} alt="logo" className="max-w-xs min-w-[120px] h-auto"/>
+                    <Link href="/home">
+                        <Image src={LogoWhite} alt="logo" className="max-w-xs min-w-[120px] h-auto"/>
+                    </Link>
                     <p className="text-sm font-light leading-relaxed">
                         We are connecting you with technology that makes life easier.
                     </p>
@@ -23,9 +25,9 @@ export default function Footer() {
                     <ul className="space-y-2">
                         {["Laptops", "Desktops", "Phones", "Tablets", "Smart Watches", "Gaming"].map((item) => (
                         <li key={item}>
-                            <a href="/productpage" className="text-sm hover:font-bold transition-colors">
+                            <Link href="/productpage" className="text-sm hover:font-bold transition-colors">
                                 {item}
-                            </a>
+                            </Link>
                         </li>
                         ))}
                     </ul>
@@ -42,13 +44,13 @@ export default function Footer() {
                         { icon: <FiLinkedin />, label: "Linkedin" },
                         ].map(({ icon, label }) => (
                         <li key={label}>
-                            <a
-                            href="#"
+                            <Link
+                            href="/home"
                             className="flex items-center space-x-2 text-sm hover:font-bold transition-colors"
                             >
                                 {icon}
                                 <span>{label}</span>
-                            </a>
+                            </Link>
                         </li>
                         ))}
                     </ul>

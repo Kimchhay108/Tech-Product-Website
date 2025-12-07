@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FiMenu, FiX, FiShoppingCart, FiUser, FiSearch } from "react-icons/fi";
@@ -15,6 +15,33 @@ import {
 import Logo from "../assets/Logo.png"; // Keep this path correct relative to your app folder
 
 export default function Header() {
+
+    const navBar = [
+                        {
+                            category: "Laptops",
+                            icon: FaLaptop
+                        }, 
+                        {
+                            category: "Desktops",
+                            icon: FiMonitor
+                        }, 
+                        {
+                            category: "Phones",
+                            icon: FiSmartphone,                      
+                        }, 
+                        {
+                            category: "Tablets",
+                            icon: FiTablet
+                        }, 
+                        {
+                            category: "Smart Watches",
+                            icon: FiWatch
+                        }, 
+                        {
+                            category: "Gaming",
+                            icon: FiHeadphones                       
+                        }];
+
     const [open, setOpen] = useState(false);
 
 
@@ -41,14 +68,14 @@ export default function Header() {
                 {/* Nav + Icons (Desktop) */}
                 <nav className="hidden md:flex items-center space-x-10 text-[var(--secondary)]">
                     <ul className="flex space-x-8">
-                        <li><a href="/home" className="hover:text-black">Home</a></li>
-                        <li><a href="#footer" className="hover:text-black">About</a></li>
-                        <li><a href="#footer" className="hover:text-black whitespace-nowrap">Contact Us</a></li>
+                        <li><Link href="/home" className="hover:text-black">Home</Link></li>
+                        <li><Link href="#footer" className="hover:text-black">About</Link></li>
+                        <li><Link href="#footer" className="hover:text-black whitespace-nowrap">Contact Us</Link></li>
                     </ul>
                     <div className="flex items-center space-x-6">
-                        <a href="/shoppingCart" className="text-black">
+                        <Link href="/shoppingCart" className="text-black">
                             <FiShoppingCart size={25} />
-                        </a>
+                        </Link>
                         <Link href="#" className="text-black">
                             <FiUser size={25} />
                         </Link>
@@ -62,9 +89,9 @@ export default function Header() {
                     </button>
 
                     <div className="md:hidden flex items-center space-x-6">
-                        <a href="/shoppingCart" className="text-black">
+                        <Link href="/shoppingCart" className="text-black">
                             <FiShoppingCart size={25} />
-                        </a>
+                        </Link>
                         <Link href="#" className="text-black">
                             <FiUser size={25} />
                         </Link>
@@ -92,55 +119,33 @@ export default function Header() {
 
                 {/* Mobile Links */}
                 <ul className=" py-4 space-y-3 text-[var(--secondary)]">
-                    <li><a href="/productpage" className="block text-black">Laptops</a></li>
-                    <li><a href="/productpage" className="block text-black">Desktops</a></li>
-                    <li><a href="/productpage" className="block text-black">Phones</a></li>
-                    <li><a href="/productpage" className="block text-black">Tablets</a></li>
-                    <li><a href="/productpage" className="block text-black">Smart Watches</a></li>
-                    <li><a href="/productpage" className="block text-black">Gaming</a></li>
-                    <li><a href="/productpage" className="block text-black">About Us</a></li>
+                    {navBar.map((nav, index) => (
+                        <li key={index}>
+                            <Link 
+                                href={`/productpage?category=${nav.category}` }
+                                className="block text-black"
+                            >
+                                {nav.category}
+                            </Link>
+                        </li>
+                    ))}
                 </ul>
             </div>
 
             {/* CATEGORY BAR */}
             <div className="hidden md:block bg-[var(--accent)] py-2 overflow-hidden">
                 <ul className="flex justify-center items-center space-x-14 text-lg">
-                    <li>
-                        <a href="/productpage" className="flex items-center space-x-2 text-[var(--secondary)] hover:font-bold">
-                            <FaLaptop size={20} />
-                            <span>Laptops</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/productpage" className="flex items-center space-x-2 text-[var(--secondary)] hover:font-bold">
-                            <FiMonitor size={20} />
-                            <span>Desktops</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/productpage" className="flex items-center space-x-2 text-[var(--secondary)] hover:font-bold">
-                            <FiSmartphone size={20} />
-                            <span>Phones</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/productpage" className="flex items-center space-x-2 text-[var(--secondary)] hover:font-bold">
-                            <FiTablet size={20} />
-                            <span>Tablets</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/productpage" className="flex items-center space-x-2 text-[var(--secondary)] hover:font-bold whitespace-nowrap">
-                            <FiWatch size={20}/>
-                            <span>Smart Watches</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/productpage" className="flex items-center space-x-2 text-[var(--secondary)] hover:font-bold">
-                            <FiHeadphones size={20} />
-                            <span>Gaming</span>
-                        </a>
-                    </li>
+                    {navBar.map((nav, index) => (
+                        <li key={index}>
+                            <Link 
+                                href={`/productpage?category=${nav.category}`}
+                                className="flex items-center space-x-2 text-[var(--secondary)] hover:font-bold whitespace-nowrap"
+                            >
+                                <p><nav.icon size={20}/></p>
+                                <span>{nav.category}</span>
+                            </Link>
+                        </li>
+                    ))}
                 </ul>
             </div>
         </header>

@@ -52,13 +52,12 @@ export default function HomePage() {
                             everyone
                         </p>
                         <div>
-                            <a href="/productpage">
-                                <button
-                                    className="text-white border border-white rounded-md py-3 px-10 my-3 cursor-pointer"
-                                >
-                                    Shop Now
-                                </button>
-                            </a>
+                            <button
+                                onClick={goToProducts}
+                                className="text-white border border-white rounded-md py-3 px-10 my-3 cursor-pointer"
+                            >
+                                Shop Now
+                            </button>
                         </div>
                     </div>
 
@@ -156,13 +155,12 @@ export default function HomePage() {
                                 <p className="text-[var(--secondary)] text-base sm:text-base md:text-sm lg:text-base py-3">
                                     An immersive way to experience entertainment
                                 </p>
-                                <a href="/productpage">
-                                    <button
-                                        className="text-sm sm:text-base md:text-lg lg:text-xl text-black border rounded-lg py-3 px-9 my-3 hidden md:block"
-                                    >
-                                        Shop Now
-                                    </button>
-                                </a>
+                                <button
+                                    onClick={goToProducts}
+                                    className="text-sm sm:text-base md:text-lg lg:text-xl text-black border rounded-lg py-3 px-9 my-3 hidden md:block"
+                                >
+                                    Shop Now
+                                </button>
                             </div>
                             <div className="w-full md:w-1/2 flex items-center justify-center py-3">
                                 <Image
@@ -173,13 +171,12 @@ export default function HomePage() {
                                     className="w-72 md:w-full h-auto object-contain"
                                 />
                             </div>
-                            <a href="/productpage">
                                 <button
+                                    onClick={goToProducts}
                                     className="text-sm sm:text-base md:text-lg lg:text-xl text-black border rounded-lg py-3 px-9 my-3 md:hidden"
                                 >
                                     Shop Now
                                 </button>
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -192,54 +189,54 @@ export default function HomePage() {
                         Browse By Category
                     </h1>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-10">
-                        <a href="/productpage">
+                        <Link href="/productpage">
                             <div className="bg-[#EDEDED] p-8 rounded shadow flex flex-col justify-center items-center cursor-pointer">
                                 <FaLaptop className="text-4xl sm:text-4xl md:text-4xl" />
                                 <p className="text-base md:text-lg lg:text-lg font-bold mt-2">
                                     Laptops
                                 </p>
                             </div>
-                        </a>
-                        <a href="/productpage">
+                        </Link>
+                        <Link href="/productpage">
                             <div className="bg-[#EDEDED] p-8 rounded shadow flex flex-col justify-center items-center cursor-pointer">
                                 <FiMonitor className="text-4xl" />
                                 <p className="text-base md:text-lg lg:text-lg font-bold mt-2">
                                     Desktops
                                 </p>
                             </div>
-                        </a>
-                        <a href="/productpage">
+                        </Link>
+                        <Link href="/productpage">
                             <div className="bg-[#EDEDED] p-8 rounded shadow flex flex-col justify-center items-center cursor-pointer">
                                 <FiSmartphone className="text-4xl" />
                                 <p className="text-base md:text-lg lg:text-lg font-bold mt-2">
                                     Phones
                                 </p>
                             </div>
-                        </a>
-                        <a href="/productpage">
+                        </Link>
+                        <Link href="/productpage">
                             <div className="bg-[#EDEDED] p-8 rounded shadow flex flex-col justify-center items-center cursor-pointer">
                                 <FiTablet className="text-4xl" />
                                 <p className="text-base md:text-lg lg:text-lg font-bold mt-2">
                                     Tablets
                                 </p>
                             </div>
-                        </a>
-                        <a href="/productpage">
+                        </Link>
+                        <Link href="/productpage">
                             <div className="bg-[#EDEDED] p-8 rounded shadow flex flex-col justify-center items-center cursor-pointer">
                                 <FiWatch className="text-4xl" />
                                 <p className="text-base md:text-lg lg:text-lg font-bold mt-2 text-center">
                                     Smart Watch
                                 </p>
                             </div>
-                        </a>
-                        <a href="/productpage">
+                        </Link>
+                        <Link href="/productpage">
                             <div className="bg-[#EDEDED] p-8 rounded shadow flex flex-col justify-center items-center cursor-pointer">
                                 <FiHeadphones className="text-4xl" />
                                 <p className="text-base md:text-lg lg:text-lg font-bold mt-2">
                                     Gaming
                                 </p>
                             </div>
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </section>
@@ -277,11 +274,12 @@ export default function HomePage() {
                             <h1 className="text-3xl font-semibold my-3">
                                 $900
                             </h1>
-                            <a href="/productDetail" className="bg-black text-white text-sm sm:text-base py-4 px-8 rounded-2xl cursor-pointer">
-                                <button>
-                                    Buy Now
-                                </button>
-                            </a>
+                            <button
+                                className="bg-black text-white text-sm sm:text-base py-4 px-8 rounded-2xl cursor-pointer"
+                                onClick={goToProductDetail}
+                            >
+                                Buy Now
+                            </button>
                         </div>
 
                         {/* Product 2 */}
@@ -299,11 +297,12 @@ export default function HomePage() {
                             <h1 className="text-3xl font-semibold my-3">
                                 $1799
                             </h1>
-                            <a href="/productDetail" className="bg-black text-white text-sm sm:text-base py-4 px-8 rounded-2xl cursor-pointer">
-                                <button>
-                                    Buy Now
-                                </button>
-                            </a>
+                            <button
+                                className="bg-black text-white text-sm sm:text-base py-4 px-8 rounded-2xl cursor-pointer"
+                                onClick={goToProductDetail}
+                            >
+                                Buy Now
+                            </button>
                         </div>
 
                         {/* Product 3 */}
@@ -322,11 +321,12 @@ export default function HomePage() {
                             <h1 className="text-3xl font-semibold my-3">
                                 $399
                             </h1>
-                            <a href="/productDetail" className="bg-black text-white text-sm sm:text-base py-4 px-8 rounded-2xl cursor-pointer">
-                                <button>
-                                    Buy Now
-                                </button>
-                            </a>
+                            <button
+                                className="bg-black text-white text-sm sm:text-base py-4 px-8 rounded-2xl cursor-pointer"
+                                onClick={goToProductDetail}
+                            >
+                                Buy Now
+                            </button>
                         </div>
 
                         {/* Product 4 */}
@@ -344,11 +344,12 @@ export default function HomePage() {
                             <h1 className="text-3xl font-semibold my-3">
                                 $99.99
                             </h1>
-                            <a href="/productDetail" className="bg-black text-white text-sm sm:text-base py-4 px-8 rounded-2xl cursor-pointer">
-                                <button>
-                                    Buy Now
-                                </button>
-                            </a>
+                            <button
+                                className="bg-black text-white text-sm sm:text-base py-4 px-8 rounded-2xl cursor-pointer"
+                                onClick={goToProductDetail}
+                            >
+                                Buy Now
+                            </button>
                         </div>
 
                         {/* Add remaining products similarly (5-8) */}
@@ -377,13 +378,12 @@ export default function HomePage() {
                             <h1 className="text-xs text-[#909090] my-3">
                                 Think different, everything different.
                             </h1>
-                            <a href="/productpage">
-                                <button
-                                    className="border-1 border-black-500 px-8 py-3 font-semibold rounded-md cursor-pointer"
-                                >
-                                    Shop Now
-                                </button>
-                            </a>
+                            <button
+                                className="border-1 border-black-500 px-8 py-3 font-semibold rounded-md cursor-pointer"
+                                onClick={goToProducts}
+                            >
+                                Shop Now
+                            </button>
                         </div>
                     </div>
 
@@ -405,13 +405,12 @@ export default function HomePage() {
                                 display, incredible performance, multitasking
                                 and ease of use.
                             </h1>
-                            <a href="/productpage">
-                                <button
-                                    className="border-1 border-black-500 px-8 py-3 font-semibold rounded-md cursor-pointer"
-                                >
-                                    Shop Now
-                                </button>
-                            </a>
+                            <button
+                                className="border-1 border-black-500 px-8 py-3 font-semibold rounded-md cursor-pointer"
+                                onClick={goToProducts}
+                            >
+                                Shop Now
+                            </button>
                         </div>
                     </div>
 
@@ -431,14 +430,12 @@ export default function HomePage() {
                             <h1 className="text-xs text-[#909090] my-3">
                                 Introducing Apple Watch Series 9
                             </h1>
-                            <a href="/productpage">
-                                <button
-                                    className="border-1 border-black-500 px-8 py-3 font-semibold rounded-md cursor-pointer"
-                                    onClick={goToProducts}
-                                >
-                                    Shop Now
-                                </button>
-                            </a>
+                            <button
+                                className="border-1 border-black-500 px-8 py-3 font-semibold rounded-md cursor-pointer"
+                                onClick={goToProducts}
+                            >
+                                Shop Now
+                            </button>
                         </div>
                     </div>
 
@@ -460,14 +457,12 @@ export default function HomePage() {
                             <h1 className="text-xs text-[#909090] my-3">
                                 Join the flip side
                             </h1>
-                            <a href="productpage">
-                                <button
-                                    className="border-1 text-white px-8 py-3 font-semibold rounded-md cursor-pointer"
-                                    onClick={goToProducts}
-                                >
-                                    Shop Now
-                                </button>
-                            </a>
+                            <button
+                                className="border-1 text-white px-8 py-3 font-semibold rounded-md cursor-pointer"
+                                onClick={goToProducts}
+                            >
+                                Shop Now
+                            </button>
                         </div>
                     </div>
                 </div>

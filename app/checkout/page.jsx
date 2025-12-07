@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useRef, useEffect } from "react";
+import Link from "next/link";
 import { useCartState } from "../context/CartContext";
 import { FiChevronRight, FiX, FiChevronDown, FiSend, FiPhone, FiDollarSign } from "react-icons/fi";
 import Image from "next/image";
@@ -80,13 +81,13 @@ export default function checkoutPage(){
                         <div className="bg-[#F6F6F6] flex items-center gap-4 p-4 rounded">
                             <input type="radio" defaultChecked />
                             <h1 className="flex-1">{address}</h1>
-                            <a
+                            <Link
                                 href="#"
                                 className="flex items-center"
                                 onClick={(e) => { e.preventDefault(); setModalOpen(true); }}
                             >
                             Change Address <FiChevronRight />
-                            </a>
+                            </Link>
                         </div>
                     </div>
 
@@ -96,7 +97,7 @@ export default function checkoutPage(){
                         <div>
                             {cart.map(item => (
                                 <div 
-                                    key={item.id}
+                                    key={item.cartItemId}
                                     className="bg-[#F6F6F6] p-3 rounded flex items-center justify-between gap-3"
                                 >                   
                                     <div className="flex items-center gap-3">
@@ -286,7 +287,7 @@ export default function checkoutPage(){
                     </div>
 
                     {/* Checkout Button */}
-                    <button className="w-full py-4 px-6 bg-black text-white font-bold rounded">
+                    <button className="w-full py-4 px-6 bg-black text-white font-bold rounded cursor-pointer">
                         Checkout
                     </button>
                 </div>

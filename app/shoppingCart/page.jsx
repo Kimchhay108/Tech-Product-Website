@@ -1,5 +1,8 @@
 "use client";
+import { products } from "../data/products";
 import Image from "next/image";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
     useCartState,
     useCartDispatch,
@@ -9,6 +12,12 @@ import { useRouter } from "next/navigation";
 
 export default function CartPage() {
 
+    const searchParams = useSearchParams();
+    //get the value from category and store in category
+    const category = searchParams.get("category");
+    //get the value from category and store in category
+    const productId = searchParams.get("id");
+    
     const router = useRouter();
 
     const goToHome = () => {
@@ -59,22 +68,24 @@ export default function CartPage() {
                 <div className="space-y-4 md:w-1/2">
                     <h1 className="text-2xl font-bold">Shopping Cart</h1>
 
+                    {/* Items */}
                     <div className="space-y-4">
                         {cart.map((item) => (
                         <div
-                            key={item.id}
+                            key={item.cartItemId}
                             className="flex items-center gap-4 bg-gray-50 p-4 rounded-lg"
                         >
-                            {item.image && (
-                            <Image
-                                src={item.image}
-                                alt={item.name}
-                                width={100}
-                                height={100}
-                                className="object-contain"
-                            />
-                            )}
-
+                            <Link href={`/productDetail?category=${item.category}&id=${item.productId}`}>
+                                {item.image && (
+                                    <Image
+                                        src={item.image}
+                                        alt={item.name}
+                                        width={100}
+                                        height={100}
+                                        className="object-contain"
+                                    />
+                                )}
+                            </Link>
                             {/* Item Details */}
                             <div className="flex-1 space-y-1">
                                 <h2 className="font-semibold">{item.name}</h2>
@@ -90,6 +101,7 @@ export default function CartPage() {
                                         borderRadius: "50%",
                                     }}
                                     />
+                                    ${item.price}
                                 </p>
                             </div>
 

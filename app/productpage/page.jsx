@@ -1,29 +1,28 @@
 'use client'
-import Image from "next/image"
-import { useRouter } from "next/navigation"; // For useRouter
 
 import React, { useState } from "react";
+import { products } from "../data/products";
+import Image from "next/image"
+import Link from "next/link";
+import { useRouter } from "next/navigation"; // For useRouter
+import { useSearchParams } from "next/navigation";
+
 import { FiChevronDown, FiChevronRight, FiChevronLeft } from "react-icons/fi";
 
-import Ip14prm from "../../assets/home/Ip14prm.png";
-import Ip14Gold from "../../assets/home/Ip14Gold.png";
-import ZFold from "../../assets/home/ZFold.png";
-import Ipad from "../../assets/home/Ipad.png";
 export default function ProductsPage() {
 
 	const router = useRouter();
 		
-	const goToProductsDetail = () => {
-		router.push("/productDetail");
-	};
-	
-	const products = [
-		{ id: 1, name: "Apple iPhone 14 Pro 128GB Deep Purple", price: 1599, img: Ip14prm },
-		{ id: 2, name: "Apple iPhone 14 Pro 1TB Gold ", price: 1399, img: Ip14Gold },
-		{ id: 3, name: "Galaxy Z Fold5 256GB Phantom Black", price: 1799, img: ZFold },
-		{ id: 4, name: "Apple iPad 9 10.2 64GB Wi-Fi Silver 2021", price: 1499, img: Ipad },
+	// useSearchParams() is to read values from the URL (example: ?category=Laptops)
+	// key → category
+	// value → Laptops
+	const searchParams = useSearchParams();
+	//get the value from category and store in category
+	const category = searchParams.get("category");
 
-	];
+	const goToProductsDetail = (productId) => {
+		router.push(`/productDetail?category=${category}&id=${encodeURIComponent(productId)}`);
+	};
 
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 	const [filter, setFilter] = useState(""); // current filter option
@@ -36,14 +35,17 @@ export default function ProductsPage() {
 	});
 
   return (
-    <section className="px-4">
+    <section className="container mx-auto px-3">
 		{/* Header */}
-		<div className="flex justify-end sm:justify-around space-x-3 items-center pt-4">
+		<div className="flex justify-end sm:justify-between space-x-3 items-center mt-4">
+
 			{/* Category */}
 			<div className="hidden sm:flex items-center space-x-4 ">
 				<h1 className="text-[#A4A4A4] font-medium">Category</h1>
 				<FiChevronRight size={20} className="text-[#A4A4A4]"/>
-				<h1 className="text-black font-medium">Laptops</h1>
+				<Link href={`/productpage?category=${category}`} >
+					<h1 className="text-black font-medium">{category}</h1>
+				</Link>
 			</div>
 
 			{/* Dropdown Filter */}
@@ -96,7 +98,7 @@ export default function ProductsPage() {
 						<h1 className="text-black font-semibold text-xl sm:text-2xl mt-2 mb-4">${product.price}</h1>
 						<button 
 							className="bg-black text-sm sm:text-base text-white rounded-lg py-3 px-8 md:px-12 whitespace-nowrap cursor-pointer"
-							onClick={goToProductsDetail}
+							onClick={() => goToProductsDetail(product.id)}
 						>
 						Buy Now
 						</button>

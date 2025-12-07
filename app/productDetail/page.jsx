@@ -1,8 +1,12 @@
 'use client'
 import { useState } from "react";
+import { products } from "../data/products";
 import { useRouter } from "next/navigation"; // For useRouter
 import Image from "next/image"
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useCartDispatch, CartActions } from "../context/CartContext";
+import { FiChevronDown, FiChevronRight, FiChevronLeft } from "react-icons/fi";
 
 import IP14prm from "../../assets/productDetail/IP14prm.png";
 import FrontIP14prm from "../../assets/productDetail/FrontIP14prm.png";
@@ -14,9 +18,12 @@ export default function ProductsDetail(){
 
     const router = useRouter();
 
-    const goToCart = () => {
-        router.push("/shoppingCart");
-    };
+    const searchParams = useSearchParams();
+    const category = searchParams.get("category");
+    const productId = searchParams.get("id");
+
+    const product = products.find((p) => p.id === Number(productId));
+    
 
     //Get the dispatch function
     const dispatch = useCartDispatch();
@@ -71,14 +78,28 @@ export default function ProductsDetail(){
     const increase = () => setQuantity(prev => prev + 1);
     const decrease = () => setQuantity(prev => (prev > 1 ? prev - 1 : 1));
 
+
     
     return(
         <>
-            <section className="px-3 md:py-20">
-                <div className="md:max-w-7xl mx-auto h-auto flex flex-col md:flex-row ">
-                    {/* Left Side */}
-                    <div className="md:w-1/2 mx-auto  h-auto flex flex-col md:flex-row justify-center items-center py-10 ">
+            <section className="container mx-auto px-3 sm:mt-6">
 
+                {/* Category */}
+                <div className="hidden sm:flex items-center space-x-4 ">
+                    <h1 className="text-[#A4A4A4] font-medium">Category</h1>
+                    <FiChevronRight size={20} className="text-[#A4A4A4]"/>
+                    <Link href={`/productpage?category=${category}`} >
+					    <h1 className="text-black font-medium">{category}</h1>
+				    </Link>
+                    <FiChevronRight size={20} className="text-[#A4A4A4]"/>
+                    <h2 className="text-black font-medium">{product?.name.split(" ")[0] || "Unknown"}</h2>
+                </div>
+
+                <div className="md:max-w-7xl mx-auto h-auto flex flex-col md:flex-row ">
+                    
+                    {/* Left Side */}
+                    <div className="md:w-1/2 flex flex-col md:flex-row justify-center items-center py-5">
+                      
                         {/* Small img */}
                         <div className="hidden md:flex flex-row md:flex-col gap-4 justify-center">
                             {images.map((img, index) => (
@@ -103,6 +124,7 @@ export default function ProductsDetail(){
                                 className="w-80 md:w-94 h-auto object-contain "
                             /> 
                         </div>
+                        
 
                         {/* Small img for mobile */}
                         <div className="flex md:hidden flex-row md:flex-col gap-4 justify-center">
@@ -124,8 +146,8 @@ export default function ProductsDetail(){
 
                         {/* Title */}
                         <div >
-                            <h1 className="mb-3 text-3xl font-bold">Apple iPhone 14 Pro Max</h1>
-                            <h2 className="text-2xl font-semibold">$1399</h2>
+                            <h1 className="mb-3 text-3xl font-bold">{product.name}</h1>
+                            <h2 className="text-2xl font-semibold">${product.price}</h2>
                         </div>
 
                         {/* Choose Color */}
@@ -150,7 +172,7 @@ export default function ProductsDetail(){
                                     key={index}
                                     onClick={() => setSelectedMemory(memory)}
                                     className={`
-                                        py-3 px-6 rounded-md text-[#A0A0A0] border-1  ${selectedMemory == memory ? "border-1 text-black" : ""}
+                                        py-3 px-6 rounded-md text-[#A0A0A0] text-center border-1  ${selectedMemory == memory ? "border-1 text-black" : ""}
                                     `}
                                 >
                                     {memory}
@@ -201,13 +223,15 @@ export default function ProductsDetail(){
                                             dispatch({
                                                 type: CartActions.ADD,
                                                 payload: {
-                                                    id: Date.now(),
-                                                    name: "iPhone 14 Pro Max",
-                                                    price: 1399,
+                                                    cartItemId: Date.now(),   // unique for cart
+                                                    productId: product.id,    // original product id
+                                                    name: product.name,
+                                                    price: product.price,
                                                     color: selectedColor,
                                                     memory: selectedMemory,
                                                     quantity: quantity,
-                                                    image: bigImage
+                                                    image: bigImage,
+                                                    category: product.category 
                                                     }
                                                 });
                                                 router.push('shoppingCart');  
