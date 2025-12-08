@@ -76,7 +76,7 @@ export default function Header() {
                         <Link href="/shoppingCart" className="text-black">
                             <FiShoppingCart size={25} />
                         </Link>
-                        <Link href="#" className="text-black">
+                        <Link href="/profilePage" className="text-black">
                             <FiUser size={25} />
                         </Link>
                     </div>
@@ -92,7 +92,7 @@ export default function Header() {
                         <Link href="/shoppingCart" className="text-black">
                             <FiShoppingCart size={25} />
                         </Link>
-                        <Link href="#" className="text-black">
+                        <Link href="/profilePage" className="text-black">
                             <FiUser size={25} />
                         </Link>
                     </div>

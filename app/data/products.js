@@ -13,7 +13,7 @@ export const products = [
     },
     {
         id: 2,
-        name: "Apple iPhone 14 Pro",
+        name: "Apple iPhone 13 Pro",
         price: 1399,
         img: Ip14Gold,
         category: "Phones"

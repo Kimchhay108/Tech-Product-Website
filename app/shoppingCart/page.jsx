@@ -12,11 +12,7 @@ import { useRouter } from "next/navigation";
 
 export default function CartPage() {
 
-    const searchParams = useSearchParams();
-    //get the value from category and store in category
-    const category = searchParams.get("category");
-    //get the value from category and store in category
-    const productId = searchParams.get("id");
+
     
     const router = useRouter();
 
