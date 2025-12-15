@@ -16,11 +16,11 @@ function cartReducer(state, action) {
             return [...state, action.payload];
 
         case CartActions.REMOVE:
-            return state.filter((item) => item.id !== action.payload);
+            return state.filter((item) => item.cartItemId !== action.payload);
 
         case CartActions.UPDATE_QTY:
             return state.map(item =>
-                item.id === action.payload.id
+                item.cartItemId === action.payload.id
                 ? { ...item, quantity: action.payload.quantity }
                 : item
             );

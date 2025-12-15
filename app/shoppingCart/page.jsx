@@ -105,8 +105,8 @@ export default function CartPage() {
                             <div className="flex flex-col items-end gap-2">
                                 <div className="flex items-center">
                                     <button
-                                    className="px-3 py-1 bg-gray-200 rounded"
-                                    onClick={() => updateQty(item.id, Math.max(1, item.quantity - 1))}
+                                    className="px-3 py-1 bg-gray-200 rounded cursor-pointer"
+                                    onClick={() => updateQty(item.cartItemId, Math.max(1, item.quantity - 1))}
                                     >
                                     -
                                     </button>
@@ -114,16 +114,16 @@ export default function CartPage() {
                                     <div className="px-3 py-1">{item.quantity}</div>
 
                                     <button
-                                    className="px-3 py-1 bg-gray-200 rounded"
-                                    onClick={() => updateQty(item.id, item.quantity + 1)}
+                                    className="px-3 py-1 bg-gray-200 rounded cursor-pointer"
+                                    onClick={() => updateQty(item.cartItemId, item.quantity + 1)}
                                     >
                                     +
                                     </button>
                                 </div>
 
                                 <button
-                                    className="text-red-600 text-sm"
-                                    onClick={() => removeItem(item.id)}
+                                    className="text-red-600 text-sm cursor-pointer"
+                                    onClick={() => removeItem(item.cartItemId)}
                                 >
                                     Remove
                                 </button>
@@ -134,8 +134,8 @@ export default function CartPage() {
                 </div>
 
                 {/* Right Side */}
-                <div className="md:w-1/3">
-                    <div className="p-8 border-2 border-[#EBEBEB] rounded-xl space-y-4 sticky top-30">
+                <div className="w-full md:w-1/3 md:sticky md:top-[50px] md:self-start">
+                    <div className="p-8 border-2 border-[#EBEBEB] rounded-xl space-y-4 ">
                         <h1 className="text-xl font-bold">Order Summary</h1>
 
                         <div className="flex justify-between text-lg font-semibold">
@@ -150,7 +150,7 @@ export default function CartPage() {
 
                         <div className="flex justify-between text-lg font-semibold">
                             <span>Total:</span>
-                            <span>${total}</span>
+                            <span>${total.toFixed(2)}</span>
                         </div>
 
                         <button 
