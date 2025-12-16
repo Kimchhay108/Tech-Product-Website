@@ -12,7 +12,6 @@ import {
     FiWatch,
     FiHeadphones,
     } from "react-icons/fi";
-import Logo from "../assets/Logo.png"; // Keep this path correct relative to your app folder
 
 export default function Header() {
 
@@ -52,7 +51,13 @@ export default function Header() {
 
                 {/* Logo */}
                 <Link href="/home">
-                    <Image src={Logo} alt="logo" className="max-w-xs min-w-[120px] h-auto"/>
+                    <Image 
+                        src="/Logo.png"
+                        alt="Logo"
+                        width={120}
+                        height={40}
+                        className="max-w-xs min-w-[120px] h-auto"
+                    />
                 </Link>
 
                 {/* Search (Desktop) */}
@@ -73,10 +78,10 @@ export default function Header() {
                         <li><Link href="#footer" className="hover:text-black whitespace-nowrap">Contact Us</Link></li>
                     </ul>
                     <div className="flex items-center space-x-6">
-                        <Link href="/shoppingCart" className="text-black">
+                        <Link href="/cart" className="text-black">
                             <FiShoppingCart size={25} />
                         </Link>
-                        <Link href="/profilePage" className="text-black">
+                        <Link href="/profile" className="text-black">
                             <FiUser size={25} />
                         </Link>
                     </div>
@@ -89,10 +94,10 @@ export default function Header() {
                     </button>
 
                     <div className="md:hidden flex items-center space-x-6">
-                        <Link href="/shoppingCart" className="text-black">
+                        <Link href="/cart" className="text-black">
                             <FiShoppingCart size={25} />
                         </Link>
-                        <Link href="/profilePage" className="text-black">
+                        <Link href="/profile" className="text-black">
                             <FiUser size={25} />
                         </Link>
                     </div>
@@ -122,7 +127,7 @@ export default function Header() {
                     {navBar.map((nav, index) => (
                         <li key={index}>
                             <Link 
-                                href={`/productpage?category=${nav.category}` }
+                                href={`/products?category=${nav.category}` }
                                 className="block text-black"
                             >
                                 {nav.category}
@@ -138,7 +143,7 @@ export default function Header() {
                     {navBar.map((nav, index) => (
                         <li key={index}>
                             <Link 
-                                href={`/productpage?category=${nav.category}`}
+                                href={`/products?category=${nav.category}`}
                                 className="flex items-center space-x-2 text-[var(--secondary)] hover:font-bold whitespace-nowrap"
                             >
                                 <p><nav.icon size={20}/></p>

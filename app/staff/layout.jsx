@@ -12,10 +12,10 @@ export default function StaffLayout({ children }) {
                     <ul className="space-y-2">
                         <li>
                             <Link
-                                href="/staff/dashboard"
+                                href="/staff/page.jsx"
                                 className="flex justify-between items-center px-3 py-2 rounded hover:bg-blue-900"
                             >
-                                <span>Dashboard</span>
+                                <span>Overview</span>
                                 <FiChevronRight />
                             </Link>
                         </li>

@@ -2,11 +2,10 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { useCartState } from "../context/CartContext";
+import { useCartState } from "@/context/CartContext";
 import { FiChevronRight, FiX, FiChevronDown, FiSend, FiPhone, FiDollarSign } from "react-icons/fi";
 import Image from "next/image";
-import CreditCard from "../../assets/productDetail/CreditCard.png";
-import KHQR from "../../assets/productDetail/KHQR.jpg";
+
 
 export default function checkoutPage(){
 
@@ -188,7 +187,7 @@ export default function checkoutPage(){
                         <div>
                             <div className="mb-4">
                                 <Image
-                                    src={CreditCard}
+                                    src="/productDetail/CreditCard.png"
                                     alt="CreditCard"
                                     width={800}
                                     height={800}
@@ -227,7 +226,7 @@ export default function checkoutPage(){
                         <div>
                             <div className="">
                                 <Image
-                                    src={KHQR}
+                                    src="/productDetail/KHQR.jpg"
                                     alt="KHQR"
                                     width={800}
                                     height={800}

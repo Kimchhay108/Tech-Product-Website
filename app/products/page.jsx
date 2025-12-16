@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from "react";
-import { products } from "../data/products";
+import { products } from "@/data/products";
 import Image from "next/image"
 import Link from "next/link";
 import { useRouter } from "next/navigation"; // For useRouter
@@ -43,7 +43,7 @@ export default function ProductsPage() {
 			<div className="hidden sm:flex items-center space-x-4 ">
 				<h1 className="text-[#A4A4A4] font-medium">Category</h1>
 				<FiChevronRight size={20} className="text-[#A4A4A4]"/>
-				<Link href={`/productpage?category=${category}`} >
+				<Link href={`/products?category=${category}`} >
 					<h1 className="text-black font-medium">{category}</h1>
 				</Link>
 			</div>

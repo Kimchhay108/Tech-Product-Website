@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { registerApi } from "../registerApi";
+import { registerApi } from "../services/registerApi";
 
 export default function Register() {
     const [showOtpModal, setShowOtpModal] = useState(false);

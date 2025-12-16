@@ -2,7 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { FiMail, FiPhone, FiFacebook, FiInstagram, FiTwitter, FiLinkedin } from "react-icons/fi";
-import LogoWhite from "../assets/LogoWhite.png"; // adjust path if needed
+
 
 export default function Footer() {
     return (
@@ -12,7 +12,13 @@ export default function Footer() {
                 {/* Logo / About */}
                 <div className="space-y-4">
                     <Link href="/home">
-                        <Image src={LogoWhite} alt="logo" className="max-w-xs min-w-[120px] h-auto"/>
+                        <Image 
+                            src="/LogoWhite.png"
+                            alt="logo" 
+                            width={120}
+                            height={40}
+                            className="max-w-xs min-w-[120px] h-auto"
+                        />
                     </Link>
                     <p className="text-sm font-light leading-relaxed">
                         We are connecting you with technology that makes life easier.

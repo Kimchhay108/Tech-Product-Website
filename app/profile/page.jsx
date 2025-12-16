@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { FiCpu } from "react-icons/fi";
-import Login from "./login/page";
-import Register from "./register/page";
+import Login from "@/auth/login/Login";
+import Register from "@/auth/register/page";
 
 export default function ProfilePage() {
     const [selectedAuth, setSelectedAuth] = useState("login");

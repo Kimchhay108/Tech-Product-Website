@@ -3,16 +3,6 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import IphoneImage from "../../assets/home/IphoneImage.png";
-import Airpods from "../../assets/home/Airpods.png";
-import Ps5 from "../../assets/home/Ps5.png";
-import Vision from "../../assets/home/Vision.png";
-import MacbookPro from "../../assets/home/MacbookPro.png";
-import Earbud from "../../assets/home/EarBud.png";
-import Ip14prm from "../../assets/home/Ip14prm.png";
-import Watches from "../../assets/home/Watches.png";
-import ZFold from "../../assets/home/ZFold.png";
-import Ipad from "../../assets/home/Ipad.png";
 
 import { FaLaptop } from "react-icons/fa6";
 import {
@@ -27,7 +17,7 @@ export default function HomePage() {
     const router = useRouter();
 
     const goToProducts = () => {
-        router.push("/productpage");
+        router.push("/products");
     };
 
     const goToProductDetail = () => {
@@ -64,7 +54,7 @@ export default function HomePage() {
                     {/* Image / Right side */}
                     <div className="md:w-1/2 flex h-full justify-center md:justify-center">
                         <Image
-                            src={IphoneImage}
+                            src="/home/IphoneImage.png"
                             alt="iphone 14 pro"
                             width={1440}
                             height={632}
@@ -83,7 +73,7 @@ export default function HomePage() {
                         <div className="col-span-1 md:col-span-2 flex flex-col md:flex-row items-center justify-center bg-white h-[600px] md:h-[300px]">
                             <div className="w-full md:w-1/2 flex items-end justify-center">
                                 <Image
-                                    src={Ps5}
+                                    src="/home/Ps5.png"
                                     alt="Ps5"
                                     width={600}
                                     height={600}
@@ -106,7 +96,7 @@ export default function HomePage() {
                         <div className="flex flex-col md:flex-row items-center justify-center bg-[#EDEDED] py-10 md:py-0">
                             <div className="w-full md:w-1/2 flex items-center justify-center md:justify-end md:overflow-hidden">
                                 <Image
-                                    src={Airpods}
+                                    src="/home/Airpods.png"
                                     alt="Airpods"
                                     width={600}
                                     height={600}
@@ -127,7 +117,7 @@ export default function HomePage() {
                         <div className="flex flex-col md:flex-row items-center justify-center bg-[#353535] py-10 md:py-0">
                             <div className="w-full md:w-1/2 flex items-center justify-center md:justify-end md:overflow-hidden">
                                 <Image
-                                    src={MacbookPro}
+                                    src="/home/MacbookPro.png"
                                     alt="MacbookPro"
                                     width={600}
                                     height={600}
@@ -164,7 +154,7 @@ export default function HomePage() {
                             </div>
                             <div className="w-full md:w-1/2 flex items-center justify-center py-3">
                                 <Image
-                                    src={Vision}
+                                    src="/home/Vision.png"
                                     alt="Vision"
                                     width={600}
                                     height={600}
@@ -189,7 +179,7 @@ export default function HomePage() {
                         Browse By Category
                     </h1>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-10">
-                        <Link href="/productpage">
+                        <Link href="/products">
                             <div className="bg-[#EDEDED] p-8 rounded shadow flex flex-col justify-center items-center cursor-pointer">
                                 <FaLaptop className="text-4xl sm:text-4xl md:text-4xl" />
                                 <p className="text-base md:text-lg lg:text-lg font-bold mt-2">
@@ -197,7 +187,7 @@ export default function HomePage() {
                                 </p>
                             </div>
                         </Link>
-                        <Link href="/productpage">
+                        <Link href="/products">
                             <div className="bg-[#EDEDED] p-8 rounded shadow flex flex-col justify-center items-center cursor-pointer">
                                 <FiMonitor className="text-4xl" />
                                 <p className="text-base md:text-lg lg:text-lg font-bold mt-2">
@@ -205,7 +195,7 @@ export default function HomePage() {
                                 </p>
                             </div>
                         </Link>
-                        <Link href="/productpage">
+                        <Link href="/products">
                             <div className="bg-[#EDEDED] p-8 rounded shadow flex flex-col justify-center items-center cursor-pointer">
                                 <FiSmartphone className="text-4xl" />
                                 <p className="text-base md:text-lg lg:text-lg font-bold mt-2">
@@ -213,7 +203,7 @@ export default function HomePage() {
                                 </p>
                             </div>
                         </Link>
-                        <Link href="/productpage">
+                        <Link href="/products">
                             <div className="bg-[#EDEDED] p-8 rounded shadow flex flex-col justify-center items-center cursor-pointer">
                                 <FiTablet className="text-4xl" />
                                 <p className="text-base md:text-lg lg:text-lg font-bold mt-2">
@@ -221,7 +211,7 @@ export default function HomePage() {
                                 </p>
                             </div>
                         </Link>
-                        <Link href="/productpage">
+                        <Link href="/products">
                             <div className="bg-[#EDEDED] p-8 rounded shadow flex flex-col justify-center items-center cursor-pointer">
                                 <FiWatch className="text-4xl" />
                                 <p className="text-base md:text-lg lg:text-lg font-bold mt-2 text-center">
@@ -229,7 +219,7 @@ export default function HomePage() {
                                 </p>
                             </div>
                         </Link>
-                        <Link href="/productpage">
+                        <Link href="/products">
                             <div className="bg-[#EDEDED] p-8 rounded shadow flex flex-col justify-center items-center cursor-pointer">
                                 <FiHeadphones className="text-4xl" />
                                 <p className="text-base md:text-lg lg:text-lg font-bold mt-2">
@@ -262,7 +252,7 @@ export default function HomePage() {
                         {/* Product 1 */}
                         <div className="bg-[#F6F6F6] p-5 rounded text-center text-black hover:shadow-md flex flex-col h-full">
                             <Image
-                                src={Ip14prm}
+                                src="/home/Ip14prm.png"
                                 alt="Iphone 14 pro max"
                                 width={600}
                                 height={600}
@@ -285,7 +275,7 @@ export default function HomePage() {
                         {/* Product 2 */}
                         <div className="bg-[#F6F6F6] p-5 rounded text-center text-black hover:shadow-md flex flex-col h-full">
                             <Image
-                                src={ZFold}
+                                src="/home/ZFold.png"
                                 alt="Z fold"
                                 width={800}
                                 height={600}
@@ -308,7 +298,7 @@ export default function HomePage() {
                         {/* Product 3 */}
                         <div className="bg-[#F6F6F6] p-5 rounded text-center text-black hover:shadow-md flex flex-col h-full">
                             <Image
-                                src={Watches}
+                                src="/home/Watches.png"
                                 alt="Apple Watch Series 9"
                                 width={600}
                                 height={600}
@@ -332,7 +322,7 @@ export default function HomePage() {
                         {/* Product 4 */}
                         <div className="bg-[#F6F6F6] p-5 rounded text-center text-black hover:shadow-md flex flex-col h-full">
                             <Image
-                                src={Earbud}
+                                src="/home/EarBud.png"
                                 alt="Galaxy Buds"
                                 width={600}
                                 height={600}
@@ -364,7 +354,7 @@ export default function HomePage() {
                     <div className="bg-[#FFFFFF] md:w-1/4 p-5 flex flex-col justify-between space-y-10">
                         <div>
                             <Image
-                                src={Ip14prm}
+                                src="/home/Ip14prm.png"
                                 width={600}
                                 height={600}
                                 alt="Apple iPhone 14 Pro Max"
@@ -391,7 +381,7 @@ export default function HomePage() {
                     <div className="bg-[#F9F9F9] md:w-1/4 p-5 flex flex-col justify-between space-y-10">
                         <div>
                             <Image
-                                src={Ipad}
+                                src="/home/Ipad.png"
                                 width={600}
                                 height={600}
                                 alt="Ipad Pro"
@@ -418,7 +408,7 @@ export default function HomePage() {
                     <div className="bg-[#EAEAEA] md:w-1/4 p-5 flex flex-col justify-between space-y-10">
                         <div>
                             <Image
-                                src={Watches}
+                                src="/home/Watches.png"
                                 width={600}
                                 height={600}
                                 alt="Apple Watch Series 9"
@@ -443,7 +433,7 @@ export default function HomePage() {
                     <div className="bg-[#2C2C2C] md:w-1/4 p-5 flex flex-col justify-between space-y-10">
                         <div>
                             <Image
-                                src={ZFold}
+                                src="/home/ZFold.png"
                                 width={800}
                                 height={800}
                                 alt="Galaxy Z Fold5"

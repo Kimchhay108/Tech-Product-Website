@@ -1,5 +1,5 @@
 "use client";
-import { products } from "../data/products";
+import { products } from "@/data/products";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -7,7 +7,7 @@ import {
     useCartState,
     useCartDispatch,
     CartActions,
-} from "../context/CartContext";
+} from "@/context/CartContext";
 import { useRouter } from "next/navigation";
 
 export default function CartPage() {

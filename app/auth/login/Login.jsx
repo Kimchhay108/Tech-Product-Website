@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { loginApi } from "../loginApi";
+import { loginApi } from "../services/loginApi";
 import { useState } from "react";
 
 export default function Login() {
@@ -19,11 +19,11 @@ export default function Login() {
 
                 // Redirect based on role
                 if (response.user.role === "admin") {
-                    router.push("/admin/dashboard");
+                    router.push("/admin");
                 } else if (response.user.role === "staff") {
-                    router.push("/staff/dashboard");
+                    router.push("/staff");
                 } else {
-                    router.push("/user/dashboard");
+                    router.push("/user");
                 }
             }
         } catch (err) {
