@@ -11,6 +11,7 @@ import {
     FiTablet,
     FiWatch,
     FiHeadphones,
+    FiPhone,
 } from "react-icons/fi";
 
 export default function HomePage() {
@@ -24,6 +25,32 @@ export default function HomePage() {
         router.push("/productDetail");
     };
 
+    const categoryNav = [
+        {
+            category: "Laptops",
+            icon: FaLaptop,
+        },
+        {
+            category: "Desktops",
+            icon: FiMonitor,
+        },
+        {
+            category: "Phones",
+            icon: FiPhone,
+        },
+        {
+            category: "Tablets",
+            icon: FiTablet,
+        },
+        {
+            category: "Smart Watches",
+            icon: FiWatch,
+        },
+        {
+            category: "Gaming",
+            icon: FiHeadphones
+        }
+    ];
     return (
         <>
             {/* Hero Section */}
@@ -161,12 +188,12 @@ export default function HomePage() {
                                     className="w-72 md:w-full h-auto object-contain"
                                 />
                             </div>
-                                <button
-                                    onClick={goToProducts}
-                                    className="text-sm sm:text-base md:text-lg lg:text-xl text-black border rounded-lg py-3 px-9 my-3 md:hidden"
-                                >
-                                    Shop Now
-                                </button>
+                            <button
+                                onClick={goToProducts}
+                                className="text-sm sm:text-base md:text-lg lg:text-xl text-black border rounded-lg py-3 px-9 my-3 md:hidden"
+                            >
+                                Shop Now
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -179,54 +206,16 @@ export default function HomePage() {
                         Browse By Category
                     </h1>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-10">
-                        <Link href="/products">
-                            <div className="bg-[#EDEDED] p-8 rounded shadow flex flex-col justify-center items-center cursor-pointer">
-                                <FaLaptop className="text-4xl sm:text-4xl md:text-4xl" />
-                                <p className="text-base md:text-lg lg:text-lg font-bold mt-2">
-                                    Laptops
-                                </p>
-                            </div>
-                        </Link>
-                        <Link href="/products">
-                            <div className="bg-[#EDEDED] p-8 rounded shadow flex flex-col justify-center items-center cursor-pointer">
-                                <FiMonitor className="text-4xl" />
-                                <p className="text-base md:text-lg lg:text-lg font-bold mt-2">
-                                    Desktops
-                                </p>
-                            </div>
-                        </Link>
-                        <Link href="/products">
-                            <div className="bg-[#EDEDED] p-8 rounded shadow flex flex-col justify-center items-center cursor-pointer">
-                                <FiSmartphone className="text-4xl" />
-                                <p className="text-base md:text-lg lg:text-lg font-bold mt-2">
-                                    Phones
-                                </p>
-                            </div>
-                        </Link>
-                        <Link href="/products">
-                            <div className="bg-[#EDEDED] p-8 rounded shadow flex flex-col justify-center items-center cursor-pointer">
-                                <FiTablet className="text-4xl" />
-                                <p className="text-base md:text-lg lg:text-lg font-bold mt-2">
-                                    Tablets
-                                </p>
-                            </div>
-                        </Link>
-                        <Link href="/products">
-                            <div className="bg-[#EDEDED] p-8 rounded shadow flex flex-col justify-center items-center cursor-pointer">
-                                <FiWatch className="text-4xl" />
-                                <p className="text-base md:text-lg lg:text-lg font-bold mt-2 text-center">
-                                    Smart Watch
-                                </p>
-                            </div>
-                        </Link>
-                        <Link href="/products">
-                            <div className="bg-[#EDEDED] p-8 rounded shadow flex flex-col justify-center items-center cursor-pointer">
-                                <FiHeadphones className="text-4xl" />
-                                <p className="text-base md:text-lg lg:text-lg font-bold mt-2">
-                                    Gaming
-                                </p>
-                            </div>
-                        </Link>
+                        {categoryNav.map((nav, index) => (
+                            <Link key={index} href={`/products?category=${nav.category}`}>
+                                <div className="bg-[#EDEDED] p-8 rounded shadow flex flex-col justify-center items-center cursor-pointer">
+                                    <p className="text-4xl sm:text-4xl md:text-4xl"><nav.icon/></p>
+                                    <p className="text-base md:text-lg lg:text-lg font-bold mt-2 whitespace-nowrap">
+                                        {nav.category}
+                                    </p>
+                                </div>
+                            </Link>
+                        ))}           
                     </div>
                 </div>
             </section>

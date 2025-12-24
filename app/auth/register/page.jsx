@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { registerApi } from "../services/registerApi";
 
-export default function Register() {
+export default function Register( {setSelectedAuth} ) {
     const [showOtpModal, setShowOtpModal] = useState(false);
     const [showPasswordModal, setShowPasswordModal] = useState(false);
     const [otpInput, setOtpInput] = useState("");
@@ -128,9 +128,12 @@ export default function Register() {
                     </button>
 
                     <div className="text-center">
-                        <Link href="#" className="hover:underline">
+                        <button
+                            onClick={() => setSelectedAuth("login")}
+                            className="hover:underline"
+                        >
                             Already have an account? Login
-                        </Link>
+                        </button>
                     </div>
                 </div>
             </div>

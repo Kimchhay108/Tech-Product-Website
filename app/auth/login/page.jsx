@@ -5,7 +5,7 @@ import Link from "next/link";
 import { loginApi } from "../services/loginApi";
 import { useState } from "react";
 
-export default function Login() {
+export default function Login({ setSelectedAuth }) {
     const router = useRouter();
     const [tel, setTel] = useState("");
     const [password, setPassword] = useState("");
@@ -67,9 +67,12 @@ export default function Login() {
                 </button>
 
                 <div className="text-center">
-                    <Link href="/profile/register" className="hover:underline">
+                    <button 
+                        onClick={() => setSelectedAuth("register")}
+                        className="hover:underline"
+                    >
                         New to Cyber? Create an account
-                    </Link>
+                    </button>
                 </div>
             </div>
         </div>

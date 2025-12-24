@@ -43,8 +43,12 @@ export default function ProfilePage() {
                     </div>
 
                     {/* Content */}
-                    {selectedAuth === "login" && <Login />}
-                    {selectedAuth === "register" && <Register />}
+                    {selectedAuth === "login" && (
+                        <Login setSelectedAuth={setSelectedAuth}/>
+                    )}
+                    {selectedAuth === "register" && (
+                        <Register setSelectedAuth={setSelectedAuth}/>
+                    )}
                 </div>
             </div>
         </section>
