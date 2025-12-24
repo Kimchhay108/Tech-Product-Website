@@ -5,14 +5,17 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 export default function ClientWrapper({ children }) {
-  const pathname = usePathname();
-  const isAdminRoute = pathname?.startsWith("/admin");
+    const pathname = usePathname();
 
-  return (
-    <>
-      {!isAdminRoute && <Header />}
-      <main>{children}</main>
-      {!isAdminRoute && <Footer />}
-    </>
-  );
+    // Hide header/footer for admin or staff dashboards
+    const isDashboardRoute =
+        pathname?.startsWith("/admin") || pathname?.startsWith("/staff");
+
+    return (
+        <>
+            {!isDashboardRoute && <Header />}
+            <main>{children}</main>
+            {!isDashboardRoute && <Footer />}
+        </>
+    );
 }

@@ -1,5 +1,5 @@
 import "../styles/global.css";
-import { CartProvider } from "../context/CartContext";
+import { CartProvider } from "./context/CartContext";
 import ClientWrapper from "./ClientWrapper";
 
 export const metadata = {

@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from "react";
-import { products } from "@/data/products";
+import { products } from "../data/products";
 import Image from "next/image"
 import Link from "next/link";
 import { useRouter } from "next/navigation"; // For useRouter

@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { products } from "@/data/products";
+import { products } from "../data/products";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { useCartDispatch, CartActions } from "@/context/CartContext";
+import { useCartDispatch, CartActions } from "../context/CartContext";
 import { FiChevronRight, FiPlus, FiMinus } from "react-icons/fi";
 
 export default function ProductsDetail() {

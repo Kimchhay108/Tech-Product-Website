@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { useCartState } from "@/context/CartContext";
+import { useCartState } from "../context/CartContext";
 import { FiChevronRight, FiX, FiChevronDown, FiSend, FiPhone, FiDollarSign } from "react-icons/fi";
 import Image from "next/image";
 
