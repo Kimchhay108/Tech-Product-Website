@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { registerApi } from "../services/registerApi";
+import { sendOtpApi, registerApi } from "../services/registerApi";
 
-export default function Register( {setSelectedAuth} ) {
+export default function Register({ setSelectedAuth }) {
     const [showOtpModal, setShowOtpModal] = useState(false);
     const [showPasswordModal, setShowPasswordModal] = useState(false);
     const [otpInput, setOtpInput] = useState("");
@@ -17,15 +17,26 @@ export default function Register( {setSelectedAuth} ) {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
-    const handleRegister = () => {
+    const handleRegister = async () => {
         if (!phone) {
             alert("Phone number is required");
             return;
         }
-        setShowOtpModal(true);
+
+        try {
+            await sendOtpApi(phone); // ✅ SEND OTP
+            setShowOtpModal(true);
+        } catch (err) {
+            alert("Failed to send OTP");
+        }
     };
 
     const handleConfirmOtp = () => {
+        if (!otpInput) {
+            alert("Please enter OTP");
+            return;
+        }
+
         setShowOtpModal(false);
         setShowPasswordModal(true);
     };
@@ -37,15 +48,26 @@ export default function Register( {setSelectedAuth} ) {
         }
 
         try {
-            const userData = { gender, firstName, lastName, phone, email, password };
+            const userData = {
+                gender,
+                firstName,
+                lastName,
+                phone,
+                email,
+                password,
+                otp: otpInput, // ✅ IMPORTANT
+            };
+
             const response = await registerApi(userData);
 
             if (response.success) {
                 setShowPasswordModal(false);
                 alert("Account created 🎉 You can now login!");
+            } else {
+                alert(response.message || "Registration failed");
             }
         } catch (err) {
-            alert(err.message);
+            alert("Server error");
         }
     };
 
@@ -63,7 +85,8 @@ export default function Register( {setSelectedAuth} ) {
                                 value="male"
                                 onChange={(e) => setGender(e.target.value)}
                                 className="accent-black"
-                            /> Male
+                            />{" "}
+                            Male
                         </label>
                         <label className="flex items-center gap-1">
                             <input
@@ -72,14 +95,17 @@ export default function Register( {setSelectedAuth} ) {
                                 value="female"
                                 onChange={(e) => setGender(e.target.value)}
                                 className="accent-black"
-                            /> Female
+                            />{" "}
+                            Female
                         </label>
                     </div>
 
                     {/* Name */}
                     <div className="flex flex-col md:flex-row gap-4 mb-2">
                         <div className="w-full">
-                            <label className="block mb-1 font-medium">First Name</label>
+                            <label className="block mb-1 font-medium">
+                                First Name
+                            </label>
                             <input
                                 type="text"
                                 value={firstName}
@@ -88,7 +114,9 @@ export default function Register( {setSelectedAuth} ) {
                             />
                         </div>
                         <div className="w-full">
-                            <label className="block mb-1 font-medium">Last Name</label>
+                            <label className="block mb-1 font-medium">
+                                Last Name
+                            </label>
                             <input
                                 type="text"
                                 value={lastName}
@@ -100,7 +128,9 @@ export default function Register( {setSelectedAuth} ) {
 
                     {/* Phone */}
                     <div className="mb-2">
-                        <label className="block mb-1 font-medium">Phone Number (Required)</label>
+                        <label className="block mb-1 font-medium">
+                            Phone Number (Required)
+                        </label>
                         <input
                             type="tel"
                             value={phone}
@@ -122,7 +152,7 @@ export default function Register( {setSelectedAuth} ) {
 
                     <button
                         onClick={handleRegister}
-                        className="w-full py-2 bg-black text-white rounded font-semibold mb-4"
+                        className="w-full py-2 bg-black text-white rounded font-semibold mb-4 cursor-pointer"
                     >
                         REGISTER
                     </button>
@@ -141,10 +171,17 @@ export default function Register( {setSelectedAuth} ) {
             {/* OTP Modal */}
             {showOtpModal && (
                 <div className="fixed inset-0 z-50 flex justify-center items-center">
-                    <div className="absolute inset-0 bg-black/50" onClick={() => setShowOtpModal(false)} />
+                    <div
+                        className="absolute inset-0 bg-black/50"
+                        onClick={() => setShowOtpModal(false)}
+                    />
                     <div className="relative bg-white p-6 rounded-sm w-80 shadow-xl text-center animate-fadeIn">
-                        <h2 className="text-lg font-bold mb-3">Verify Your Number</h2>
-                        <p className="text-sm text-gray-600 mb-4">We sent a 6-digit code to your phone</p>
+                        <h2 className="text-lg font-bold mb-3">
+                            Verify Your Number
+                        </h2>
+                        <p className="text-sm text-gray-600 mb-4">
+                            We sent a 6-digit code to your phone
+                        </p>
                         <input
                             type="text"
                             className="w-full px-3 py-2 border border-gray-300 rounded mb-4 text-center text-lg tracking-widest"
@@ -171,9 +208,14 @@ export default function Register( {setSelectedAuth} ) {
             {/* Password Modal */}
             {showPasswordModal && (
                 <div className="fixed inset-0 z-50 flex justify-center items-center">
-                    <div className="absolute inset-0 bg-black/50" onClick={() => setShowPasswordModal(false)} />
+                    <div
+                        className="absolute inset-0 bg-black/50"
+                        onClick={() => setShowPasswordModal(false)}
+                    />
                     <div className="relative bg-white p-6 rounded-sm w-80 shadow-xl text-center animate-fadeIn">
-                        <h2 className="text-lg font-bold mb-4">Create Password</h2>
+                        <h2 className="text-lg font-bold mb-4">
+                            Create Password
+                        </h2>
                         <input
                             type="password"
                             placeholder="Enter password"

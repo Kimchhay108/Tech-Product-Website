@@ -1,21 +1,35 @@
-// app/api/login/route.js
 import { NextResponse } from "next/server";
+import { userStore } from "@/lib/memoryStore"; // shared with register
 
 export async function POST(req) {
-  const { tel, password } = await req.json();
+  const { phone, password } = await req.json();
 
-  // example test users
-  const users = [
-    { tel: "111", password: "111", role: "admin" },
-    { tel: "222", password: "222", role: "staff" },
-    { tel: "333", password: "333", role: "user" },
-  ];
-
-  const user = users.find(u => u.tel === tel && u.password === password);
-
-  if (user) {
-    return NextResponse.json({ success: true, user });
-  } else {
-    return NextResponse.json({ message: "Invalid credentials" }, { status: 401 });
+  if (!phone || !password) {
+    return NextResponse.json(
+      { success: false, message: "Phone and password required" },
+      { status: 400 }
+    );
   }
+
+  const user = userStore[phone];
+
+  if (!user) {
+    return NextResponse.json(
+      { success: false, message: "User not found" },
+      { status: 404 }
+    );
+  }
+
+  if (user.password !== password) {
+    return NextResponse.json(
+      { success: false, message: "Incorrect password" },
+      { status: 401 }
+    );
+  }
+
+  return NextResponse.json({
+    success: true,
+    message: "Login successful",
+    user: { phone, firstName: user.firstName, lastName: user.lastName, role: user.role },
+  });
 }

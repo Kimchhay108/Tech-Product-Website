@@ -1,23 +1,27 @@
-import Twilio from "twilio";
-
-const accountSid = process.env.TWILIO_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
-const fromNumber = process.env.TWILIO_PHONE; // your Twilio phone number
-
-const client = new Twilio(accountSid, authToken);
+import { NextResponse } from "next/server";
+import { otpStore } from "@/lib/memoryStore";
 
 export async function POST(req) {
-    const { phone, otp } = await req.json();
+  const { phone } = await req.json();
 
-    try {
-        await client.messages.create({
-            body: `Your OTP code is ${otp}`,
-            from: fromNumber,
-            to: phone,
-        });
+  if (!phone) {
+    return NextResponse.json(
+      { message: "Phone is required" },
+      { status: 400 }
+    );
+  }
 
-        return new Response(JSON.stringify({ success: true }), { status: 200 });
-    } catch (err) {
-        return new Response(JSON.stringify({ success: false, error: err.message }), { status: 500 });
-    }
+  const otp = Math.floor(100000 + Math.random() * 900000);
+
+  otpStore[phone] = {
+    otp,
+    expiresAt: Date.now() + 5 * 60 * 1000,
+  };
+
+  console.log("📱 OTP for", phone, "=>", otp);
+
+  return NextResponse.json({
+    success: true,
+    message: "OTP sent",
+  });
 }

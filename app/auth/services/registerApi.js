@@ -1,14 +1,21 @@
-export async function registerApi(userData) {
-    const res = await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
-    });
+// services/registerApi.js
 
-    if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.message || "Registration failed");
-    }
+export async function sendOtpApi(phone) {
+  const res = await fetch("/api/send-otp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ phone }),
+  });
 
-    return await res.json();
+  return res.json();
+}
+
+export async function registerApi(data) {
+  const res = await fetch("/api/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  return res.json();
 }

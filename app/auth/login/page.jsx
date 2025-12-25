@@ -61,7 +61,7 @@ export default function Login({ setSelectedAuth }) {
 
                 <button
                     onClick={handleLogin}
-                    className="w-full py-2 bg-black text-white rounded font-semibold mb-4"
+                    className="w-full py-2 bg-black text-white rounded font-semibold mb-4 cursor-pointer"
                 >
                     LOGIN
                 </button>

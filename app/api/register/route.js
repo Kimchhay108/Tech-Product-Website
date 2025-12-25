@@ -1,27 +1,46 @@
 import { NextResponse } from "next/server";
+import { otpStore, userStore } from "@/lib/memoryStore";
 
 export async function POST(req) {
-    try {
-        const body = await req.json();
-        const { phone, password, firstName, lastName, gender, email } = body;
+  const { phone, otp, password, ...rest } = await req.json();
 
-        // Simple validation
-        if (!phone || !password) {
-            return NextResponse.json(
-                { success: false, message: "Phone and password are required" },
-                { status: 400 }
-            );
-        }
+  const record = otpStore[phone];
 
-        // TODO: Save user to your database here
-        // For testing, we just return the user data
-        const newUser = { phone, firstName, lastName, gender, email, role: "user" };
+  if (!record) {
+    return NextResponse.json(
+      { success: false, message: "OTP not found" },
+      { status: 400 }
+    );
+  }
 
-        return NextResponse.json({ success: true, user: newUser });
-    } catch (err) {
-        return NextResponse.json(
-            { success: false, message: err.message || "Registration failed" },
-            { status: 500 }
-        );
-    }
+  if (record.expiresAt < Date.now()) {
+    delete otpStore[phone];
+    return NextResponse.json(
+      { success: false, message: "OTP expired" },
+      { status: 400 }
+    );
+  }
+
+  if (record.otp != otp) {
+    return NextResponse.json(
+      { success: false, message: "Invalid OTP" },
+      { status: 400 }
+    );
+  }
+
+  userStore[phone] = {
+    phone,
+    password,
+    ...rest,
+    createdAt: new Date(),
+  };
+
+  delete otpStore[phone];
+
+  console.log("✅ User saved:", userStore[phone]);
+
+  return NextResponse.json({
+    success: true,
+    message: "Registered successfully",
+  });
 }
