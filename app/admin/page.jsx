@@ -3,16 +3,24 @@
 import { useEffect, useState } from "react";
 import OverviewChart from "./OverviewChart"; // Your chart component
 import { useRouter } from "next/navigation";
+import { getAuth } from "@/lib/auth";
+
 
 export default function AdminDashboard() {
     const router = useRouter();
 
     useEffect(() => {
-        const user = JSON.parse(localStorage.getItem("user"));
-        if (!user || user.role !== "admin") {
-            router.push("/login"); // block access
+        const auth = getAuth();
+
+        if (!auth) {
+            router.replace("/profile");
+            return;
         }
-    }, []);
+
+        if (auth.user.role !== "admin") {
+            router.replace("/");
+        }
+    }, [router]);
 
     const periods = ["Today", "This Week", "This Month", "This Year"];
     const [period, setPeriod] = useState("Today");

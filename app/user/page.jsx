@@ -1,34 +1,81 @@
-'use client'
+"use client";
 
-import { FiChevronRight, FiUser, FiShield, FiShoppingBag } from "react-icons/fi";
+import {
+    FiChevronRight,
+    FiUser,
+    FiShield,
+    FiShoppingBag,
+    FiLogOut,
+} from "react-icons/fi";
 import React, { useState } from "react";
+import { logout } from "@/lib/auth";
+import { useRouter, usePathname } from "next/navigation";
 
-export default function userProfile(){
-
+export default function userProfile() {
     const [selectedFeature, setSelectedFeature] = useState("profile");
 
-    return(
+    const router = useRouter();
+    const handleLogout = () => {
+        logout();
+        router.replace("/profile");
+    };
+
+    return (
         <section className="md:min-h-screen container mx-auto">
             <div className="w-full my-2 flex p-3">
-                {/* Left Bar */}
-                <div className="w-1/4 pr-3">
-                    <h1 className="text-lg mb-3">Me</h1>
-                    <ul className="ml-4">
-                        <li 
+                {/* Left Sidebar */}
+                <div className="w-1/4 pr-2 h-full flex flex-col">
+                    {/* Sidebar Header */}
+                    <h1 className="text-lg mb-3 font-semibold">Me</h1>
+
+                    {/* Menu Items */}
+                    <ul className="flex-1 md:ml-4 space-y-2 mb-2">
+                        <li
                             onClick={() => setSelectedFeature("profile")}
-                            className={`${selectedFeature === "profile" ? "flex items-center justify-between font-semibold mb-2" : "flex items-center justify-between mb-2" }`}
+                            className={`flex items-center justify-between px-2 py-1 rounded cursor-pointer ${
+                                selectedFeature === "profile"
+                                    ? "font-semibold"
+                                    : "hover:bg-[#f9f9f9]"
+                            }`}
                         >
                             Profile
-                            <FiChevronRight />
+                            <FiChevronRight
+                                className={`transition-all ${
+                                    selectedFeature === "profile"
+                                        ? "font-bold text-xl"
+                                        : "text-[#2F5755]"
+                                }`}
+                            />
                         </li>
-                        <li 
+                        <li
                             onClick={() => setSelectedFeature("myOrder")}
-                            className={`${selectedFeature === "myOrder" ? "flex items-center justify-between font-semibold" : "flex items-center justify-between" }`}
+                            className={`flex items-center justify-between px-2 py-1 rounded cursor-pointer ${
+                                selectedFeature === "myOrder"
+                                    ? "font-semibold"
+                                    : "hover:bg-[#f9f9f9]"
+                            }`}
                         >
-                            My orders
-                            <FiChevronRight />
+                            My Orders
+                            <FiChevronRight
+                                className={`transition-all ${
+                                    selectedFeature === "myOrder"
+                                        ? "font-bold text-xl"
+                                        : "text-[#2F5755]"
+                                }`}
+                            />
                         </li>
                     </ul>
+
+                    {/* Logout Button at Bottom */}
+                    <div className="mt-auto pt-2 border-t">
+                        <button
+                            onClick={handleLogout}
+                            className="flex items-center gap-2 md:px-2 py-1 rounded hover:text-red-600 font-medium transition-colors cursor-pointer whitespace-nowrap"
+                        >
+                            <FiLogOut size={15}/>
+                            <span>Log out</span>
+                        </button>
+                    </div>
                 </div>
 
                 {/* Right content (My Profile)*/}
@@ -44,7 +91,9 @@ export default function userProfile(){
                             <div className="w-full">
                                 {/* Gender */}
                                 <div className="flex items-center gap-5 mb-3">
-                                    <p className="font-medium">Gender (Required)</p>
+                                    <p className="font-medium">
+                                        Gender (Required)
+                                    </p>
                                     <label className="flex items-center gap-1">
                                         <input
                                             type="radio"
@@ -112,7 +161,10 @@ export default function userProfile(){
                                 </div>
 
                                 {/* Update profile btn */}
-                                <button type="submit" className="w-full py-2 bg-black text-white rounded font-semibold mb-4 cursor-pointer">
+                                <button
+                                    type="submit"
+                                    className="w-full py-2 bg-black text-white rounded font-semibold mb-4 cursor-pointer"
+                                >
                                     Update
                                 </button>
                             </div>
@@ -160,14 +212,17 @@ export default function userProfile(){
                                 </div>
 
                                 {/* Confirm Change btn */}
-                                <button type="submit" className="w-full py-2 bg-black text-white rounded font-semibold mb-4 cursor-pointer">
+                                <button
+                                    type="submit"
+                                    className="w-full py-2 bg-black text-white rounded font-semibold mb-4 cursor-pointer"
+                                >
                                     Confirm Change
                                 </button>
                             </div>
                         </div>
                     </div>
                 )}
-                
+
                 {/* Right content (My Order)*/}
                 {selectedFeature === "myOrder" && (
                     <div className="w-full">
@@ -176,11 +231,8 @@ export default function userProfile(){
                                 Order History <FiShoppingBag size={20} />
                             </p>
                         </div>
-
-                        
                     </div>
                 )}
-            
             </div>
         </section>
     );

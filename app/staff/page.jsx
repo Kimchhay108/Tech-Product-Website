@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import OverviewChart from "@components/OverviewChart"; // make sure this exists
+import OverviewChart from "@components/OverviewChart";
+import { getAuth } from "@/lib/auth";
 
 export default function StaffOverview() {
   const router = useRouter();
@@ -13,14 +14,13 @@ export default function StaffOverview() {
   const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
-    // Block access if not staff
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (!user || user.role !== "staff") {
-      router.push("/login");
+    const auth = getAuth();
+    if (!auth || auth.user.role !== "staff") {
+      router.replace("/profile");
       return;
     }
 
-    // Sample orders data (replace this with your API)
+    // Sample orders data (replace with real API later)
     const sampleOrders = [
       { date: "2025-12-20", quantity: 3 },
       { date: "2025-12-21", quantity: 5 },
@@ -28,18 +28,14 @@ export default function StaffOverview() {
       { date: "2025-12-23", quantity: 4 },
     ];
 
-    // Calculate totals
     const totalOrders = sampleOrders.length;
     const totalItems = sampleOrders.reduce((sum, o) => sum + o.quantity, 0);
     setStats({ totalOrders, totalItemsSold: totalItems });
 
-    // Prepare chart data
-    setChartData(
-      sampleOrders.map(o => ({
-        date: o.date,
-        value: o.quantity
-      }))
-    );
+    setChartData(sampleOrders.map(o => ({
+      date: o.date,
+      value: o.quantity
+    })));
   }, [router]);
 
   return (

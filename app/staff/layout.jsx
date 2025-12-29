@@ -1,17 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import {
-    FiChevronRight,
-    FiHome,
-    FiGrid,
-    FiPackage,
-    FiLogOut,
-} from "react-icons/fi";
+import { useState, useEffect } from "react";
+import { FiChevronRight, FiHome, FiGrid, FiPackage, FiLogOut } from "react-icons/fi";
 import { FaUserCircle } from "react-icons/fa";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
+import { getAuth, logout } from "@/lib/auth";
 
 export default function StaffLayout({ children }) {
     const router = useRouter();
@@ -19,14 +14,35 @@ export default function StaffLayout({ children }) {
 
     const [openProfile, setOpenProfile] = useState(false);
     const [openMenu, setOpenMenu] = useState(false);
+    const [authChecked, setAuthChecked] = useState(false); // prevent flicker
+
+    useEffect(() => {
+        const auth = getAuth();
+
+        if (!auth) {
+            router.replace("/profile"); // not logged in → profile page
+            return;
+        }
+
+        if (auth.user.role !== "staff") {
+            // not staff → redirect to proper dashboard
+            if (auth.user.role === "admin") router.replace("/admin");
+            else router.replace("/user");
+            return;
+        }
+
+        setAuthChecked(true); // staff confirmed
+    }, [router]);
 
     const handleLogout = () => {
-        localStorage.removeItem("user");
-        router.push("/");
+        logout(); // clear auth
+        router.replace("/profile");
     };
 
-    const isActive = (path) =>
-        path === "/staff" ? pathname === "/staff" : pathname.startsWith(path);
+    const isActive = (path) => path === "/staff" ? pathname === "/staff" : pathname.startsWith(path);
+
+    // Wait until auth is checked before rendering to prevent flicker redirect
+    if (!authChecked) return null;
 
     return (
         <div className="flex min-h-screen">
@@ -40,45 +56,28 @@ export default function StaffLayout({ children }) {
 
             {/* SIDEBAR */}
             <aside
-                className={`
-                    fixed top-0 left-0 z-40 h-screen w-64 bg-[#2E2E2E] text-white p-5 flex flex-col
+                className={`fixed top-0 left-0 z-40 h-screen w-64 bg-[#2E2E2E] text-white p-5 flex flex-col
                     transform transition-transform duration-300
-                    ${openMenu ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
-                `}
+                    ${openMenu ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
             >
                 <div>
                     <div className="flex gap-2 items-center mb-6">
-                        <Image
-                            src="/LogoOnlyWhite.png"
-                            alt="Logo"
-                            width={40}
-                            height={50}
-                        />
+                        <Image src="/LogoOnlyWhite.png" alt="Logo" width={40} height={50} />
                         <h2 className="text-xl font-bold">Staff Dashboard</h2>
                     </div>
 
                     <nav>
                         <ul className="space-y-2">
                             {[
-                                {
-                                    href: "/staff",
-                                    label: "Overview",
-                                    icon: FiGrid,
-                                },
-                                {
-                                    href: "/staff/orders",
-                                    label: "Orders",
-                                    icon: FiPackage,
-                                },
+                                { href: "/staff", label: "Overview", icon: FiGrid },
+                                { href: "/staff/orders", label: "Orders", icon: FiPackage },
                             ].map(({ href, label, icon: Icon }) => (
                                 <li key={href}>
                                     <Link
                                         href={href}
                                         onClick={() => setOpenMenu(false)}
                                         className={`flex justify-between items-center px-3 py-2 rounded-lg ${
-                                            isActive(href)
-                                                ? "bg-[#3A3A3A]"
-                                                : "hover:bg-[#4A4A4A]"
+                                            isActive(href) ? "bg-[#3A3A3A]" : "hover:bg-[#4A4A4A]"
                                         }`}
                                     >
                                         <div className="flex items-center gap-2">
@@ -129,11 +128,7 @@ export default function StaffLayout({ children }) {
                         <div
                             className={`absolute right-0 mt-2 w-56 bg-white shadow-xl rounded z-50
                             transition-all duration-100 ease-out transform
-                            ${
-                                openProfile
-                                    ? "opacity-100 scale-100"
-                                    : "opacity-0 scale-95 pointer-events-none"
-                            }`}
+                            ${openProfile ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}`}
                         >
                             <div className="flex items-center gap-3 border-b p-3">
                                 <FaUserCircle size={30} />

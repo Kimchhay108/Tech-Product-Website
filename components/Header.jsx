@@ -11,47 +11,63 @@ import {
     FiTablet,
     FiWatch,
     FiHeadphones,
-    } from "react-icons/fi";
+} from "react-icons/fi";
+import { getAuth } from "@/lib/auth";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
-
     const navBar = [
-                        {
-                            category: "Laptops",
-                            icon: FaLaptop
-                        }, 
-                        {
-                            category: "Desktops",
-                            icon: FiMonitor
-                        }, 
-                        {
-                            category: "Phones",
-                            icon: FiSmartphone,                      
-                        }, 
-                        {
-                            category: "Tablets",
-                            icon: FiTablet
-                        }, 
-                        {
-                            category: "Smart Watches",
-                            icon: FiWatch
-                        }, 
-                        {
-                            category: "Gaming",
-                            icon: FiHeadphones                       
-                        }];
+        {
+            category: "Laptops",
+            icon: FaLaptop,
+        },
+        {
+            category: "Desktops",
+            icon: FiMonitor,
+        },
+        {
+            category: "Phones",
+            icon: FiSmartphone,
+        },
+        {
+            category: "Tablets",
+            icon: FiTablet,
+        },
+        {
+            category: "Smart Watches",
+            icon: FiWatch,
+        },
+        {
+            category: "Gaming",
+            icon: FiHeadphones,
+        },
+    ];
 
     const [open, setOpen] = useState(false);
 
+    const router = useRouter();
+
+    const handleProfileClick = () => {
+        const auth = getAuth();
+
+        if (!auth) {
+            router.push("/profile"); // not logged in
+            return;
+        }
+
+        const role = auth.user.role;
+        if (role === "admin") router.push("/admin");
+        else if (role === "staff") router.push("/staff");
+        else router.push("/user");
+    };
 
     return (
         <header id="header" className="sticky top-0 z-50 shadow">
             {/* TOP HEADER */}
             <div className="bg-white w-full h-full mx-auto px-4 py-4 flex items-center justify-around">
-
                 {/* Logo */}
                 <Link href="/home">
-                    <Image 
+                    <Image
                         src="/Logo.png"
                         alt="Logo"
                         width={120}
@@ -62,7 +78,10 @@ export default function Header() {
 
                 {/* Search (Desktop) */}
                 <div className="hidden md:flex bg-gray-100 items-center rounded-lg w-full max-w-md mx-6">
-                    <FiSearch size={20} className="ml-2 text-[var(--secondary)]" />
+                    <FiSearch
+                        size={20}
+                        className="ml-2 text-[var(--secondary)]"
+                    />
                     <input
                         type="text"
                         placeholder="Search"
@@ -73,23 +92,44 @@ export default function Header() {
                 {/* Nav + Icons (Desktop) */}
                 <nav className="hidden md:flex items-center space-x-10 text-[var(--secondary)]">
                     <ul className="flex space-x-8">
-                        <li><Link href="/home" className="hover:text-black">Home</Link></li>
-                        <li><Link href="#footer" className="hover:text-black">About</Link></li>
-                        <li><Link href="#footer" className="hover:text-black whitespace-nowrap">Contact Us</Link></li>
+                        <li>
+                            <Link href="/home" className="hover:text-black">
+                                Home
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="#footer" className="hover:text-black">
+                                About
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                href="#footer"
+                                className="hover:text-black whitespace-nowrap"
+                            >
+                                Contact Us
+                            </Link>
+                        </li>
                     </ul>
                     <div className="flex items-center space-x-6">
                         <Link href="/cart" className="text-black">
                             <FiShoppingCart size={25} />
                         </Link>
-                        <Link href="/profile" className="text-black">
+                        <button
+                            onClick={handleProfileClick}
+                            className="text-black cursor-pointer"
+                        >
                             <FiUser size={25} />
-                        </Link>
+                        </button>
                     </div>
                 </nav>
 
                 {/* Nav + Icons (Mobile) */}
                 <div className="md:hidden flex space-x-6">
-                    <button className="md:hidden text-3xl" onClick={() => setOpen(!open)}>
+                    <button
+                        className="md:hidden text-3xl"
+                        onClick={() => setOpen(!open)}
+                    >
                         {open ? <FiX /> : <FiMenu />}
                     </button>
 
@@ -97,9 +137,12 @@ export default function Header() {
                         <Link href="/cart" className="text-black">
                             <FiShoppingCart size={25} />
                         </Link>
-                        <Link href="/profile" className="text-black">
+                        <button
+                            onClick={handleProfileClick}
+                            className="text-black cursor-pointer"
+                        >
                             <FiUser size={25} />
-                        </Link>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -109,12 +152,19 @@ export default function Header() {
                 className={`
                 md:hidden bg-white px-4 overflow-hidden
                 transition-all duration-300
-                ${open ? "max-h-[500px] opacity-100 translate-y-0" : "max-h-0 opacity-0 -translate-y-3"}
+                ${
+                    open
+                        ? "max-h-[500px] opacity-100 translate-y-0"
+                        : "max-h-0 opacity-0 -translate-y-3"
+                }
                 `}
             >
                 {/* Search Mobile */}
                 <div className="bg-gray-100 flex items-center rounded-lg">
-                    <FiSearch size={20} className="ml-2 text-[var(--secondary)]" />
+                    <FiSearch
+                        size={20}
+                        className="ml-2 text-[var(--secondary)]"
+                    />
                     <input
                         type="text"
                         placeholder="Search"
@@ -126,8 +176,8 @@ export default function Header() {
                 <ul className=" py-4 space-y-3 text-[var(--secondary)]">
                     {navBar.map((nav, index) => (
                         <li key={index}>
-                            <Link 
-                                href={`/products?category=${nav.category}` }
+                            <Link
+                                href={`/products?category=${nav.category}`}
                                 className="block text-black"
                             >
                                 {nav.category}
@@ -142,11 +192,13 @@ export default function Header() {
                 <ul className="flex justify-center items-center space-x-14 text-lg">
                     {navBar.map((nav, index) => (
                         <li key={index}>
-                            <Link 
+                            <Link
                                 href={`/products?category=${nav.category}`}
                                 className="flex items-center space-x-2 text-[var(--secondary)] hover:font-bold whitespace-nowrap"
                             >
-                                <p><nav.icon size={20}/></p>
+                                <p>
+                                    <nav.icon size={20} />
+                                </p>
                                 <span>{nav.category}</span>
                             </Link>
                         </li>

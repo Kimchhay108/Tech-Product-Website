@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
     FiChevronRight,
     FiHome,
@@ -13,9 +13,9 @@ import {
 import { FaUserCircle } from "react-icons/fa";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { CategoriesProvider } from "./context/CategoriesContext";
+import { getAuth, logout } from "@/lib/auth";
 
 export default function AdminLayout({ children }) {
     const router = useRouter();
@@ -24,9 +24,20 @@ export default function AdminLayout({ children }) {
     const [openProfile, setOpenProfile] = useState(false);
     const [openMenu, setOpenMenu] = useState(false);
 
+    useEffect(() => {
+        const auth = getAuth();
+        if (!auth) {
+            router.replace("/profile");
+            return;
+        }
+        if (auth.user.role !== "admin") {
+            router.replace("/");
+        }
+    }, [router]);
+
     const handleLogout = () => {
-        localStorage.removeItem("user");
-        router.push("/");
+        logout(); // clear auth
+        router.replace("/profile");
     };
 
     const isActive = (path) =>
@@ -42,51 +53,31 @@ export default function AdminLayout({ children }) {
                 />
             )}
 
-            {/* SIDEBAR / Left */}
+            {/* SIDEBAR */}
             <aside
-                className={`
-                    fixed top-0 left-0 z-40 h-screen w-64 bg-[#2E2E2E] text-white p-5 flex flex-col
+                className={`fixed top-0 left-0 z-40 h-screen w-64 bg-[#2E2E2E] text-white p-5 flex flex-col
                     transform transition-transform duration-300
-                    ${openMenu ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
-                `}
+                    ${openMenu ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
             >
                 <div>
                     <div className="flex gap-2 items-center mb-6">
-                        <div>
-                            <Image
-                                src="/LogoOnlyWhite.png"
-                                alt="Logo only"
-                                width={40}
-                                height={50}
-                                className="w-auto h-auto"
-                            />
-                        </div>
+                        <Image
+                            src="/LogoOnlyWhite.png"
+                            alt="Logo only"
+                            width={40}
+                            height={50}
+                            className="w-auto h-auto"
+                        />
                         <h2 className="text-xl font-bold">Admin Dashboard</h2>
                     </div>
 
                     <nav>
                         <ul className="space-y-2">
                             {[
-                                {
-                                    href: "/admin",
-                                    label: "Overview",
-                                    icon: FiGrid,
-                                },
-                                {
-                                    href: "/admin/category",
-                                    label: "Category",
-                                    icon: FiList,
-                                },
-                                {
-                                    href: "/admin/products",
-                                    label: "Product",
-                                    icon: FiPackage,
-                                },
-                                {
-                                    href: "/admin/staff",
-                                    label: "Staff",
-                                    icon: FiUsers,
-                                },
+                                { href: "/admin", label: "Overview", icon: FiGrid },
+                                { href: "/admin/category", label: "Category", icon: FiList },
+                                { href: "/admin/products", label: "Product", icon: FiPackage },
+                                { href: "/admin/staff", label: "Staff", icon: FiUsers },
                             ].map(({ href, label, icon: Icon }) => (
                                 <li key={href}>
                                     <Link
@@ -110,7 +101,6 @@ export default function AdminLayout({ children }) {
                     </nav>
                 </div>
 
-                {/* Bottom home link */}
                 <div className="mt-auto pt-4 border-t border-white">
                     <Link
                         href="/"
@@ -125,7 +115,6 @@ export default function AdminLayout({ children }) {
 
             {/* MAIN CONTENT */}
             <div className="flex-1 flex flex-col bg-gray-100 md:ml-64">
-                {/* HEADER */}
                 <header className="h-14 bg-white flex justify-end items-center px-6 shadow-sm">
                     <button
                         onClick={() => setOpenMenu((v) => !v)}
@@ -134,7 +123,6 @@ export default function AdminLayout({ children }) {
                         ☰
                     </button>
 
-                    {/* Profile */}
                     <div className="relative">
                         <button
                             onClick={() => setOpenProfile((prev) => !prev)}
@@ -150,9 +138,9 @@ export default function AdminLayout({ children }) {
                                     : "opacity-0 scale-95 pointer-events-none"
                             }`}
                         >
-                            <div className="flex items-center gap-3 border-gray-300 border-b-1 p-3">
+                            <div className="flex items-center gap-3 border-gray-300 border-b p-3">
                                 <FaUserCircle size={30} />
-                                <p className="font-medium">Admin</p>
+                                <p className="font-medium">{getAuth()?.user?.name || "Admin"}</p>
                             </div>
                             <div>
                                 <button
@@ -167,7 +155,6 @@ export default function AdminLayout({ children }) {
                     </div>
                 </header>
 
-                {/* PAGE CONTENT */}
                 <CategoriesProvider>
                     <main className="p-4 flex-1">{children}</main>
                 </CategoriesProvider>

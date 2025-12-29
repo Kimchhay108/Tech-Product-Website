@@ -1,12 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { getAuth } from "@/lib/auth"; // <-- your auth helper
 import { FiCpu } from "react-icons/fi";
 import Login from "../auth/login/page";
 import Register from "../auth/register/page";
 
 export default function ProfilePage() {
     const [selectedAuth, setSelectedAuth] = useState("login");
+    const router = useRouter();
+
+    useEffect(() => {
+        const auth = getAuth();
+
+        if (auth?.user?.role === "admin") {
+            router.replace("/admin");
+        } else if (auth?.user?.role === "staff") {
+            router.replace("/staff");
+        } else if (auth?.user?.role === "user") {
+            router.replace("/user");
+        }
+        // If no auth, stay on profile page (login/register)
+    }, [router]);
 
     return (
         <section className="md:min-h-screen container mx-auto">
@@ -44,10 +60,10 @@ export default function ProfilePage() {
 
                     {/* Content */}
                     {selectedAuth === "login" && (
-                        <Login setSelectedAuth={setSelectedAuth}/>
+                        <Login setSelectedAuth={setSelectedAuth} />
                     )}
                     {selectedAuth === "register" && (
-                        <Register setSelectedAuth={setSelectedAuth}/>
+                        <Register setSelectedAuth={setSelectedAuth} />
                     )}
                 </div>
             </div>

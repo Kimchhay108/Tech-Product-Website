@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { loginApi } from "../services/loginApi";
 import { useState } from "react";
+import { login } from "@/lib/auth";
 
 export default function Login({ setSelectedAuth }) {
     const router = useRouter();
@@ -11,13 +12,18 @@ export default function Login({ setSelectedAuth }) {
     const [password, setPassword] = useState("");
 
     const handleLogin = async () => {
+        if (!tel || !password) {
+            alert("Please enter phone number and password");
+            return;
+        }
+
         try {
             const response = await loginApi(tel, password);
 
             if (response.success) {
-                localStorage.setItem("user", JSON.stringify(response.user));
+               
+                login(response.user);
 
-                // Redirect based on role
                 if (response.user.role === "admin") {
                     router.push("/admin");
                 } else if (response.user.role === "staff") {
@@ -67,7 +73,7 @@ export default function Login({ setSelectedAuth }) {
                 </button>
 
                 <div className="text-center">
-                    <button 
+                    <button
                         onClick={() => setSelectedAuth("register")}
                         className="hover:underline"
                     >
