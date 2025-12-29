@@ -7,15 +7,22 @@ export default function AdminStaff() {
         {
             id: 1,
             name: "Kimhab",
-            position: "Seller",
+            position: "Manager",
+            date: "1 Jan 2024",
+            active: true,
+        },
+        {
+            id: 3,
+            name: "Kimheng",
+            position: "Seller & Cashier",
             date: "16 Oct 2024",
             active: true,
         },
         {
             id: 2,
-            name: "Anna Smith",
-            position: "Supervisor",
-            date: "23 Dec 2023",
+            name: "KimChhay",
+            position: "User",
+            date: "23 Dec 2025",
             active: false,
         },
     ]);
