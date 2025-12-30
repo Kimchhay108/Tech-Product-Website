@@ -7,7 +7,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation"; // For useRouter
 import { useSearchParams } from "next/navigation";
 
-import { FiChevronDown, FiChevronRight, FiChevronLeft } from "react-icons/fi";
+import {
+    FiChevronDown,
+    FiChevronRight,
+    FiChevronLeft,
+    FiSmile,
+} from "react-icons/fi";
 
 export default function ProductsPage() {
     const router = useRouter();
@@ -19,16 +24,18 @@ export default function ProductsPage() {
     //get the value from category and store in category
     const category = searchParams.get("category");
 
-    const goToProductsDetail = (productId) => {
-        router.push(
-            `/productDetail?category=${category}&id=${encodeURIComponent(
-                productId
-            )}`
-        );
-    };
+    // Make sure productId is the MongoDB _id
+const goToProductsDetail = (productId) => {
+  console.log("Navigating to product detail:", productId); // debug
+  router.push(`/productDetail/${productId}`);
+};
+
+
 
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [filter, setFilter] = useState(""); // current filter option
+
+    const [products, setProducts] = useState([]);
 
     // Sort products based on filter
     const sortedProducts = [...products].sort((a, b) => {
@@ -37,8 +44,6 @@ export default function ProductsPage() {
         return 0; // default = original order
     });
 
-    const [products, setProducts] = useState([]);
-
     useEffect(() => {
         const loadProducts = async () => {
             const data = await fetchProducts();
@@ -46,9 +51,17 @@ export default function ProductsPage() {
         };
         loadProducts();
     }, []);
-	
-	if (!products.length) return <p className="text-center mt-10">Loading products...</p>;
 
+    if (!products.length) {
+        return (
+            <div>
+               
+                <p className="h-100 text-center text-lg my-10 flex items-center justify-center gap-2">
+                    Oops! Nothing here yet. Stay tuned...  <FiSmile size={20} />
+                </p>
+            </div>
+        );
+    }
 
     return (
         <section className="container mx-auto px-3">
@@ -121,7 +134,7 @@ export default function ProductsPage() {
                     >
                         <div>
                             <Image
-                                src={product.img}
+                                src={product.images?.[0] || "/placeholder.png"}
                                 alt={product.name}
                                 width={800}
                                 height={800}
@@ -137,7 +150,7 @@ export default function ProductsPage() {
                             </h1>
                             <button
                                 className="bg-black text-sm sm:text-base text-white rounded-lg py-3 px-8 md:px-12 whitespace-nowrap cursor-pointer"
-                                onClick={() => goToProductsDetail(product.id)}
+                                onClick={() => goToProductsDetail(encodeURIComponent(String(product._id)))}
                             >
                                 Buy Now
                             </button>

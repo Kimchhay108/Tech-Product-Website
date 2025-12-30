@@ -1,64 +1,95 @@
 "use client";
 
-import { useState } from "react";
-import { products } from "../data/products";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { useCartDispatch, CartActions } from "../context/CartContext";
-import { FiChevronRight, FiPlus, FiMinus } from "react-icons/fi";
+import { useCartDispatch, CartActions } from "../../context/CartContext";
+
+import { FiChevronRight } from "react-icons/fi";
 
 export default function ProductsDetail() {
+    const { id: productId } = useParams();
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const category = searchParams.get("category");
-    const productId = searchParams.get("id");
-    const product = products.find((p) => p.id === Number(productId));
-
     const dispatch = useCartDispatch();
 
-    // Left Side Images
-    const images = product?.images || []; // gallery (can all be IP14 for now)
-    const [bigImage, setBigImage] = useState(product?.img || null); // use the product's main image
+    const [product, setProduct] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [bigImage, setBigImage] = useState(null);
 
-    // Right Side Options
     const colors = ["#000000", "#E8E8E8", "#781DBC", "#E1B000"];
     const [selectedColor, setSelectedColor] = useState(colors[0]);
 
     const memories = ["128GB", "256GB", "512GB", "1TB"];
     const [selectedMemory, setSelectedMemory] = useState(memories[0]);
 
-    const phoneDetails = product?.details || [];
-    const description = product?.description || "No description available.";
-
-    // Quantity
     const [quantity, setQuantity] = useState(1);
     const increase = () => setQuantity((prev) => prev + 1);
     const decrease = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
-    if (!product) {
+    useEffect(() => {
+        const fetchProduct = async () => {
+            try {
+                console.log("Fetching product with ID:", productId); // debug
+                const res = await fetch(`/api/products/${productId}`);
+                if (!res.ok) {
+                    // handle both 404 and other errors
+                    const errorData = await res.json();
+                    throw new Error(
+                        errorData.message || "Failed to fetch product"
+                    );
+                }
+                const data = await res.json();
+                setProduct(data);
+                setBigImage(data.images?.[0] || null);
+            } catch (err) {
+                console.error(err);
+                setProduct(null);
+            } finally {
+                setLoading(false);
+            }
+        };
+        if (productId) fetchProduct();
+    }, [productId]);
+
+    if (loading) return <div className="text-center mt-10">Loading...</div>;
+    if (!product)
         return <div className="text-center mt-10">Product not found.</div>;
-    }
+
+    const categoryLabel =
+        product?.category?.name || product?.categoryLabel || "Products";
+    const categoryParam = encodeURIComponent(categoryLabel);
+
+    // first word for the product name 
+    const productFirstWord = (product?.name || "Product").split(" ")[0];
+
+    const images = product.images || [];
+    const phoneDetails = product.details || [];
+    const description = product.description || "No description available.";
 
     return (
         <section className="container mx-auto px-3 sm:mt-6">
-            {/* Category */}
-            <div className="hidden sm:flex items-center space-x-4">
+            {/* Breadcrumb */}
+            <div className="hidden sm:flex items-center space-x-2">
                 <h1 className="text-[#A4A4A4] font-medium">Category</h1>
+
                 <FiChevronRight size={20} className="text-[#A4A4A4]" />
-                <Link href={`/products?category=${category}`}>
-                    <h1 className="text-black font-medium">{category}</h1>
+
+                <Link
+                    href={`/products?category=${categoryParam}`}
+                    className="text-black font-medium"
+                >
+                    {categoryLabel}
                 </Link>
+
                 <FiChevronRight size={20} className="text-[#A4A4A4]" />
-                <h2 className="text-black font-medium">
-                    {product?.name.split(" ")[0]}
-                </h2>
+
+                <h2 className="text-black font-medium">{productFirstWord}</h2>
             </div>
 
             <div className="md:max-w-7xl mx-auto flex flex-col md:flex-row h-auto py-5">
-                {/* Left Side */}
+                {/* Left Side Images */}
                 <div className="md:w-1/2 flex flex-col md:flex-row justify-evenly items-center">
-                    {/* Small Images Desktop */}
                     <div className="hidden md:flex flex-row md:flex-col gap-4 justify-center">
                         {images.map((img, index) => (
                             <Image
@@ -73,7 +104,6 @@ export default function ProductsDetail() {
                         ))}
                     </div>
 
-                    {/* Big Image */}
                     <div className="flex justify-center items-center my-4">
                         <Image
                             src={bigImage}
@@ -84,7 +114,6 @@ export default function ProductsDetail() {
                         />
                     </div>
 
-                    {/* Small Images Mobile */}
                     <div className="flex md:hidden flex-row gap-4 justify-center">
                         {images.map((img, index) => (
                             <Image
@@ -100,24 +129,17 @@ export default function ProductsDetail() {
                     </div>
                 </div>
 
-                {/* Right Side */}
+                {/* Right Side Options */}
                 <div className="md:w-1/2 mx-auto flex flex-col space-y-3 my-4">
-                    {/* Title & Price */}
-                    <div>
-                        <h1 className="mb-3 text-3xl font-bold">
-                            {product.name}
-                        </h1>
-                        <h2 className="text-2xl font-semibold">
-                            ${product.price}
-                        </h2>
-                    </div>
+                    <h1 className="mb-3 text-3xl font-bold">{product.name}</h1>
+                    <h2 className="text-2xl font-semibold">${product.price}</h2>
 
-                    {/* Color Selection */}
+                    {/* Color */}
                     <div className="flex gap-3 items-center">
                         <p>Select color:</p>
-                        {colors.map((color, index) => (
+                        {colors.map((color) => (
                             <div
-                                key={index}
+                                key={color}
                                 onClick={() => setSelectedColor(color)}
                                 className={`w-8 h-8 rounded-full cursor-pointer ${
                                     selectedColor === color ? "ring-1" : ""
@@ -127,11 +149,11 @@ export default function ProductsDetail() {
                         ))}
                     </div>
 
-                    {/* Memory Selection */}
+                    {/* Memory */}
                     <div className="grid grid-cols-4 gap-3">
-                        {memories.map((memory, index) => (
+                        {memories.map((memory) => (
                             <button
-                                key={index}
+                                key={memory}
                                 onClick={() => setSelectedMemory(memory)}
                                 className={`py-3 px-6 rounded-md text-[#A0A0A0] text-center border ${
                                     selectedMemory === memory
@@ -172,7 +194,7 @@ export default function ProductsDetail() {
                                 onClick={decrease}
                                 className="px-5 py-2 text-xl bg-[#F4F4F4] rounded hover:bg-gray-200"
                             >
-                                <FiMinus />
+                                -
                             </button>
                             <span className="w-16 py-2 text-lg text-center bg-[#F4F4F4] rounded">
                                 {quantity}
@@ -181,7 +203,7 @@ export default function ProductsDetail() {
                                 onClick={increase}
                                 className="px-5 py-2 text-xl bg-[#F4F4F4] rounded hover:bg-gray-200"
                             >
-                                <FiPlus />
+                                +
                             </button>
                         </div>
 
@@ -192,7 +214,7 @@ export default function ProductsDetail() {
                                     type: CartActions.ADD,
                                     payload: {
                                         cartItemId: Date.now(),
-                                        productId: product.id,
+                                        productId: product._id,
                                         name: product.name,
                                         price: product.price,
                                         color: selectedColor,
