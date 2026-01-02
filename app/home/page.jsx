@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 
 import { FaLaptop } from "react-icons/fa6";
 import {
@@ -25,32 +26,44 @@ export default function HomePage() {
         router.push("/productDetail");
     };
 
-    const categoryNav = [
-        {
-            category: "Laptops",
-            icon: FaLaptop,
-        },
-        {
-            category: "Desktops",
-            icon: FiMonitor,
-        },
-        {
-            category: "Phones",
-            icon: FiPhone,
-        },
-        {
-            category: "Tablets",
-            icon: FiTablet,
-        },
-        {
-            category: "Smart Watches",
-            icon: FiWatch,
-        },
-        {
-            category: "Gaming",
-            icon: FiHeadphones
-        }
-    ];
+    // ===== CATEGORY =====
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        fetch("/api/categories")
+            .then((res) => res.json())
+            .then((data) => setCategories(data))
+            .catch((err) => console.error("Failed to load categories", err));
+    }, []);
+
+    const categoryIcons = {
+        laptop: FaLaptop,
+        laptops: FaLaptop,
+        desktop: FiMonitor,
+        desktops: FiMonitor,
+        phone: FiSmartphone,
+        phones: FiSmartphone,
+        tablet: FiTablet,
+        tablets: FiTablet,
+        watch: FiWatch,
+        watches: FiWatch,
+        gaming: FiHeadphones,
+    };
+
+    const defaultIcon = FiMonitor;
+    // ==================
+
+    const [products, setProducts] = useState([]);
+    const [activeTab, setActiveTab] = useState("newArrival");
+
+    useEffect(() => {
+        let url = `/api/products?${activeTab}=true`;
+        fetch(url)
+            .then((res) => res.json())
+            .then((data) => setProducts(data))
+            .catch((err) => console.error(err));
+    }, [activeTab]); // refetch when tab changes
+
     return (
         <>
             {/* Hero Section */}
@@ -206,16 +219,24 @@ export default function HomePage() {
                         Browse By Category
                     </h1>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-10">
-                        {categoryNav.map((nav, index) => (
-                            <Link key={index} href={`/products?category=${nav.category}`}>
-                                <div className="bg-[#EDEDED] p-8 rounded shadow flex flex-col justify-center items-center cursor-pointer">
-                                    <p className="text-4xl sm:text-4xl md:text-4xl"><nav.icon/></p>
-                                    <p className="text-base md:text-lg lg:text-lg font-bold mt-2 whitespace-nowrap">
-                                        {nav.category}
-                                    </p>
-                                </div>
-                            </Link>
-                        ))}           
+                        {categories.map((cat) => {
+                            const key = cat.name.toLowerCase();
+                            const Icon = categoryIcons[key] || defaultIcon;
+
+                            return (
+                                <Link
+                                    key={cat._id}
+                                    href={`/products?category=${cat.slug}`}
+                                >
+                                    <div className="bg-[#EDEDED] p-8 rounded shadow flex flex-col justify-center items-center cursor-pointer">
+                                        <Icon size={40} />
+                                        <p className="text-base md:text-lg lg:text-lg font-bold mt-2 whitespace-nowrap">
+                                            {cat.name}
+                                        </p>
+                                    </div>
+                                </Link>
+                            );
+                        })}
                     </div>
                 </div>
             </section>
@@ -224,114 +245,80 @@ export default function HomePage() {
             <section className="px-3">
                 <div className="max-w-7xl mx-auto py-15">
                     {/* Header Tabs */}
-                    <div className="flex space-x-7 justify-center md:justify-start items-center text-start mb-5">
-                        <p className="text-base md:text-lg lg:text-xl text-[#8B8B8B] active">
+                    <div className="flex space-x-7 justify-center md:justify-start items-center text-start text-lg mb-5">
+                        <p
+                            className={`cursor-pointer ${
+                                activeTab === "newArrival"
+                                    ? "text-black font-semibold border-b-2"
+                                    : "text-[#8B8B8B]"
+                            }`}
+                            onClick={() => setActiveTab("newArrival")}
+                        >
                             New Arrival
                         </p>
-                        <p className="text-base md:text-lg lg:text-xl text-[#8B8B8B] hover:text-black">
+                        <p
+                            className={`cursor-pointer ${
+                                activeTab === "bestSeller"
+                                    ? "text-black font-semibold border-b-2"
+                                    : "text-[#8B8B8B]"
+                            }`}
+                            onClick={() => setActiveTab("bestSeller")}
+                        >
                             BestSeller
                         </p>
-                        <p className="text-base md:text-lg lg:text-xl text-[#8B8B8B] hover:text-black">
+                        <p
+                            className={`cursor-pointer ${
+                                activeTab === "specialOffer"
+                                    ? "text-black font-semibold border-b-2"
+                                    : "text-[#8B8B8B]"
+                            }`}
+                            onClick={() => setActiveTab("specialOffer")}
+                        >
                             Special Offers
                         </p>
                     </div>
 
                     {/* Product Cards */}
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        {/* Product 1 */}
-                        <div className="bg-[#F6F6F6] p-5 rounded text-center text-black hover:shadow-md flex flex-col h-full">
-                            <Image
-                                src="/home/Ip14prm.png"
-                                alt="Iphone 14 pro max"
-                                width={600}
-                                height={600}
-                                className="w-64 h-auto object-contain mx-auto p-5"
-                            />
-                            <h1 className="text-base sm:text-md md:text-lg font-semibold mb-auto">
-                                Apple iPhone 14 Pro Max 128GB Deep Purple
-                            </h1>
-                            <h1 className="text-3xl font-semibold my-3">
-                                $900
-                            </h1>
-                            <button
-                                className="bg-black text-white text-sm sm:text-base py-4 px-8 rounded-2xl cursor-pointer"
-                                onClick={goToProductDetail}
-                            >
-                                Buy Now
-                            </button>
-                        </div>
-
-                        {/* Product 2 */}
-                        <div className="bg-[#F6F6F6] p-5 rounded text-center text-black hover:shadow-md flex flex-col h-full">
-                            <Image
-                                src="/home/ZFold.png"
-                                alt="Z fold"
-                                width={800}
-                                height={600}
-                                className="w-64 h-auto object-contain mx-auto p-5"
-                            />
-                            <h1 className="text-base sm:text-md md:text-lg font-semibold mb-auto">
-                                Galaxy Z Fold5 Unlocked | 256GB | Phantom Black
-                            </h1>
-                            <h1 className="text-3xl font-semibold my-3">
-                                $1799
-                            </h1>
-                            <button
-                                className="bg-black text-white text-sm sm:text-base py-4 px-8 rounded-2xl cursor-pointer"
-                                onClick={goToProductDetail}
-                            >
-                                Buy Now
-                            </button>
-                        </div>
-
-                        {/* Product 3 */}
-                        <div className="bg-[#F6F6F6] p-5 rounded text-center text-black hover:shadow-md flex flex-col h-full">
-                            <Image
-                                src="/home/Watches.png"
-                                alt="Apple Watch Series 9"
-                                width={600}
-                                height={600}
-                                className="w-64 h-auto object-contain mx-auto p-5"
-                            />
-                            <h1 className="text-base sm:text-md md:text-lg font-semibold mb-auto">
-                                Apple Watch Series 9 GPS 41mm Starlight
-                                Aluminium Case
-                            </h1>
-                            <h1 className="text-3xl font-semibold my-3">
-                                $399
-                            </h1>
-                            <button
-                                className="bg-black text-white text-sm sm:text-base py-4 px-8 rounded-2xl cursor-pointer"
-                                onClick={goToProductDetail}
-                            >
-                                Buy Now
-                            </button>
-                        </div>
-
-                        {/* Product 4 */}
-                        <div className="bg-[#F6F6F6] p-5 rounded text-center text-black hover:shadow-md flex flex-col h-full">
-                            <Image
-                                src="/home/EarBud.png"
-                                alt="Galaxy Buds"
-                                width={600}
-                                height={600}
-                                className="w-64 h-auto object-contain mx-auto p-5"
-                            />
-                            <h1 className="text-base sm:text-md md:text-lg font-semibold mb-auto">
-                                Galaxy Buds FE Graphite
-                            </h1>
-                            <h1 className="text-3xl font-semibold my-3">
-                                $99.99
-                            </h1>
-                            <button
-                                className="bg-black text-white text-sm sm:text-base py-4 px-8 rounded-2xl cursor-pointer"
-                                onClick={goToProductDetail}
-                            >
-                                Buy Now
-                            </button>
-                        </div>
-
-                        {/* Add remaining products similarly (5-8) */}
+                        {products.length > 0 ? (
+                            products.map((product) => (
+                                <div
+                                    key={product._id}
+                                    className="bg-[#F6F6F6] p-5 rounded text-center text-black hover:shadow-md flex flex-col h-full"
+                                >
+                                    <Image
+                                        src={
+                                            product.images?.[0] ||
+                                            "/placeholder.png"
+                                        }
+                                        alt={product.name}
+                                        width={600}
+                                        height={600}
+                                        className="w-64 h-auto object-contain mx-auto p-5"
+                                    />
+                                    <h1 className="text-base sm:text-md md:text-lg font-semibold mb-auto">
+                                        {product.name}
+                                    </h1>
+                                    <h1 className="text-3xl font-semibold my-3">
+                                        ${product.price}
+                                    </h1>
+                                    <button
+                                        className="bg-black text-white text-sm sm:text-base py-4 px-8 rounded-2xl cursor-pointer"
+                                        onClick={() =>
+                                            router.push(
+                                                `/productDetail/${product._id}`
+                                            )
+                                        }
+                                    >
+                                        Buy Now
+                                    </button>
+                                </div>
+                            ))
+                        ) : (
+                            <p className="text-center col-span-full">
+                                No products found
+                            </p>
+                        )}
                     </div>
                 </div>
             </section>

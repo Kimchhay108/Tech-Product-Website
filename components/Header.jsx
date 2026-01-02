@@ -1,57 +1,42 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { FiMenu, FiX, FiShoppingCart, FiUser, FiSearch } from "react-icons/fi";
-import { FaLaptop } from "react-icons/fa6";
 import {
+    FiMenu,
+    FiX,
+    FiShoppingCart,
+    FiUser,
+    FiSearch,
     FiMonitor,
     FiSmartphone,
     FiTablet,
     FiWatch,
     FiHeadphones,
 } from "react-icons/fi";
+import { FaLaptop } from "react-icons/fa6";
 import { getAuth } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 
 export default function Header() {
-    const navBar = [
-        {
-            category: "Laptops",
-            icon: FaLaptop,
-        },
-        {
-            category: "Desktops",
-            icon: FiMonitor,
-        },
-        {
-            category: "Phones",
-            icon: FiSmartphone,
-        },
-        {
-            category: "Tablets",
-            icon: FiTablet,
-        },
-        {
-            category: "Smart Watches",
-            icon: FiWatch,
-        },
-        {
-            category: "Gaming",
-            icon: FiHeadphones,
-        },
-    ];
-
     const [open, setOpen] = useState(false);
+    const [categories, setCategories] = useState([]);
 
     const router = useRouter();
+
+    useEffect(() => {
+        fetch("/api/categories")
+            .then((res) => res.json())
+            .then((data) => setCategories(data))
+            .catch((err) => console.error("Failed to load categories", err));
+    }, []);
 
     const handleProfileClick = () => {
         const auth = getAuth();
 
         if (!auth) {
-            router.push("/profile"); // not logged in
+            router.push("/profile");
             return;
         }
 
@@ -60,6 +45,23 @@ export default function Header() {
         else if (role === "staff") router.push("/staff");
         else router.push("/user");
     };
+
+    // CATEGORY ICON MAP
+    const categoryIcons = {
+        laptop: FaLaptop,
+        laptops: FaLaptop,
+        desktop: FiMonitor,
+        desktops: FiMonitor,
+        phone: FiSmartphone,
+        phones: FiSmartphone,
+        tablet: FiTablet,
+        tablets: FiTablet,
+        watch: FiWatch,
+        watches: FiWatch,
+        gaming: FiHeadphones,
+    };
+
+    const DefaultIcon = FiMonitor;
 
     return (
         <header id="header" className="sticky top-0 z-50 shadow">
@@ -76,7 +78,7 @@ export default function Header() {
                     />
                 </Link>
 
-                {/* Search (Desktop) */}
+                {/* Search Desktop */}
                 <div className="hidden md:flex bg-gray-100 items-center rounded-lg w-full max-w-md mx-6">
                     <FiSearch
                         size={20}
@@ -89,7 +91,7 @@ export default function Header() {
                     />
                 </div>
 
-                {/* Nav + Icons (Desktop) */}
+                {/* Nav Desktop */}
                 <nav className="hidden md:flex items-center space-x-10 text-[var(--secondary)]">
                     <ul className="flex space-x-8">
                         <li>
@@ -111,6 +113,7 @@ export default function Header() {
                             </Link>
                         </li>
                     </ul>
+
                     <div className="flex items-center space-x-6">
                         <Link href="/cart" className="text-black">
                             <FiShoppingCart size={25} />
@@ -124,16 +127,13 @@ export default function Header() {
                     </div>
                 </nav>
 
-                {/* Nav + Icons (Mobile) */}
+                {/* Mobile Icons */}
                 <div className="md:hidden flex space-x-6">
-                    <button
-                        className="md:hidden text-3xl"
-                        onClick={() => setOpen(!open)}
-                    >
+                    <button className="text-3xl" onClick={() => setOpen(!open)}>
                         {open ? <FiX /> : <FiMenu />}
                     </button>
 
-                    <div className="md:hidden flex items-center space-x-6">
+                    <div className="flex items-center space-x-6">
                         <Link href="/cart" className="text-black">
                             <FiShoppingCart size={25} />
                         </Link>
@@ -150,14 +150,14 @@ export default function Header() {
             {/* MOBILE DROPDOWN */}
             <div
                 className={`
-                md:hidden bg-white px-4 overflow-hidden
-                transition-all duration-300
-                ${
-                    open
-                        ? "max-h-[500px] opacity-100 translate-y-0"
-                        : "max-h-0 opacity-0 -translate-y-3"
-                }
-                `}
+          md:hidden bg-white px-4 overflow-hidden
+          transition-all duration-300
+          ${
+              open
+                  ? "max-h-[500px] opacity-100 translate-y-0"
+                  : "max-h-0 opacity-0 -translate-y-3"
+          }
+        `}
             >
                 {/* Search Mobile */}
                 <div className="bg-gray-100 flex items-center rounded-lg">
@@ -172,37 +172,40 @@ export default function Header() {
                     />
                 </div>
 
-                {/* Mobile Links */}
-                <ul className=" py-4 space-y-3 text-[var(--secondary)]">
-                    {navBar.map((nav, index) => (
-                        <li key={index}>
+                {/* Mobile Categories */}
+                <ul className="py-4 space-y-3 text-[var(--secondary)]">
+                    {categories.map((cat) => (
+                        <li key={cat._id}>
                             <Link
-                                href={`/products?category=${nav.category}`}
+                                href={`/products?category=${cat.slug}`}
                                 className="block text-black"
                             >
-                                {nav.category}
+                                {cat.name}
                             </Link>
                         </li>
                     ))}
                 </ul>
             </div>
 
-            {/* CATEGORY BAR */}
+            {/* CATEGORY BAR DESKTOP */}
             <div className="hidden md:block bg-[var(--accent)] py-2 overflow-hidden">
                 <ul className="flex justify-center items-center space-x-14 text-lg">
-                    {navBar.map((nav, index) => (
-                        <li key={index}>
-                            <Link
-                                href={`/products?category=${nav.category}`}
-                                className="flex items-center space-x-2 text-[var(--secondary)] hover:font-bold whitespace-nowrap"
-                            >
-                                <p>
-                                    <nav.icon size={20} />
-                                </p>
-                                <span>{nav.category}</span>
-                            </Link>
-                        </li>
-                    ))}
+                    {categories.map((cat) => {
+                        const key = cat.name.toLowerCase();
+                        const Icon = categoryIcons[key] || DefaultIcon;
+
+                        return (
+                            <li key={cat._id}>
+                                <Link
+                                    href={`/products?category=${cat.slug}`}
+                                    className="flex items-center space-x-2 text-[var(--secondary)] hover:font-bold whitespace-nowrap"
+                                >
+                                    <Icon size={20} />
+                                    <span>{cat.name}</span>
+                                </Link>
+                            </li>
+                        );
+                    })}
                 </ul>
             </div>
         </header>

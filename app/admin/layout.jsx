@@ -14,7 +14,6 @@ import { FaUserCircle } from "react-icons/fa";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
-import { CategoriesProvider } from "./context/CategoriesContext";
 import { getAuth, logout } from "@/lib/auth";
 
 export default function AdminLayout({ children }) {
@@ -155,9 +154,9 @@ export default function AdminLayout({ children }) {
                     </div>
                 </header>
 
-                <CategoriesProvider>
+               
                     <main className="p-4 flex-1">{children}</main>
-                </CategoriesProvider>
+              
             </div>
         </div>
     );
