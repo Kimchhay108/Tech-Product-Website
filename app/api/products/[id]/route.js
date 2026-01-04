@@ -5,38 +5,44 @@ import { connectDB } from "@/lib/mongodb";
 import Product from "@/models/Product";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 export async function GET(req, { params }) {
   try {
-    await connectDB();
-    const { id } = params;
+    // unwrap the params promise
+    const { id } = await params;  
+   
 
-    // support both ObjectId and slugs (optional)
-    const query = mongoose.Types.ObjectId.isValid(id)
-      ? Product.findById(id)
-      : Product.findOne({ slug: id });
-
-    const product = await query.populate("category", "name slug").lean();
-
-    if (!product) {
-      return new Response(JSON.stringify({ message: "Product not found" }), {
-        status: 404,
-        headers: { "Content-Type": "application/json" },
-      });
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return new Response(
+        JSON.stringify({ message: "Invalid product ID" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
     }
 
-    const categoryLabel = product.category?.name || "Products";
+    await connectDB();
 
-    return new Response(JSON.stringify({ ...product, categoryLabel }), {
+    const product = await Product.findById(id)
+      .populate("category", "name slug")
+      .lean();
+
+  
+
+    if (!product) {
+      return new Response(
+        JSON.stringify({ message: "Product not found" }),
+        { status: 404, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    return new Response(JSON.stringify(product), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
   } catch (err) {
     console.error("[GET /api/products/:id] Error:", err);
     return new Response(
-      JSON.stringify({
-        message: err instanceof Error ? err.message : "Unknown error",
-      }),
+      JSON.stringify({ message: err instanceof Error ? err.message : "Unknown error" }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }

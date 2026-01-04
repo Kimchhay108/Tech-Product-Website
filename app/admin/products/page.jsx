@@ -136,21 +136,7 @@ export default function AdminProducts() {
                 bestSeller,
                 specialOffer,
             };
-console.log("Sending product:", {
-                name: productName,
-                category: selectedCategory,
-                price: Number(price),
-                colors: colors
-                    .split(",")
-                    .map((c) => c.trim())
-                    .filter(Boolean),
-                memory,
-                description,
-                images: uploadedUrls,
-                newArrival,
-                bestSeller,
-                specialOffer,
-            });
+
             const res = await fetch("/api/products", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },

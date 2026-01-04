@@ -17,24 +17,16 @@ import {
 export default function ProductsPage() {
     const router = useRouter();
 
-    // useSearchParams() is to read values from the URL (example: ?category=Laptops)
-    // key → category
-    // value → Laptops
     const searchParams = useSearchParams();
-    //get the value from category and store in category
+
     const category = searchParams.get("category");
 
-    // Make sure productId is the MongoDB _id
-const goToProductsDetail = (productId) => {
-  console.log("Navigating to product detail:", productId); // debug
-  router.push(`/productDetail/${productId}`);
-};
-
-
+    const goToProductsDetail = (productId) => {
+        router.push(`/productDetail/${productId}`);
+    };
 
     const [dropdownOpen, setDropdownOpen] = useState(false);
-    const [filter, setFilter] = useState(""); // current filter option
-
+    const [filter, setFilter] = useState(""); 
     const [products, setProducts] = useState([]);
 
     // Sort products based on filter
@@ -46,34 +38,42 @@ const goToProductsDetail = (productId) => {
 
     useEffect(() => {
         const loadProducts = async () => {
-            const data = await fetchProducts();
-            setProducts(data);
-        };
-        loadProducts();
-    }, []);
+            try {
+                let url = "/api/products";
+                if (category) {
+                    url += `?category=${category.toLowerCase()}`; 
+                }
 
-    if (!products.length) {
-        return (
-            <div>
-               
-                <p className="h-100 text-center text-lg my-10 flex items-center justify-center gap-2">
-                    Oops! Nothing here yet. Stay tuned...  <FiSmile size={20} />
-                </p>
-            </div>
-        );
-    }
+                const res = await fetch(url);
+                const data = await res.json();
+
+             
+                setProducts(Array.isArray(data) ? data : []);
+            } catch (err) {
+                console.error("Failed to load products:", err);
+                setProducts([]);
+            }
+        };
+
+        loadProducts();
+    }, [category]);
 
     return (
         <section className="container mx-auto px-3">
             {/* Header */}
             <div className="flex justify-end sm:justify-between space-x-3 items-center mt-4">
-                {/* Category */}
-                <div className="hidden sm:flex items-center space-x-4 ">
-                    <h1 className="text-[#A4A4A4] font-medium">Category</h1>
-                    <FiChevronRight size={20} className="text-[#A4A4A4]" />
-                    <Link href={`/products?category=${category}`}>
-                        <h1 className="text-black font-medium">{category}</h1>
+                {/* Breadcrumb */}
+                <div className="hidden sm:flex items-center space-x-2 text-[#A4A4A4] mt-4">
+                    <Link href="/products" className="hover:text-black">
+                        Category
                     </Link>
+                    <FiChevronRight size={16} />
+                    <span>
+                        {category
+                            ? category.charAt(0).toUpperCase() +
+                              category.slice(1)
+                            : "All Products"}
+                    </span>
                 </div>
 
                 {/* Dropdown Filter */}
@@ -129,7 +129,7 @@ const goToProductsDetail = (productId) => {
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 py-10 max-w-7xl mx-auto w-full">
                 {sortedProducts.map((product) => (
                     <div
-                        key={product.id}
+                        key={product._id}
                         className="bg-[#F6F6F6] rounded-lg shadow-md flex flex-col justify-between items-center text-center p-6 hover:shadow-xl transition-all duration-300"
                     >
                         <div>
@@ -150,7 +150,7 @@ const goToProductsDetail = (productId) => {
                             </h1>
                             <button
                                 className="bg-black text-sm sm:text-base text-white rounded-lg py-3 px-8 md:px-12 whitespace-nowrap cursor-pointer"
-                                onClick={() => goToProductsDetail(encodeURIComponent(String(product._id)))}
+                                onClick={() => goToProductsDetail(product._id)}
                             >
                                 Buy Now
                             </button>

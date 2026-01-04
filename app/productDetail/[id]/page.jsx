@@ -31,7 +31,9 @@ export default function ProductsDetail() {
         const fetchProduct = async () => {
             try {
                 console.log("Fetching product with ID:", productId); // debug
-                const res = await fetch(`/api/products/${productId}`);
+                const res = await fetch(`/api/products/${productId}`, {
+                    cache: "no-store",
+                });
                 if (!res.ok) {
                     // handle both 404 and other errors
                     const errorData = await res.json();
@@ -42,6 +44,7 @@ export default function ProductsDetail() {
                 const data = await res.json();
                 setProduct(data);
                 setBigImage(data.images?.[0] || null);
+                  console.log("Fetched product from API:", data);
             } catch (err) {
                 console.error(err);
                 setProduct(null);
@@ -52,7 +55,7 @@ export default function ProductsDetail() {
         if (productId) fetchProduct();
     }, [productId]);
 
-    if (loading) return <div className="text-center mt-10">Loading...</div>;
+    if (loading) return <div className="text-center mt-10 h-screen">Loading...</div>;
     if (!product)
         return <div className="text-center mt-10">Product not found.</div>;
 
@@ -87,7 +90,7 @@ export default function ProductsDetail() {
                 <h2 className="text-black font-medium">{productFirstWord}</h2>
             </div>
 
-            <div className="md:max-w-7xl mx-auto flex flex-col md:flex-row h-auto py-5">
+            <div className="md:max-w-7xl mx-auto flex flex-col md:flex-row h-auto py-5 md:my-10">
                 {/* Left Side Images */}
                 <div className="md:w-1/2 flex flex-col md:flex-row justify-evenly items-center">
                     <div className="hidden md:flex flex-row md:flex-col gap-4 justify-center">
@@ -96,8 +99,8 @@ export default function ProductsDetail() {
                                 key={index}
                                 src={img}
                                 alt={`${product.name} view ${index + 1}`}
-                                width={800}
-                                height={800}
+                                width={1000}
+                                height={1000}
                                 className="w-20 h-auto object-contain cursor-pointer"
                                 onClick={() => setBigImage(img)}
                             />
@@ -108,8 +111,8 @@ export default function ProductsDetail() {
                         <Image
                             src={bigImage}
                             alt={product.name}
-                            width={800}
-                            height={800}
+                            width={1000}
+                            height={1000}
                             className="w-80 md:w-96 h-auto object-contain"
                         />
                     </div>
@@ -120,8 +123,8 @@ export default function ProductsDetail() {
                                 key={index}
                                 src={img}
                                 alt={`${product.name} view ${index + 1}`}
-                                width={800}
-                                height={800}
+                                width={1000}
+                                height={1000}
                                 className="w-20 h-auto object-contain cursor-pointer"
                                 onClick={() => setBigImage(img)}
                             />

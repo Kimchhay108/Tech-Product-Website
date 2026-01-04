@@ -315,8 +315,8 @@ export default function HomePage() {
                                 </div>
                             ))
                         ) : (
-                            <p className="text-center col-span-full">
-                                No products found
+                            <p className="text-center font-bold col-span-full">
+                                Coming soon!
                             </p>
                         )}
                     </div>
