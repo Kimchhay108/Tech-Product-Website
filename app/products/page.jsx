@@ -167,12 +167,6 @@ export default function ProductsPage() {
                 <button className="px-4 py-2 cursor-pointer text-center rounded-lg bg-black text-white">
                     1
                 </button>
-                <button className="px-4 py-2 cursor-pointer text-center rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
-                    2
-                </button>
-                <button className="px-4 py-2 cursor-pointer text-center rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">
-                    3
-                </button>
                 <button className="mr-4 py-2 cursor-pointer ">
                     <FiChevronRight size={20} />
                 </button>
