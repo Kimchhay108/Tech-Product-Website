@@ -241,7 +241,7 @@ export default function HomePage() {
                 </div>
             </section>
 
-            {/* New Arrivals & Products Grid */}
+            {/* Products Grid */}
             <section className="px-3">
                 <div className="max-w-7xl mx-auto py-15">
                     {/* Header Tabs */}
@@ -284,26 +284,29 @@ export default function HomePage() {
                             products.map((product) => (
                                 <div
                                     key={product._id}
-                                    className="bg-[#F6F6F6] p-5 rounded text-center text-black hover:shadow-md flex flex-col h-full"
+                                    className="bg-[#F6F6F6] p-5 rounded text-center text-black hover:shadow-md flex flex-col h-full justify-between"
                                 >
-                                    <Image
-                                        src={
-                                            product.images?.[0] ||
-                                            "/placeholder.png"
-                                        }
-                                        alt={product.name}
-                                        width={600}
-                                        height={600}
-                                        className="w-64 h-auto object-contain mx-auto p-5"
-                                    />
+                                    <div>
+                                        <Image
+                                            src={
+                                                product.images?.[0] ||
+                                                "/placeholder.png"
+                                            }
+                                            alt={product.name}
+                                            width={600}
+                                            height={600}
+                                            className="w-full h-full md:h-64 object-contain mx-auto p-5"
+                                        />
+                                    </div>
+                                    <div>
                                     <h1 className="text-base sm:text-md md:text-lg font-semibold mb-auto">
                                         {product.name}
                                     </h1>
-                                    <h1 className="text-3xl font-semibold my-3">
+                                    <h1 className="text-2xl md:text-3xl font-semibold my-3">
                                         ${product.price}
                                     </h1>
                                     <button
-                                        className="bg-black text-white text-sm sm:text-base py-4 px-8 rounded-2xl cursor-pointer"
+                                        className="bg-black text-white text-sm sm:text-base py-3 px-8 md:px-12 rounded-xl cursor-pointer"
                                         onClick={() =>
                                             router.push(
                                                 `/productDetail/${product._id}`
@@ -312,6 +315,7 @@ export default function HomePage() {
                                     >
                                         Buy Now
                                     </button>
+                                    </div>
                                 </div>
                             ))
                         ) : (

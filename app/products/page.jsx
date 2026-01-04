@@ -161,13 +161,13 @@ export default function ProductsPage() {
 
             {/* Pagination */}
             <div className="flex justify-center items-center space-x-3 my-5">
-                <button className="mr-4 py-2 cursor-pointer ">
+                <button className="mr-4 py-2 cursor-pointer text-[#A4A4A4]">
                     <FiChevronLeft size={20} />
                 </button>
                 <button className="px-4 py-2 cursor-pointer text-center rounded-lg bg-black text-white">
                     1
                 </button>
-                <button className="mr-4 py-2 cursor-pointer ">
+                <button className="mr-4 py-2 cursor-pointer text-[#A4A4A4]">
                     <FiChevronRight size={20} />
                 </button>
             </div>
