@@ -153,7 +153,7 @@ export default function HomePage() {
                                     Apple AirPods Max
                                 </h1>
                                 <p className="text-[var(--secondary)] text-base sm:text-base md:text-sm lg:text-base">
-                                    Computational audio. Listen, it's powerful.
+                                    Computational audio. Listen, it&apos;s powerful.
                                 </p>
                             </div>
                         </div>
