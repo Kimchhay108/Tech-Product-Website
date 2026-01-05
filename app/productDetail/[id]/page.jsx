@@ -16,7 +16,6 @@ export default function ProductsDetail() {
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [bigImage, setBigImage] = useState(null);
-    const [isWishlisted, setIsWishlisted] = useState(false);
 
     const colors = ["#000000", "#E8E8E8", "#781DBC", "#E1B000"];
     const [selectedColor, setSelectedColor] = useState(colors[0]);
@@ -87,7 +86,7 @@ export default function ProductsDetail() {
         <section className="bg-gray-50 min-h-screen">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 {/* Breadcrumb */}
-                <nav className="hidden sm:flex items-center space-x-2 mb-6 text-sm">
+                <nav className="hidden sm:flex items-center space-x-2 my-4 pb-4">
                     <Link href="/products" className="text-gray-500 hover:text-gray-900 transition-colors">
                         Category
                     </Link>
@@ -108,14 +107,14 @@ export default function ProductsDetail() {
                         {/* Left Side - Images */}
                         <div className="flex flex-col-reverse md:flex-row gap-4">
                             {/* Thumbnail Images */}
-                            <div className="flex md:flex-col gap-3 overflow-x-auto md:overflow-visible">
+                            <div className="flex md:flex-col gap-4 overflow-x-auto md:overflow-visible">
                                 {images.map((img, index) => (
                                     <button
                                         key={index}
                                         onClick={() => setBigImage(img)}
-                                        className={`relative -shrink-0 w-20 h-20 rounded-lg overflow-hidden border-1 transition-all ${
+                                        className={`relative shrink-0 w-20 h-20 rounded-lg overflow-hidden transition-all ${
                                             bigImage === img
-                                                ? "border-black shadow-md"
+                                                ? "border-black shadow-sm"
                                                 : "border-gray-200 hover:border-gray-400"
                                         }`}
                                     >
@@ -131,8 +130,8 @@ export default function ProductsDetail() {
                             </div>
 
                             {/* Main Image */}
-                            <div className="flex-1 relative bg-gray-50 rounded-2xl overflow-hidden group">
-                                <div className="aspect-square flex items-center justify-center p-8">
+                            <div className="flex-1 relative rounded-2xl overflow-hidden group">
+                                <div className="aspect-square flex items-center justify-center p-4">
                                     <Image
                                         src={bigImage}
                                         alt={product.name}
@@ -150,7 +149,7 @@ export default function ProductsDetail() {
                         <div className="flex flex-col space-y-6">
                             {/* Product Title & Rating */}
                             <div>
-                                <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-3">
+                                <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-3">
                                     {product.name}
                                 </h1>       
                             </div>
@@ -164,17 +163,15 @@ export default function ProductsDetail() {
                                     <span className="text-xl text-gray-400 line-through">
                                         ${(product.price * 1.15).toFixed(2)}
                                     </span>
-                                    <span className="px-3 py-1 bg-green-100 text-green-700 text-sm font-semibold rounded-full">
-                                        Save 15%
-                                    </span>
+                                  
                                 </div>
-                                <p className="text-sm text-gray-600 mt-2">Tax included. Shipping calculated at checkout.</p>
+                                
                             </div>
 
                             {/* Color Selection */}
                             <div>
                                 <div className="flex items-center justify-between mb-3">
-                                    <label className="text-sm font-semibold text-gray-900">
+                                    <label className=" font-semibold text-gray-900">
                                         Color: <span className="font-normal text-gray-600">{colorNames[selectedColor]}</span>
                                     </label>
                                 </div>
@@ -205,7 +202,7 @@ export default function ProductsDetail() {
 
                             {/* Storage Selection */}
                             <div>
-                                <label className="text-sm font-semibold text-gray-900 mb-3 block">
+                                <label className=" font-semibold text-gray-900 mb-3 block">
                                     Storage Capacity
                                 </label>
                                 <div className="grid grid-cols-4 gap-3">
@@ -225,37 +222,16 @@ export default function ProductsDetail() {
                                 </div>
                             </div>
 
-                            {/* Key Features */}
-                            {phoneDetails.length > 0 && (
-                                <div>
-                                    <h3 className="text-sm font-semibold text-gray-900 mb-3">Key Features</h3>
-                                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-                                        {phoneDetails.map((detail, index) => (
-                                            <div
-                                                key={index}
-                                                className="bg-gray-50 p-3 rounded-lg border border-gray-200"
-                                            >
-                                                <p className="text-xs text-gray-500 mb-1">
-                                                    {detail.part}
-                                                </p>
-                                                <p className="text-sm font-medium text-gray-900">
-                                                    {detail.detail}
-                                                </p>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
                             {/* Description */}
-                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                <p className="text-sm text-gray-700 leading-relaxed">{description}</p>
+                            <div className="rounded-lg">
+                                <p className="py-2 font-semibold">Description:</p>
+                                <p className="text-sm text-gray-700">{description}</p>
                             </div>
 
                             {/* Quantity & Add to Cart */}
-                            <div className="space-y-4 pt-4">
+                            <div className="space-y-4 pt-2">
                                 <div>
-                                    <label className="text-sm font-semibold text-gray-900 mb-2 block">
+                                    <label className=" font-semibold text-gray-900 mb-2 block">
                                         Quantity
                                     </label>
                                     <div className="flex items-center gap-4">
@@ -276,14 +252,11 @@ export default function ProductsDetail() {
                                                 +
                                             </button>
                                         </div>
-                                        <span className="text-sm text-gray-600">
-                                            Only <span className="font-semibold text-orange-600">12 items</span> left in stock
-                                        </span>
                                     </div>
                                 </div>
 
                                 <button
-                                    className="w-full py-4 bg-black text-white font-semibold rounded-xl hover:bg-gray-800 active:scale-98 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                                    className="w-full py-4 bg-black text-white font-semibold rounded-xl shadow-md hover:shadow-xl flex items-center justify-center gap-2 cursor-pointer"
                                     onClick={() => {
                                         dispatch({
                                             type: CartActions.ADD,
@@ -310,17 +283,17 @@ export default function ProductsDetail() {
                             {/* Trust Badges */}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-gray-200">
                                 <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-blue-100 rounded-lg">
-                                        <FiTruck size={24} className="text-blue-600" />
+                                    <div className="p-2 bg-[#F6F6F6] rounded-lg">
+                                        <FiTruck size={24} className="text-[#797979]" />
                                     </div>
                                     <div>
-                                        <p className="text-sm font-semibold text-gray-900">Free Shipping</p>
-                                        <p className="text-xs text-gray-600">On orders over $50</p>
+                                        <p className="text-sm font-semibold text-gray-900">Fast Shipping</p>
+                                        <p className="text-xs text-gray-600">Only 1.5$ nationally</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-green-100 rounded-lg">
-                                        <FiShield size={24} className="text-green-600" />
+                                    <div className="p-2 bg-[#F6F6F6] rounded-lg">
+                                        <FiShield size={24} className="text-[#797979]" />
                                     </div>
                                     <div>
                                         <p className="text-sm font-semibold text-gray-900">2 Year Warranty</p>
@@ -328,8 +301,8 @@ export default function ProductsDetail() {
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-purple-100 rounded-lg">
-                                        <FiCreditCard size={24} className="text-purple-600" />
+                                    <div className="p-2 bg-[#F6F6F6] rounded-lg">
+                                        <FiCreditCard size={24} className="text-[#797979]" />
                                     </div>
                                     <div>
                                         <p className="text-sm font-semibold text-gray-900">Secure Payment</p>

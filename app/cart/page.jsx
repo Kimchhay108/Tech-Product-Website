@@ -7,13 +7,13 @@ import {
     CartActions,
 } from "../context/CartContext";
 import { useRouter } from "next/navigation";
-import { FiShoppingBag, FiTrash2, FiArrowLeft, FiTruck, FiShield, FiTag } from "react-icons/fi";
+import { FiShoppingBag, FiTrash2, FiArrowLeft, FiTruck, FiShield, FiCreditCard, FiPackage } from "react-icons/fi";
 
 export default function CartPage() {
     const router = useRouter();
 
     const goToHome = () => {
-        router.push("/home");
+        router.push("/products");
     }
 
     const goToCheckout = () => {
@@ -33,7 +33,7 @@ export default function CartPage() {
         subTotal += item.price * item.quantity;
     });
 
-    const deliveryFee = subTotal > 50 ? 0 : 1.5;
+    const deliveryFee = 1.5;
     let total = subTotal + deliveryFee;
 
     const colorNames = {
@@ -47,8 +47,8 @@ export default function CartPage() {
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
                 <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8 text-center">
-                    <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <FiShoppingBag size={48} className="text-gray-400" />
+                    <div className="w-24 h-24 bg-[#F4F4F4] rounded-full flex items-center justify-center mx-auto mb-6">
+                        <FiShoppingBag size={48} className="text-[#797979]" />
                     </div>
                     <h1 className="text-2xl font-bold text-gray-900 mb-3">Your cart is empty</h1>
                     <p className="text-gray-600 mb-6">
@@ -190,37 +190,35 @@ export default function CartPage() {
                         ))}
 
                         {/* Benefits Section */}
-                        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-3 bg-blue-100 rounded-lg">
-                                        <FiTruck size={24} className="text-blue-600" />
-                                    </div>
-                                    <div>
-                                        <p className="font-semibold text-gray-900 text-sm">Free Shipping</p>
-                                        <p className="text-xs text-gray-600">Orders over $50</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <div className="p-3 bg-green-100 rounded-lg">
-                                        <FiShield size={24} className="text-green-600" />
-                                    </div>
-                                    <div>
-                                        <p className="font-semibold text-gray-900 text-sm">Secure Payment</p>
-                                        <p className="text-xs text-gray-600">100% protected</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <div className="p-3 bg-purple-100 rounded-lg">
-                                        <FiTag size={24} className="text-purple-600" />
-                                    </div>
-                                    <div>
-                                        <p className="font-semibold text-gray-900 text-sm">Best Price</p>
-                                        <p className="text-xs text-gray-600">Price guarantee</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-gray-200">
+                                                        <div className="flex items-center justify-center gap-3">
+                                                            <div className="p-2 bg-[#F6F6F6] rounded-lg">
+                                                                <FiTruck size={24} className="text-[#797979]" />
+                                                            </div>
+                                                            <div>
+                                                                <p className="text-sm font-semibold text-gray-900">Fast Shipping</p>
+                                                                <p className="text-xs text-gray-600">Only 1.5$ nationally</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex items-center justify-center  gap-3">
+                                                            <div className="p-2 bg-[#F6F6F6] rounded-lg">
+                                                                <FiShield size={24} className="text-[#797979]" />
+                                                            </div>
+                                                            <div>
+                                                                <p className="text-sm font-semibold text-gray-900">2 Year Warranty</p>
+                                                                <p className="text-xs text-gray-600">Full coverage</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex items-center justify-center gap-3">
+                                                            <div className="p-2 bg-[#F6F6F6] rounded-lg">
+                                                                <FiCreditCard size={24} className="text-[#797979]" />
+                                                            </div>
+                                                            <div>
+                                                                <p className="text-sm font-semibold text-gray-900">Secure Payment</p>
+                                                                <p className="text-xs text-gray-600">100% protected</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                     </div>
 
                     {/* Right Side - Order Summary */}
@@ -237,30 +235,13 @@ export default function CartPage() {
                                 <div className="flex justify-between text-gray-700">
                                     <span className="flex items-center gap-2">
                                         Shipping
-                                        {deliveryFee === 0 && (
-                                            <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">
-                                                FREE
-                                            </span>
-                                        )}
                                     </span>
                                     <span className="font-semibold">
-                                        {deliveryFee === 0 ? "FREE" : `$${deliveryFee.toFixed(2)}`}
+                                        {"$" + deliveryFee }
                                     </span>
                                 </div>
 
-                                {subTotal < 50 && (
-                                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                                        <p className="text-sm text-blue-800">
-                                            Add <span className="font-bold">${(50 - subTotal).toFixed(2)}</span> more to get free shipping!
-                                        </p>
-                                        <div className="w-full bg-blue-200 rounded-full h-2 mt-2">
-                                            <div 
-                                                className="bg-blue-600 h-2 rounded-full transition-all"
-                                                style={{ width: `${Math.min((subTotal / 50) * 100, 100)}%` }}
-                                            />
-                                        </div>
-                                    </div>
-                                )}
+                               
 
                                 <div className="border-t border-gray-200 pt-4">
                                     <div className="flex justify-between items-center">
@@ -276,14 +257,14 @@ export default function CartPage() {
                             </div>
 
                             <button
-                                className="w-full bg-black text-white py-4 rounded-xl font-semibold hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl active:scale-95 mb-3"
+                                className="w-full bg-black text-white py-4 rounded-xl font-semibold hover:shadow-md mb-3 cursor-pointer"
                                 onClick={goToCheckout}
                             >
                                 Proceed to Checkout
                             </button>
 
                             <button
-                                className="w-full bg-gray-100 text-gray-900 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-all"
+                                className="w-full bg-gray-100 text-gray-900 py-3 rounded-xl font-semibold hover:bg-gray-200 cursor-pointer"
                                 onClick={goToHome}
                             >
                                 Continue Shopping
@@ -292,8 +273,8 @@ export default function CartPage() {
                             {/* Security Badge */}
                             <div className="mt-6 pt-6 border-t border-gray-200">
                                 <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
-                                    <FiShield size={16} />
-                                    <span>Secure checkout powered by SSL encryption</span>
+                                    <FiPackage size={16} />
+                                    <span>Let get your items deliver to your door</span>
                                 </div>
                             </div>
                         </div>

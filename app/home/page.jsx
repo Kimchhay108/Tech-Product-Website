@@ -252,7 +252,7 @@ export default function HomePage() {
                     {/* Header Tabs */}
                     <div className="flex space-x-7 justify-center md:justify-start items-center text-start text-lg mb-8">
                         <p
-                            className={`cursor-pointer transition-all pb-2 ${
+                            className={`cursor-pointer ${
                                 activeTab === "newArrival"
                                     ? "text-black font-semibold border-b-2 border-black"
                                     : "text-[#8B8B8B] hover:text-black"
@@ -262,7 +262,7 @@ export default function HomePage() {
                             New Arrival
                         </p>
                         <p
-                            className={`cursor-pointer transition-all pb-2 ${
+                            className={`cursor-pointer ${
                                 activeTab === "bestSeller"
                                     ? "text-black font-semibold border-b-2 border-black"
                                     : "text-[#8B8B8B] hover:text-black"
@@ -272,7 +272,7 @@ export default function HomePage() {
                             BestSeller
                         </p>
                         <p
-                            className={`cursor-pointer transition-all pb-2 ${
+                            className={`cursor-pointer ${
                                 activeTab === "specialOffer"
                                     ? "text-black font-semibold border-b-2 border-black"
                                     : "text-[#8B8B8B] hover:text-black"
@@ -289,7 +289,7 @@ export default function HomePage() {
                             products.map((product) => (
                                 <div
                                     key={product._id}
-                                    className="group relative bg-white border border-gray-200 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:border-gray-400 hover:bg-gray-50 flex flex-col h-full cursor-pointer"
+                                    className="group relative bg-white border border-gray-200 shadow-md rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:border-gray-300 flex flex-col h-full cursor-pointer"
                                     onMouseEnter={() => setHoveredProduct(product._id)}
                                     onMouseLeave={() => setHoveredProduct(null)}
                                     onClick={() => router.push(`/productDetail/${product._id}`)}
@@ -297,7 +297,7 @@ export default function HomePage() {
                                     
 
                                     {/* Image Container */}
-                                    <div className="relative bg-gray-50 p-6 aspect-square flex items-center justify-center overflow-hidden">
+                                    <div className="relative bg-white p-6 aspect-square flex items-center justify-center overflow-hidden">
                                         <Image
                                             src={product.images?.[0] || "/placeholder.png"}
                                             alt={product.name}
@@ -342,7 +342,7 @@ export default function HomePage() {
                                     </div>
 
                                     {/* Hover Overlay Effect */}
-                                    <div className="absolute inset-0 border-2 border-transparent group-hover:border-gray-400 rounded-xl pointer-events-none transition-all duration-300 opacity-0 group-hover:opacity-100"></div>
+                                    
                                 </div>
                             ))
                         ) : (

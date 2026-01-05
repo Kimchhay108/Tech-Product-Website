@@ -129,10 +129,10 @@ export default function checkoutPage(){
                         </div>
                         
 
-                        <p className="text-sm">Address</p>
+                        <p className=" font-semibold">Address:</p>
                         <p>{address}</p>
-                        <p className="text-sm">Shipping Method</p>
-                        <p>Motobike</p>
+                        <p className=" font-semibold">Shipping Method:</p>
+                        <p>Express Delivery</p>
 
                         <div className="flex justify-between text-lg font-semibold">
                             <span>Subtotal:</span>
