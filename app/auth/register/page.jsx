@@ -272,7 +272,7 @@ export default function Register({ setSelectedAuth, setAuth }) {
             
             <div className="bg-blue-50 border border-blue-200 rounded p-4 mb-6">
               <p className="text-sm text-blue-800">
-                <strong>Check your spam folder</strong> if you don't see the email in your inbox.
+                <strong>Check your spam folder</strong> if you don&apos;t see the email in your inbox.
               </p>
             </div>
 
@@ -286,7 +286,7 @@ export default function Register({ setSelectedAuth, setAuth }) {
               Go to Login
             </button>
             <p className="text-sm text-gray-500 mt-4">
-              Didn't get an email? {" "}
+              Didn&apos;t get an email? {" "}
               <button 
                 onClick={handleResendVerification}
                 disabled={resendLoading || resendCooldown > 0}

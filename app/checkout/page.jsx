@@ -8,7 +8,7 @@ import { FiChevronDown, FiSend, FiPhone, FiDollarSign } from "react-icons/fi";
 import Image from "next/image";
 
 
-export default function checkoutPage(){
+export default function CheckoutPage() {
     const router = useRouter();
 
     // ================ Summary ================

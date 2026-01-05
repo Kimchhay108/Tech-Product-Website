@@ -170,7 +170,7 @@ export default function Login({ setSelectedAuth, setAuth }) {
                     <div className="bg-white p-8 rounded-lg shadow-xl max-w-md w-full mx-4">
                         <h2 className="text-2xl font-bold mb-2">Reset Password</h2>
                         <p className="text-gray-600 mb-5">
-                            Enter your email and we'll send you a link to reset your password.
+                            Enter your email and we&apos;ll send you a link to reset your password.
                         </p>
 
                         <div className="mb-4">

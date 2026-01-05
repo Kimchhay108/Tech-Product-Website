@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -24,13 +23,9 @@ ChartJS.register(
 );
 
 export default function OverviewChart({ data, title }) {
-    const [isMounted, setIsMounted] = useState(false);
+    const isClient = typeof window !== "undefined";
 
-    useEffect(() => {
-        setIsMounted(true);
-    }, []);
-
-    if (!isMounted) {
+    if (!isClient) {
         return (
             <div className="bg-white p-4 rounded shadow">
                 <p className="text-gray-500">Loading chart...</p>

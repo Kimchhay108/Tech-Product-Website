@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { FiChevronRight, FiHome, FiGrid, FiPackage, FiLogOut } from "react-icons/fi";
 import { FaUserCircle } from "react-icons/fa";
 import Link from "next/link";
@@ -14,25 +14,21 @@ export default function StaffLayout({ children }) {
 
     const [openProfile, setOpenProfile] = useState(false);
     const [openMenu, setOpenMenu] = useState(false);
-    const [authChecked, setAuthChecked] = useState(false); // prevent flicker
+
+    const auth = useMemo(() => getAuth(), []);
+    const role = auth?.user?.role;
+    const isStaff = role === "staff";
 
     useEffect(() => {
-        const auth = getAuth();
-
         if (!auth) {
-            router.replace("/profile"); // not logged in → profile page
+            router.replace("/profile");
             return;
         }
 
-        if (auth.user.role !== "staff") {
-            // not staff → redirect to proper dashboard
-            if (auth.user.role === "admin") router.replace("/admin");
-            else router.replace("/user");
-            return;
+        if (!isStaff) {
+            router.replace(role === "admin" ? "/admin" : "/user");
         }
-
-        setAuthChecked(true); // staff confirmed
-    }, [router]);
+    }, [auth, isStaff, role, router]);
 
     const handleLogout = () => {
         logout(); // clear auth
@@ -42,7 +38,7 @@ export default function StaffLayout({ children }) {
     const isActive = (path) => path === "/staff" ? pathname === "/staff" : pathname.startsWith(path);
 
     // Wait until auth is checked before rendering to prevent flicker redirect
-    if (!authChecked) return null;
+    if (!isStaff) return null;
 
     return (
         <div className="flex min-h-screen">
