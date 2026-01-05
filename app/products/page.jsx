@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -18,7 +18,7 @@ import {
     FiEye,
 } from "react-icons/fi";
 
-export default function ProductsPage() {
+function ProductsContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const category = searchParams.get("category");
@@ -58,29 +58,25 @@ export default function ProductsPage() {
     }, [category]);
 
     return (
-        <section className="min-h-screen bg-gray-50 py-3">
-            <div className="container mx-auto px-4 ">
+        <section className="min-h-screen bg-gray-50">
+            <div className="container mx-auto px-4 py-6">
                 {/* Header */}
-                <div className="p-6 ">
+                <div className="p-6 mb-6">
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                         {/* Breadcrumb & Title */}
                         <div>
                             <nav className="hidden sm:flex items-center space-x-2 text-gray-500 mb-2">
-                                <Link
-                                    href="/products"
-                                    className="hover:text-black transition-colors"
-                                >
+                                <Link href="/products" className="hover:text-black transition-colors">
                                     Category
                                 </Link>
-
                                 <FiChevronRight size={14} />
-
-                                <span className="text-black font-medium">
-                                    {category
-                                        ? category.charAt(0).toUpperCase() +
-                                          category.slice(1)
-                                        : "All Products"}
-                                </span>
+                                {category && (
+                                    <>
+                                        <span className="text-black font-medium">
+                                            {category.charAt(0).toUpperCase() + category.slice(1)}
+                                        </span>
+                                    </>
+                                )}
                             </nav>
                         </div>
 
@@ -113,9 +109,7 @@ export default function ProductsPage() {
                             {/* Sort Dropdown */}
                             <div className="relative inline-block w-56">
                                 <button
-                                    onClick={() =>
-                                        setDropdownOpen(!dropdownOpen)
-                                    }
+                                    onClick={() => setDropdownOpen(!dropdownOpen)}
                                     className="w-full rounded-lg border-2 border-gray-200 p-3 bg-white text-sm shadow-md flex justify-between items-center hover:border-gray-300 transition-all"
                                 >
                                     <span className="font-medium">
@@ -145,22 +139,10 @@ export default function ProductsPage() {
                                     }`}
                                 >
                                     {[
-                                        {
-                                            value: "low-to-high",
-                                            label: "Price: Low → High",
-                                        },
-                                        {
-                                            value: "high-to-low",
-                                            label: "Price: High → Low",
-                                        },
-                                        {
-                                            value: "name-az",
-                                            label: "Name: A → Z",
-                                        },
-                                        {
-                                            value: "name-za",
-                                            label: "Name: Z → A",
-                                        },
+                                        { value: "low-to-high", label: "Price: Low → High" },
+                                        { value: "high-to-low", label: "Price: High → Low" },
+                                        { value: "name-az", label: "Name: A → Z" },
+                                        { value: "name-za", label: "Name: Z → A" },
                                     ].map((option) => (
                                         <button
                                             key={option.value}
@@ -191,33 +173,23 @@ export default function ProductsPage() {
                         {sortedProducts.map((product) => (
                             <div
                                 key={product._id}
-                                className={`group relative bg-white border border-gray-200 shadow-md rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:border-gray-300 ${
-                                    viewMode === "list"
-                                        ? "flex"
-                                        : "flex flex-col"
+                                className={`group relative bg-white border border-gray-200 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:border-gray-300 ${
+                                    viewMode === "list" ? "flex" : "flex flex-col"
                                 }`}
-                                onMouseEnter={() =>
-                                    setHoveredProduct(product._id)
-                                }
+                                onMouseEnter={() => setHoveredProduct(product._id)}
                                 onMouseLeave={() => setHoveredProduct(null)}
                             >
                                 {viewMode === "grid" ? (
-                                    // Grid View
                                     <>
+                                        {/* Grid View */}
+
                                         {/* Image */}
                                         <div
-                                            className="relative bg-white p-6 aspect-square flex items-center justify-center overflow-hidden cursor-pointer"
-                                            onClick={() =>
-                                                router.push(
-                                                    `/productDetail/${product._id}`
-                                                )
-                                            }
+                                            className="relative bg-gray-50 p-6 aspect-square flex items-center justify-center overflow-hidden cursor-pointer"
+                                            onClick={() => router.push(`/productDetail/${product._id}`)}
                                         >
                                             <Image
-                                                src={
-                                                    product.images?.[0] ||
-                                                    "/placeholder.png"
-                                                }
+                                                src={product.images?.[0] || "/placeholder.png"}
                                                 alt={product.name}
                                                 width={400}
                                                 height={400}
@@ -228,12 +200,8 @@ export default function ProductsPage() {
                                         {/* Info */}
                                         <div className="p-4 flex flex-col flex-grow">
                                             <h2
-                                                className="text-sm md:text-base font-semibold text-gray-900 mb-2 line-clamp-2 min-h-[2.5rem] cursor-pointer"
-                                                onClick={() =>
-                                                    router.push(
-                                                        `/productDetail/${product._id}`
-                                                    )
-                                                }
+                                                className="text-sm md:text-base font-semibold text-gray-900 mb-2 line-clamp-2 min-h-[2.5rem] cursor-pointer hover:text-blue-600 transition-colors"
+                                                onClick={() => router.push(`/productDetail/${product._id}`)}
                                             >
                                                 {product.name}
                                             </h2>
@@ -247,34 +215,26 @@ export default function ProductsPage() {
 
                                             {/* Button */}
                                             <button
-                                                className="w-full bg-black text-white py-3 px-4 rounded-lg font-medium active:scale-95 flex items-center justify-center gap-2 text-sm whitespace-nowrap cursor-pointer"
-                                                onClick={() =>
-                                                    router.push(
-                                                        `/productDetail/${product._id}`
-                                                    )
-                                                }
+                                                className="w-full bg-black text-white py-2.5 px-4 rounded-lg font-medium transition-all duration-300 hover:bg-gray-800 active:scale-95 flex items-center justify-center gap-2 text-sm"
+                                                onClick={() => router.push(`/productDetail/${product._id}`)}
                                             >
                                                 <FiShoppingCart size={16} />
                                                 <span>Add to Cart</span>
                                             </button>
                                         </div>
+
+                                        {/* Hover Border */}
+                                        <div className="absolute inset-0 border-2 border-transparent group-hover:border-gray-400 rounded-xl pointer-events-none transition-all duration-300 opacity-0 group-hover:opacity-100"></div>
                                     </>
                                 ) : (
-                                    // List View
                                     <>
+                                        {/* List View */}
                                         <div
                                             className="w-48 shrink-0 bg-gray-50 p-6 flex items-center justify-center cursor-pointer"
-                                            onClick={() =>
-                                                router.push(
-                                                    `/productDetail/${product._id}`
-                                                )
-                                            }
+                                            onClick={() => router.push(`/productDetail/${product._id}`)}
                                         >
                                             <Image
-                                                src={
-                                                    product.images?.[0] ||
-                                                    "/placeholder.png"
-                                                }
+                                                src={product.images?.[0] || "/placeholder.png"}
                                                 alt={product.name}
                                                 width={200}
                                                 height={200}
@@ -285,35 +245,25 @@ export default function ProductsPage() {
                                         <div className="flex-1 p-6 flex flex-col justify-between">
                                             <div>
                                                 <h2
-                                                    className="text-xl font-semibold text-gray-900 mb-2 cursor-pointer"
-                                                    onClick={() =>
-                                                        router.push(
-                                                            `/productDetail/${product._id}`
-                                                        )
-                                                    }
+                                                    className="text-xl font-semibold text-gray-900 mb-2 cursor-pointer hover:text-blue-600 transition-colors"
+                                                    onClick={() => router.push(`/productDetail/${product._id}`)}
                                                 >
                                                     {product.name}
                                                 </h2>
 
                                                 <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                                                    {product.description ||
-                                                        "High-quality product with excellent features and performance."}
+                                                    {product.description || "High-quality product with excellent features and performance."}
                                                 </p>
                                             </div>
 
-                                            {/* PRICE + BUTTON (RESPONSIVE) */}
-                                            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                                            <div className="flex items-center justify-between">
                                                 <span className="text-3xl font-bold text-gray-900">
                                                     ${product.price}
                                                 </span>
 
                                                 <button
-                                                    className="bg-black text-white py-3 px-2 md:px-8 rounded-lg font-medium transition-all duration-300 hover:bg-gray-800 active:scale-95 flex items-center justify-center gap-2 w-full sm:w-auto whitespace-nowrap"
-                                                    onClick={() =>
-                                                        router.push(
-                                                            `/productDetail/${product._id}`
-                                                        )
-                                                    }
+                                                    className="bg-black text-white py-3 px-8 rounded-lg font-medium transition-all duration-300 hover:bg-gray-800 active:scale-95 flex items-center gap-2"
+                                                    onClick={() => router.push(`/productDetail/${product._id}`)}
                                                 >
                                                     <FiShoppingCart size={18} />
                                                     <span>Add to Cart</span>
@@ -330,12 +280,9 @@ export default function ProductsPage() {
                         <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                             <FiGrid size={40} className="text-gray-400" />
                         </div>
-                        <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                            No products found
-                        </h3>
+                        <h3 className="text-xl font-semibold text-gray-900 mb-2">No products found</h3>
                         <p className="text-gray-600 mb-6">
-                            Try adjusting your filters or browse other
-                            categories
+                            Try adjusting your filters or browse other categories
                         </p>
                         <Link
                             href="/products"
@@ -349,18 +296,32 @@ export default function ProductsPage() {
                 {/* Pagination */}
                 {sortedProducts.length > 0 && (
                     <div className="flex justify-center items-center gap-2 mt-8">
-                        <button className="p-3 cursor-pointer">
+                        <button className="p-3 rounded-lg border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
                             <FiChevronLeft size={20} />
                         </button>
-                        <button className="px-5 py-3 rounded-lg bg-black text-white font-medium cursor-pointer">
+                        <button className="px-5 py-3 rounded-lg bg-black text-white font-medium">
                             1
                         </button>
-                        <button className="p-3 cursor-pointer">
+                        <button className="px-5 py-3 rounded-lg border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all">
+                            2
+                        </button>
+                        <button className="px-5 py-3 rounded-lg border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all">
+                            3
+                        </button>
+                        <button className="p-3 rounded-lg border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all">
                             <FiChevronRight size={20} />
                         </button>
                     </div>
                 )}
             </div>
         </section>
+    );
+}
+
+export default function ProductsPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <ProductsContent />
+        </Suspense>
     );
 }

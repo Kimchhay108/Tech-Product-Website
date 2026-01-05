@@ -19,3 +19,13 @@ export async function registerApi(data) {
 
   return res.json();
 }
+
+export async function savePhoneUserApi(data) {
+  const res = await fetch("/api/save-user", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  return res.json();
+}

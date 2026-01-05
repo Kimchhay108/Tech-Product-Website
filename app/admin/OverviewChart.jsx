@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -23,6 +24,28 @@ ChartJS.register(
 );
 
 export default function OverviewChart({ data, title }) {
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    if (!isMounted) {
+        return (
+            <div className="bg-white p-4 rounded shadow">
+                <p className="text-gray-500">Loading chart...</p>
+            </div>
+        );
+    }
+
+    if (!data || data.length === 0) {
+        return (
+            <div className="bg-white p-4 rounded shadow">
+                <p className="text-gray-500">No chart data yet</p>
+            </div>
+        );
+    }
+
     const chartData = {
         labels: data.map((d) => d.date),
         datasets: [
@@ -37,6 +60,7 @@ export default function OverviewChart({ data, title }) {
 
     const options = {
         responsive: true,
+        maintainAspectRatio: true,
         plugins: {
             legend: { display: true },
         },

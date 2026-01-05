@@ -2,249 +2,302 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { sendOtpApi, registerApi } from "../services/registerApi";
+import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { auth } from "@/lib/firebaseConfig";
+import { savePhoneUserApi } from "../services/registerApi";
+import { login } from "@/lib/auth";
 
-export default function Register({ setSelectedAuth }) {
-    const [showOtpModal, setShowOtpModal] = useState(false);
-    const [showPasswordModal, setShowPasswordModal] = useState(false);
-    const [otpInput, setOtpInput] = useState("");
+export default function Register({ setSelectedAuth, setAuth }) {
+  const [gender, setGender] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [showVerificationModal, setShowVerificationModal] = useState(false);
+  const [verificationEmail, setVerificationEmail] = useState("");
+  const [resendLoading, setResendLoading] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const [userForResend, setUserForResend] = useState(null);
 
-    const [gender, setGender] = useState("");
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [phone, setPhone] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
+  // 🔹 CREATE ACCOUNT
+  const handleCreateAccount = async () => {
+    if (!firstName || !lastName || !dateOfBirth || !email || !password || !gender) {
+      alert("Please fill in all fields");
+      return;
+    }
 
-    const handleRegister = async () => {
-        if (!phone) {
-            alert("Phone number is required");
-            return;
-        }
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
 
-        try {
-            await sendOtpApi(phone); // ✅ SEND OTP
-            setShowOtpModal(true);
-        } catch (err) {
-            alert("Failed to send OTP");
-        }
-    };
+    if (password.length < 6) {
+      alert("Password must be at least 6 characters");
+      return;
+    }
 
-    const handleConfirmOtp = () => {
-        if (!otpInput) {
-            alert("Please enter OTP");
-            return;
-        }
+    setLoading(true);
+    try {
+      // Create user with email and password
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
 
-        setShowOtpModal(false);
-        setShowPasswordModal(true);
-    };
+      console.log("✅ User created:", user.uid);
 
-    const handleCreateAccount = async () => {
-        if (password !== confirmPassword) {
-            alert("Passwords do not match");
-            return;
-        }
+      // Send verification email
+      try {
+        await sendEmailVerification(user);
+        console.log("✅ Verification email sent successfully to:", email);
+      } catch (emailError) {
+        console.error("❌ Failed to send verification email:", emailError);
+        // Continue anyway, user can resend later
+      }
 
-        try {
-            const userData = {
-                gender,
-                firstName,
-                lastName,
-                phone,
-                email,
-                password,
-                otp: otpInput, // ✅ IMPORTANT
-            };
+      // Save user profile to database (always as "user" - staff/admin created by admin only)
+      await savePhoneUserApi({
+        uid: user.uid,
+        phone: "",
+        firstName,
+        lastName,
+        dateOfBirth,
+        gender,
+        email,
+        password,
+        role: "user", // 🔒 Only admin can create staff accounts via /api/staff
+      });
 
-            const response = await registerApi(userData);
+      // Create user object
+      const newUser = {
+        uid: user.uid,
+        fullName: `${firstName} ${lastName}`,
+        firstName,
+        lastName,
+        gender,
+        email,
+        role: "user",
+        emailVerified: false,
+      };
 
-            if (response.success) {
-                setShowPasswordModal(false);
-                alert("Account created 🎉 You can now login!");
-            } else {
-                alert(response.message || "Registration failed");
-            }
-        } catch (err) {
-            alert("Server error");
-        }
-    };
+      // Save to localStorage (persistent storage)
+      login(newUser);
+      
+      // Update component state
+      setAuth({ user: newUser, isLoggedIn: true });
+      
+      // Show verification modal
+      setVerificationEmail(email);
+      setUserForResend(user);
+      setShowVerificationModal(true);
+    } catch (err) {
+      alert(err.message || "Registration failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    return (
-        <>
-            <div className="md:w-1/2 mx-auto">
-                <div className="w-full">
-                    {/* Gender */}
-                    <div className="flex items-center gap-5 mb-3">
-                        <p className="font-medium">Gender (Required)</p>
-                        <label className="flex items-center gap-1">
-                            <input
-                                type="radio"
-                                name="gender"
-                                value="male"
-                                onChange={(e) => setGender(e.target.value)}
-                                className="accent-black"
-                            />{" "}
-                            Male
-                        </label>
-                        <label className="flex items-center gap-1">
-                            <input
-                                type="radio"
-                                name="gender"
-                                value="female"
-                                onChange={(e) => setGender(e.target.value)}
-                                className="accent-black"
-                            />{" "}
-                            Female
-                        </label>
-                    </div>
+  // Resend verification email
+  const handleResendVerification = async () => {
+    if (resendCooldown > 0) {
+      alert(`Please wait ${resendCooldown} seconds before trying again`);
+      return;
+    }
 
-                    {/* Name */}
-                    <div className="flex flex-col md:flex-row gap-4 mb-2">
-                        <div className="w-full">
-                            <label className="block mb-1 font-medium">
-                                First Name
-                            </label>
-                            <input
-                                type="text"
-                                value={firstName}
-                                onChange={(e) => setFirstName(e.target.value)}
-                                className="w-full px-2 py-2 border rounded"
-                            />
-                        </div>
-                        <div className="w-full">
-                            <label className="block mb-1 font-medium">
-                                Last Name
-                            </label>
-                            <input
-                                type="text"
-                                value={lastName}
-                                onChange={(e) => setLastName(e.target.value)}
-                                className="w-full px-2 py-2 border rounded"
-                            />
-                        </div>
-                    </div>
+    if (!userForResend) {
+      alert("Unable to resend. Please try registering again.");
+      return;
+    }
 
-                    {/* Phone */}
-                    <div className="mb-2">
-                        <label className="block mb-1 font-medium">
-                            Phone Number (Required)
-                        </label>
-                        <input
-                            type="tel"
-                            value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
-                            className="w-full px-3 py-2 border rounded"
-                        />
-                    </div>
+    setResendLoading(true);
+    try {
+      await sendEmailVerification(userForResend);
+      alert("Verification email sent! Check your inbox.");
+      
+      // Set cooldown of 60 seconds
+      setResendCooldown(60);
+      const interval = setInterval(() => {
+        setResendCooldown(prev => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } catch (error) {
+      const errorMessage = error.code === 'auth/too-many-requests'
+        ? "Too many requests. Please wait a few minutes before trying again."
+        : error.message;
+      alert("Failed to send verification email: " + errorMessage);
+    } finally {
+      setResendLoading(false);
+    }
+  };
 
-                    {/* Email */}
-                    <div className="mb-5">
-                        <label className="block mb-1 font-medium">Email</label>
-                        <input
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-3 py-2 border rounded"
-                        />
-                    </div>
+  return (
+    <div className="md:w-1/2 mx-auto">
+      <div className="w-full">
+        {/* Gender */}
+        <div className="flex items-center gap-5 mb-3">
+          <p className="font-medium">Gender (Required)</p>
+          <label className="flex items-center gap-1">
+            <input
+              type="radio"
+              name="gender"
+              value="male"
+              onChange={(e) => setGender(e.target.value)}
+              className="accent-black"
+            />{" "}
+            Male
+          </label>
+          <label className="flex items-center gap-1">
+            <input
+              type="radio"
+              name="gender"
+              value="female"
+              onChange={(e) => setGender(e.target.value)}
+              className="accent-black"
+            />{" "}
+            Female
+          </label>
+        </div>
 
-                    <button
-                        onClick={handleRegister}
-                        className="w-full py-2 bg-black text-white rounded font-semibold mb-4 cursor-pointer"
-                    >
-                        REGISTER
-                    </button>
+        {/* Name */}
+        <div className="flex flex-col md:flex-row gap-4 mb-2">
+          <div className="w-full">
+            <label className="block mb-1 font-medium">First Name</label>
+            <input
+              type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              className="w-full px-2 py-2 border rounded"
+              placeholder="Enter first name"
+            />
+          </div>
+          <div className="w-full">
+            <label className="block mb-1 font-medium">Last Name</label>
+            <input
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              className="w-full px-2 py-2 border rounded"
+              placeholder="Enter last name"
+            />
+          </div>
+        </div>
 
-                    <div className="text-center">
-                        <button
-                            onClick={() => setSelectedAuth("login")}
-                            className="hover:underline"
-                        >
-                            Already have an account? Login
-                        </button>
-                    </div>
-                </div>
+        {/* Date of Birth */}
+        <div className="mb-4">
+          <label className="block mb-1 font-medium">Date of Birth (Required)</label>
+          <input
+            type="date"
+            value={dateOfBirth}
+            onChange={(e) => setDateOfBirth(e.target.value)}
+            className="w-full px-3 py-2 border rounded"
+          />
+        </div>
+
+        {/* Email */}
+        <div className="mb-4">
+          <label className="block mb-1 font-medium">Email (Required)</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full px-3 py-2 border rounded"
+            placeholder="Enter your email"
+          />
+        </div>
+
+        {/* Password */}
+        <div className="mb-3">
+          <label className="block mb-1 font-medium">Password (Required)</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full px-3 py-2 border rounded"
+            placeholder="Enter password (min 6 characters)"
+          />
+        </div>
+
+        {/* Confirm Password */}
+        <div className="mb-5">
+          <label className="block mb-1 font-medium">Confirm Password</label>
+          <input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className="w-full px-3 py-2 border rounded"
+            placeholder="Confirm password"
+          />
+        </div>
+
+        <button
+          onClick={handleCreateAccount}
+          disabled={loading}
+          className="w-full py-2 bg-black text-white rounded font-semibold mb-4 cursor-pointer disabled:bg-gray-400"
+        >
+          {loading ? "Creating Account..." : "REGISTER"}
+        </button>
+
+        <div className="text-center">
+          <button
+            onClick={() => setSelectedAuth("login")}
+            className="hover:underline"
+          >
+            Already have an account? Login
+          </button>
+        </div>
+      </div>
+
+      {/* Email Verification Modal */}
+      {showVerificationModal && (
+        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/50">
+          <div className="bg-white p-8 rounded-lg shadow-xl max-w-md text-center">
+            <h2 className="text-2xl font-bold mb-3">Verify Your Email</h2>
+            <p className="text-gray-600 mb-4">
+              We sent a verification link to:
+            </p>
+            <p className="font-semibold text-lg mb-4">{verificationEmail}</p>
+            <p className="text-gray-600 mb-6">
+              Click the link in your email to verify your account and complete registration.
+            </p>
+            
+            <div className="bg-blue-50 border border-blue-200 rounded p-4 mb-6">
+              <p className="text-sm text-blue-800">
+                <strong>Check your spam folder</strong> if you don't see the email in your inbox.
+              </p>
             </div>
 
-            {/* OTP Modal */}
-            {showOtpModal && (
-                <div className="fixed inset-0 z-50 flex justify-center items-center">
-                    <div
-                        className="absolute inset-0 bg-black/50"
-                        onClick={() => setShowOtpModal(false)}
-                    />
-                    <div className="relative bg-white p-6 rounded-sm w-80 shadow-xl text-center animate-fadeIn">
-                        <h2 className="text-lg font-bold mb-3">
-                            Verify Your Number
-                        </h2>
-                        <p className="text-sm text-gray-600 mb-4">
-                            We sent a 6-digit code to your phone
-                        </p>
-                        <input
-                            type="text"
-                            className="w-full px-3 py-2 border border-gray-300 rounded mb-4 text-center text-lg tracking-widest"
-                            placeholder="______"
-                            value={otpInput}
-                            onChange={(e) => setOtpInput(e.target.value)}
-                        />
-                        <button
-                            className="w-full py-2 bg-black text-white rounded font-semibold mb-3"
-                            onClick={handleConfirmOtp}
-                        >
-                            Confirm OTP
-                        </button>
-                        <button
-                            onClick={() => setShowOtpModal(false)}
-                            className="text-gray-500 text-sm hover:underline"
-                        >
-                            Cancel
-                        </button>
-                    </div>
-                </div>
-            )}
-
-            {/* Password Modal */}
-            {showPasswordModal && (
-                <div className="fixed inset-0 z-50 flex justify-center items-center">
-                    <div
-                        className="absolute inset-0 bg-black/50"
-                        onClick={() => setShowPasswordModal(false)}
-                    />
-                    <div className="relative bg-white p-6 rounded-sm w-80 shadow-xl text-center animate-fadeIn">
-                        <h2 className="text-lg font-bold mb-4">
-                            Create Password
-                        </h2>
-                        <input
-                            type="password"
-                            placeholder="Enter password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded mb-3"
-                        />
-                        <input
-                            type="password"
-                            placeholder="Confirm password"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded mb-5"
-                        />
-                        <button
-                            className="w-full py-2 bg-black text-white rounded font-semibold mb-3"
-                            onClick={handleCreateAccount}
-                        >
-                            Confirm
-                        </button>
-                        <button
-                            onClick={() => setShowPasswordModal(false)}
-                            className="text-gray-500 text-sm hover:underline"
-                        >
-                            Cancel
-                        </button>
-                    </div>
-                </div>
-            )}
-        </>
-    );
+            <button
+              onClick={() => {
+                setShowVerificationModal(false);
+                setSelectedAuth("login");
+              }}
+              className="w-full py-2 bg-black text-white rounded font-semibold cursor-pointer hover:bg-gray-800"
+            >
+              Go to Login
+            </button>
+            <p className="text-sm text-gray-500 mt-4">
+              Didn't get an email? {" "}
+              <button 
+                onClick={handleResendVerification}
+                disabled={resendLoading || resendCooldown > 0}
+                className="text-blue-600 hover:underline disabled:text-gray-400 disabled:no-underline"
+              >
+                {resendLoading ? "Sending..." : resendCooldown > 0 ? `Resend (${resendCooldown}s)` : "Resend"}
+              </button>
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }

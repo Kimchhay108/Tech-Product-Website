@@ -71,6 +71,7 @@ export default function StaffLayout({ children }) {
                             {[
                                 { href: "/staff", label: "Overview", icon: FiGrid },
                                 { href: "/staff/orders", label: "Orders", icon: FiPackage },
+                                { href: "/staff/products", label: "My Products", icon: FiPackage },
                             ].map(({ href, label, icon: Icon }) => (
                                 <li key={href}>
                                     <Link

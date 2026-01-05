@@ -28,26 +28,16 @@ export default function AdminDashboard() {
     // Stats
     const [totalOrders, setTotalOrders] = useState(0);
     const [totalIncome, setTotalIncome] = useState(0);
+    const [totalStaff, setTotalStaff] = useState(0);
+    const [totalProducts, setTotalProducts] = useState(0);
+
+    // Chart data
+    const [rawOrdersData, setRawOrdersData] = useState([]); // {date,value}
+    const [rawIncomeData, setRawIncomeData] = useState([]);
     const [ordersData, setOrdersData] = useState([]);
     const [incomeData, setIncomeData] = useState([]);
-
-    // Dynamic sample data for last 30 days
-    const generateSampleData = () => {
-        const today = new Date();
-        const data = [];
-        for (let i = 0; i < 30; i++) {
-            const d = new Date();
-            d.setDate(today.getDate() - i);
-            data.push({
-                date: d.toISOString().split("T")[0], // yyyy-mm-dd
-                orders: Math.floor(Math.random() * 20) + 5,
-                income: Math.floor(Math.random() * 500) + 100,
-            });
-        }
-        return data;
-    };
-
-    const sampleData = generateSampleData();
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
     // Filter data by period
     const filterDataByPeriod = (data, period) => {
@@ -131,33 +121,65 @@ export default function AdminDashboard() {
         }));
     };
 
-    // Update totals and chart data when period changes
+    // Load stats from API
     useEffect(() => {
-        // 1. Filter data by period
-        const filtered = filterDataByPeriod(sampleData, period);
+        const loadStats = async () => {
+            try {
+                setLoading(true);
+                setError("");
 
-        // 2. Calculate totals
-        setTotalOrders(filtered.reduce((sum, d) => sum + d.orders, 0));
-        setTotalIncome(filtered.reduce((sum, d) => sum + d.income, 0));
+                const res = await fetch("/api/admin/stats");
+                const data = await res.json();
 
-        // 3. Prepare chart data
-        const orderChartData = filtered.map((d) => ({
-            date: d.date,
-            value: d.orders,
-        }));
-        const incomeChartData = filtered.map((d) => ({
-            date: d.date,
-            value: d.income,
-        }));
+                if (!data.success) {
+                    throw new Error(data.message || "Failed to load stats");
+                }
 
-        // 4. Aggregate chart data by period
-        setOrdersData(aggregateData(orderChartData, period));
-        setIncomeData(aggregateData(incomeChartData, period));
-    }, [period]);
+                setTotalOrders(data.totalOrders || 0);
+                setTotalIncome(data.totalIncome || 0);
+                setTotalStaff(data.totalStaff || 0);
+                setTotalProducts(data.totalProducts || 0);
+
+                // Normalize chart data to {date, value}
+                setRawOrdersData(
+                    (data.ordersChart || []).map((d) => ({
+                        date: d.date,
+                        value: d.orders,
+                    }))
+                );
+                setRawIncomeData(
+                    (data.incomeChart || []).map((d) => ({
+                        date: d.date,
+                        value: d.income,
+                    }))
+                );
+            } catch (err) {
+                console.error(err);
+                setError(err.message || "Failed to load stats");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadStats();
+    }, []);
+
+    // Update chart data when period or raw data changes
+    useEffect(() => {
+        const filteredOrders = filterDataByPeriod(rawOrdersData, period);
+        const filteredIncome = filterDataByPeriod(rawIncomeData, period);
+
+        setOrdersData(aggregateData(filteredOrders, period));
+        setIncomeData(aggregateData(filteredIncome, period));
+    }, [period, rawOrdersData, rawIncomeData]);
 
     return (
         <div className="p-4 space-y-6">
             <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+
+            {error && (
+                <div className="p-3 bg-red-100 text-red-700 rounded">{error}</div>
+            )}
 
             {/* Period Selector */}
             <div className="flex gap-2">
@@ -180,11 +202,11 @@ export default function AdminDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-4">
                 <div className="bg-white shadow rounded p-4">
                     <h3 className="text-gray-500 text-sm">Total Staff</h3>
-                    <p className="text-2xl font-bold">5</p>
+                    <p className="text-2xl font-bold">{totalStaff}</p>
                 </div>
                 <div className="bg-white shadow rounded p-4">
                     <h3 className="text-gray-500 text-sm">Total Products</h3>
-                    <p className="text-2xl font-bold">50</p>
+                    <p className="text-2xl font-bold">{totalProducts}</p>
                 </div>
                 <div className="bg-white shadow rounded p-4">
                     <h3 className="text-gray-500 text-sm">Total Orders</h3>

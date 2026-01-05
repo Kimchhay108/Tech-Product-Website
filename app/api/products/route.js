@@ -45,23 +45,60 @@ export async function POST(req) {
   try {
     await connectDB();
 
-    const body = await req.json().catch(() => null);
-    if (!body) return NextResponse.json({ message: "Invalid JSON body" }, { status: 400 });
+    let productData = {};
+    let images = [];
 
-    const {
-      name,
-      category, // ObjectId string
-      price,
-      colors,
-      memory = "",
-      description = "",
-      images = [],
-      newArrival = false,
-      bestSeller = false,
-      specialOffer = false,
-    } = body;
+    // Check if request is FormData or JSON
+    const contentType = req.headers.get("content-type");
 
-    if (!name || !category || price === undefined) {
+    if (contentType && contentType.includes("multipart/form-data")) {
+      // Handle FormData (with file uploads)
+      const formData = await req.formData();
+      productData = {
+        name: formData.get("productName"),
+        category: formData.get("selectedCategory"),
+        price: formData.get("price"),
+        colors: formData.get("colors"),
+        memory: formData.get("memory") || "",
+        description: formData.get("description") || "",
+        newArrival: formData.get("newArrival") === "true",
+        createdBy: formData.get("createdBy"),
+        staffName: formData.get("staffName"),
+      };
+
+      // Handle image files
+      const imageFiles = formData.getAll("images");
+      for (const file of imageFiles) {
+        if (file instanceof File) {
+          // In a real app, upload to Cloudinary or similar
+          images.push(`/uploads/${Date.now()}-${file.name}`);
+        }
+      }
+    } else {
+      // Handle JSON
+      const body = await req.json().catch(() => null);
+      if (!body)
+        return NextResponse.json(
+          { message: "Invalid request body" },
+          { status: 400 }
+        );
+
+      productData = {
+        name: body.name || body.productName,
+        category: body.category || body.selectedCategory,
+        price: body.price,
+        colors: body.colors,
+        memory: body.memory || "",
+        description: body.description || "",
+        newArrival: body.newArrival || false,
+        createdBy: body.createdBy,
+        staffName: body.staffName,
+      };
+      images = body.images || [];
+    }
+
+    // Validate required fields
+    if (!productData.name || !productData.category || productData.price === undefined) {
       return NextResponse.json(
         { message: "name, category, and price are required" },
         { status: 400 }
@@ -70,44 +107,138 @@ export async function POST(req) {
 
     let categoryId;
     try {
-      categoryId = new mongoose.Types.ObjectId(String(category));
+      categoryId = new mongoose.Types.ObjectId(String(productData.category));
     } catch {
-      return NextResponse.json({ message: "Invalid category id" }, { status: 400 });
+      return NextResponse.json(
+        { message: "Invalid category id" },
+        { status: 400 }
+      );
     }
 
-    const colorsArray = Array.isArray(colors)
-      ? colors
-      : String(colors).split(",").map(c => c.trim()).filter(Boolean);
+    const colorsArray = Array.isArray(productData.colors)
+      ? productData.colors
+      : String(productData.colors || "")
+          .split(",")
+          .map((c) => c.trim())
+          .filter(Boolean);
 
     if (!colorsArray.length) {
       return NextResponse.json({ message: "colors cannot be empty" }, { status: 400 });
     }
 
     const doc = await Product.create({
-      name: name.trim(),
+      name: productData.name.trim(),
+      productName: productData.name.trim(),
       category: categoryId,
-      price: Number(price),
+      price: Number(productData.price),
       colors: colorsArray,
-      memory: String(memory),
-      description: String(description),
-      images: Array.isArray(images) ? images : [],
-      newArrival: Boolean(newArrival),
-      bestSeller: Boolean(bestSeller),
-      specialOffer: Boolean(specialOffer),
+      memory: String(productData.memory),
+      description: String(productData.description),
+      images: images.length > 0 ? images : [],
+      newArrival: Boolean(productData.newArrival),
+      createdBy: productData.createdBy,
+      staffName: productData.staffName,
     });
 
     await doc.populate({ path: "category", select: "name slug _id" });
 
-    // 🔹 Convert to plain object so flags are always included
     const docObj = doc.toObject({ getters: true, versionKey: false });
 
-    console.log("Created product:", docObj); // check in terminal
+    console.log("Created product:", docObj);
 
-    return NextResponse.json(docObj, { status: 201 });
+    return NextResponse.json({ success: true, product: docObj }, { status: 201 });
   } catch (err) {
     console.error("[POST /api/products] Error:", err);
     return NextResponse.json(
-      { message: err?.message || "Failed to add product" },
+      { success: false, message: err?.message || "Failed to add product" },
+      { status: 500 }
+    );
+  }
+}
+
+// ================== PUT ==================
+export async function PUT(req) {
+  try {
+    await connectDB();
+
+    const body = await req.json().catch(() => null);
+    if (!body)
+      return NextResponse.json(
+        { message: "Invalid request body" },
+        { status: 400 }
+      );
+
+    const { productId, productName, category, description, colors, price, memory, newArrival } = body;
+
+    if (!productId || !productName || !category || price === undefined) {
+      return NextResponse.json(
+        { message: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+      return NextResponse.json({ message: "Invalid product id" }, { status: 400 });
+    }
+
+    let categoryId;
+    try {
+      categoryId = new mongoose.Types.ObjectId(String(category));
+    } catch {
+      return NextResponse.json(
+        { message: "Invalid category id" },
+        { status: 400 }
+      );
+    }
+
+    const colorsArray = Array.isArray(colors)
+      ? colors
+      : String(colors || "")
+          .split(",")
+          .map((c) => c.trim())
+          .filter(Boolean);
+
+    if (!colorsArray.length) {
+      return NextResponse.json(
+        { message: "colors cannot be empty" },
+        { status: 400 }
+      );
+    }
+
+    const updateData = {
+      name: productName.trim(),
+      productName: productName.trim(),
+      category: categoryId,
+      price: Number(price),
+      colors: colorsArray,
+      memory: String(memory || ""),
+      description: String(description || ""),
+      newArrival: Boolean(newArrival),
+    };
+
+    const updated = await Product.findByIdAndUpdate(productId, updateData, {
+      new: true,
+    }).populate({ path: "category", select: "name slug _id" });
+
+    if (!updated) {
+      return NextResponse.json(
+        { message: "Product not found" },
+        { status: 404 }
+      );
+    }
+
+    const docObj = updated.toObject({ getters: true, versionKey: false });
+
+    console.log("Updated product:", docObj);
+
+    return NextResponse.json(
+      { success: true, product: docObj },
+      { status: 200 }
+    );
+  } catch (err) {
+    console.error("[PUT /api/products] Error:", err);
+    return NextResponse.json(
+      { success: false, message: err?.message || "Failed to update product" },
       { status: 500 }
     );
   }
