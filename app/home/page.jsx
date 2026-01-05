@@ -13,6 +13,10 @@ import {
     FiWatch,
     FiHeadphones,
     FiPhone,
+    FiHeart,
+    FiShoppingCart,
+    FiEye,
+    FiStar,
 } from "react-icons/fi";
 
 export default function HomePage() {
@@ -55,6 +59,7 @@ export default function HomePage() {
 
     const [products, setProducts] = useState([]);
     const [activeTab, setActiveTab] = useState("newArrival");
+    const [hoveredProduct, setHoveredProduct] = useState(null);
 
     useEffect(() => {
         let url = `/api/products?${activeTab}=true`;
@@ -62,7 +67,7 @@ export default function HomePage() {
             .then((res) => res.json())
             .then((data) => setProducts(data))
             .catch((err) => console.error(err));
-    }, [activeTab]); // refetch when tab changes
+    }, [activeTab]);
 
     return (
         <>
@@ -241,36 +246,36 @@ export default function HomePage() {
                 </div>
             </section>
 
-            {/* New Arrivals & Products Grid */}
-            <section className="px-3">
+            {/* New Arrivals & Products Grid - REDESIGNED */}
+            <section className="px-3 bg-white">
                 <div className="max-w-7xl mx-auto py-15">
                     {/* Header Tabs */}
-                    <div className="flex space-x-7 justify-center md:justify-start items-center text-start text-lg mb-5">
+                    <div className="flex space-x-7 justify-center md:justify-start items-center text-start text-lg mb-8">
                         <p
-                            className={`cursor-pointer ${
+                            className={`cursor-pointer transition-all pb-2 ${
                                 activeTab === "newArrival"
-                                    ? "text-black font-semibold border-b-2"
-                                    : "text-[#8B8B8B]"
+                                    ? "text-black font-semibold border-b-2 border-black"
+                                    : "text-[#8B8B8B] hover:text-black"
                             }`}
                             onClick={() => setActiveTab("newArrival")}
                         >
                             New Arrival
                         </p>
                         <p
-                            className={`cursor-pointer ${
+                            className={`cursor-pointer transition-all pb-2 ${
                                 activeTab === "bestSeller"
-                                    ? "text-black font-semibold border-b-2"
-                                    : "text-[#8B8B8B]"
+                                    ? "text-black font-semibold border-b-2 border-black"
+                                    : "text-[#8B8B8B] hover:text-black"
                             }`}
                             onClick={() => setActiveTab("bestSeller")}
                         >
                             BestSeller
                         </p>
                         <p
-                            className={`cursor-pointer ${
+                            className={`cursor-pointer transition-all pb-2 ${
                                 activeTab === "specialOffer"
-                                    ? "text-black font-semibold border-b-2"
-                                    : "text-[#8B8B8B]"
+                                    ? "text-black font-semibold border-b-2 border-black"
+                                    : "text-[#8B8B8B] hover:text-black"
                             }`}
                             onClick={() => setActiveTab("specialOffer")}
                         >
@@ -279,45 +284,71 @@ export default function HomePage() {
                     </div>
 
                     {/* Product Cards */}
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-6">
                         {products.length > 0 ? (
                             products.map((product) => (
                                 <div
                                     key={product._id}
-                                    className="bg-[#F6F6F6] p-5 rounded text-center text-black hover:shadow-md flex flex-col h-full"
+                                    className="group relative bg-white border border-gray-200 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:border-gray-400 hover:bg-gray-50 flex flex-col h-full cursor-pointer"
+                                    onMouseEnter={() => setHoveredProduct(product._id)}
+                                    onMouseLeave={() => setHoveredProduct(null)}
+                                    onClick={() => router.push(`/productDetail/${product._id}`)}
                                 >
-                                    <Image
-                                        src={
-                                            product.images?.[0] ||
-                                            "/placeholder.png"
-                                        }
-                                        alt={product.name}
-                                        width={600}
-                                        height={600}
-                                        className="w-64 h-auto object-contain mx-auto p-5"
-                                    />
-                                    <h1 className="text-base sm:text-md md:text-lg font-semibold mb-auto">
-                                        {product.name}
-                                    </h1>
-                                    <h1 className="text-3xl font-semibold my-3">
-                                        ${product.price}
-                                    </h1>
-                                    <button
-                                        className="bg-black text-white text-sm sm:text-base py-4 px-8 rounded-2xl cursor-pointer"
-                                        onClick={() =>
-                                            router.push(
-                                                `/productDetail/${product._id}`
-                                            )
-                                        }
-                                    >
-                                        Buy Now
-                                    </button>
+                                    
+
+                                    {/* Image Container */}
+                                    <div className="relative bg-gray-50 p-6 aspect-square flex items-center justify-center overflow-hidden">
+                                        <Image
+                                            src={product.images?.[0] || "/placeholder.png"}
+                                            alt={product.name}
+                                            width={600}
+                                            height={600}
+                                            className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
+                                        />
+                                    </div>
+
+                                    {/* Product Info */}
+                                    <div className="p-4 flex flex-col flex-grow bg-white">
+                                        {/* Product Name */}
+                                        <h3 className="text-sm md:text-base font-medium text-gray-900 mb-2 line-clamp-2 min-h-[2.5rem] group-hover:text-gray-700 transition-colors">
+                                            {product.name}
+                                        </h3>
+                                        
+                                    
+
+                                        {/* Price Section */}
+                                        <div className="flex items-baseline gap-2 mb-4 mt-auto">
+                                            <span className="text-xl md:text-2xl font-bold text-gray-900">
+                                                ${product.price}
+                                            </span>
+                                            {activeTab === "specialOffer" && (
+                                                <span className="text-sm text-gray-400 line-through">
+                                                    ${(product.price * 1.25).toFixed(2)}
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        {/* Add to Cart Button */}
+                                        <button
+                                            className="w-full bg-black text-white py-2.5 px-4 rounded-lg font-medium transition-all duration-300 hover:bg-gray-800 active:scale-95 flex items-center justify-center gap-2 text-sm"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                router.push(`/productDetail/${product._id}`);
+                                            }}
+                                        >
+                                            <FiShoppingCart size={16} />
+                                            <span>Add to Cart</span>
+                                        </button>
+                                    </div>
+
+                                    {/* Hover Overlay Effect */}
+                                    <div className="absolute inset-0 border-2 border-transparent group-hover:border-gray-400 rounded-xl pointer-events-none transition-all duration-300 opacity-0 group-hover:opacity-100"></div>
                                 </div>
                             ))
                         ) : (
-                            <p className="text-center font-bold col-span-full">
-                                Coming soon!
-                            </p>
+                            <div className="col-span-full text-center py-12">
+                                <p className="text-gray-500 text-lg font-medium">Coming soon!</p>
+                            </div>
                         )}
                     </div>
                 </div>
