@@ -118,11 +118,13 @@ export function CartProvider({ children }) {
             loadUserCart();
         };
         
-        window.addEventListener('cart-reload', handleCartReload);
-        
-        return () => {
-            window.removeEventListener('cart-reload', handleCartReload);
-        };
+        if (typeof window !== 'undefined') {
+            window.addEventListener('cart-reload', handleCartReload);
+            
+            return () => {
+                window.removeEventListener('cart-reload', handleCartReload);
+            };
+        }
     }, []); // Run on mount and when triggered by events
 
     // Save cart to MongoDB whenever it changes (if user is logged in)

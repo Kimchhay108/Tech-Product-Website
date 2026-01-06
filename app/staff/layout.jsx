@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { FiChevronRight, FiHome, FiGrid, FiPackage, FiLogOut } from "react-icons/fi";
 import { FaUserCircle } from "react-icons/fa";
 import Link from "next/link";
@@ -14,21 +14,25 @@ export default function StaffLayout({ children }) {
 
     const [openProfile, setOpenProfile] = useState(false);
     const [openMenu, setOpenMenu] = useState(false);
-
-    const auth = useMemo(() => getAuth(), []);
-    const role = auth?.user?.role;
-    const isStaff = role === "staff";
+    const [auth, setAuth] = useState(null);
+    const [isReady, setIsReady] = useState(false);
 
     useEffect(() => {
-        if (!auth) {
+        const a = getAuth();
+        setAuth(a);
+        setIsReady(true);
+
+        if (!a) {
             router.replace("/profile");
             return;
         }
 
+        const role = a.user?.role;
+        const isStaff = role === "staff";
         if (!isStaff) {
             router.replace(role === "admin" ? "/admin" : "/user");
         }
-    }, [auth, isStaff, role, router]);
+    }, [router]);
 
     const handleLogout = () => {
         logout(); // clear auth
@@ -37,7 +41,11 @@ export default function StaffLayout({ children }) {
 
     const isActive = (path) => path === "/staff" ? pathname === "/staff" : pathname.startsWith(path);
 
-    // Wait until auth is checked before rendering to prevent flicker redirect
+    // Wait until auth is checked on client to avoid hydration mismatch
+    if (!isReady) return null;
+
+    const role = auth?.user?.role;
+    const isStaff = role === "staff";
     if (!isStaff) return null;
 
     return (
@@ -66,7 +74,6 @@ export default function StaffLayout({ children }) {
                         <ul className="space-y-2">
                             {[
                                 { href: "/staff", label: "Overview", icon: FiGrid },
-                                { href: "/staff/orders", label: "Orders", icon: FiPackage },
                                 { href: "/staff/products", label: "My Products", icon: FiPackage },
                             ].map(({ href, label, icon: Icon }) => (
                                 <li key={href}>

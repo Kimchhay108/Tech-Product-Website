@@ -248,18 +248,18 @@ export default function UserProfile() {
     };
 
     return (
-        <section className="md:min-h-screen container mx-auto">
-            <div className="w-full my-2 flex p-3">
+        <section className="min-h-screen container mx-auto px-3 sm:px-4">
+            <div className="w-full my-2 flex flex-col md:flex-row gap-4 md:gap-6 p-3">
                 {/* Left Sidebar */}
-                <div className="w-1/4 pr-2 h-full flex flex-col">
+                <div className="w-full md:w-1/4 h-full flex flex-col border border-gray-100 rounded-lg p-3 md:p-0 md:border-0">
                     {/* Sidebar Header */}
                     <h1 className="text-lg mb-3 font-semibold">Me</h1>
 
                     {/* Menu Items */}
-                    <ul className="flex-1 md:ml-4 space-y-2 mb-2">
+                    <ul className="flex-1 md:ml-4 flex md:flex-col gap-2 md:gap-0 md:space-y-2 mb-2 overflow-x-auto md:overflow-visible">
                         <li
                             onClick={() => setSelectedFeature("profile")}
-                            className={`flex items-center justify-between px-2 py-1 rounded cursor-pointer ${
+                            className={`flex items-center justify-between px-3 py-2 rounded cursor-pointer whitespace-nowrap ${
                                 selectedFeature === "profile"
                                     ? "font-semibold"
                                     : "hover:bg-[#f9f9f9]"
@@ -276,7 +276,7 @@ export default function UserProfile() {
                         </li>
                         <li
                             onClick={() => setSelectedFeature("myOrder")}
-                            className={`flex items-center justify-between px-2 py-1 rounded cursor-pointer ${
+                            className={`flex items-center justify-between px-3 py-2 rounded cursor-pointer whitespace-nowrap ${
                                 selectedFeature === "myOrder"
                                     ? "font-semibold"
                                     : "hover:bg-[#f9f9f9]"
@@ -500,7 +500,7 @@ export default function UserProfile() {
                             </p>
                         </div>
 
-                        <div className="md:w-3/4 mx-auto">
+                        <div className="w-full md:w-3/4 mx-auto">
                             {ordersLoading && (
                                 <p className="text-center text-gray-600">Loading orders...</p>
                             )}
@@ -517,12 +517,12 @@ export default function UserProfile() {
                                 <div className="space-y-4">
                                     {orders.map((order) => (
                                         <div key={order._id} className="border border-gray-200 rounded-lg p-4 bg-white shadow-sm">
-                                            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-3">
-                                                <div className="space-y-1">
+                                            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-3">
+                                                <div className="space-y-1 break-words">
                                                     <p className="text-sm text-gray-500">Order ID</p>
                                                     <p className="font-semibold break-all">{order._id}</p>
                                                 </div>
-                                                <div className="flex gap-3 text-sm">
+                                                <div className="flex flex-wrap gap-2 text-xs sm:text-sm">
                                                     <span className="px-2 py-1 rounded bg-gray-100 capitalize">{order.status}</span>
                                                     <span className="px-2 py-1 rounded bg-gray-100">${order.totalAmount?.toFixed(2) || "0.00"}</span>
                                                     <span className="px-2 py-1 rounded bg-gray-100">{new Date(order.createdAt).toLocaleString()}</span>
@@ -531,8 +531,8 @@ export default function UserProfile() {
 
                                             <div className="space-y-2">
                                                 {order.items?.map((item) => (
-                                                    <div key={`${order._id}-${item.productId}-${item.name}`} className="flex justify-between text-sm border-b pb-2 last:border-b-0">
-                                                        <span className="font-medium">{item.name}</span>
+                                                    <div key={`${order._id}-${item.productId}-${item.name}`} className="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-2 text-sm border-b pb-2 last:border-b-0">
+                                                        <span className="font-medium break-words">{item.name}</span>
                                                         <span className="text-gray-700">x{item.quantity}</span>
                                                         <span className="text-gray-700">${(item.price * item.quantity).toFixed(2)}</span>
                                                     </div>

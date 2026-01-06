@@ -198,18 +198,12 @@ export async function PUT(req) {
           .map((c) => c.trim())
           .filter(Boolean);
 
-    if (!colorsArray.length) {
-      return NextResponse.json(
-        { message: "colors cannot be empty" },
-        { status: 400 }
-      );
-    }
-
     const updateData = {
       name: productName.trim(),
       productName: productName.trim(),
       category: categoryId,
       price: Number(price),
+      // Allow empty colors array when staff did not specify colors during edit
       colors: colorsArray,
       memory: String(memory || ""),
       description: String(description || ""),

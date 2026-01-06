@@ -119,3 +119,42 @@ export async function PUT(req) {
     );
   }
 }
+
+// DELETE - Delete order or delete all pending orders
+export async function DELETE(req) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const orderId = searchParams.get("orderId");
+
+    await connectDB();
+
+    if (orderId) {
+      // Delete specific order
+      const order = await Order.findByIdAndDelete(orderId);
+      if (!order) {
+        return NextResponse.json(
+          { success: false, message: "Order not found" },
+          { status: 404 }
+        );
+      }
+      return NextResponse.json({
+        success: true,
+        message: "Order deleted successfully",
+      });
+    } else {
+      // Delete all pending orders
+      const result = await Order.deleteMany({ status: "pending" });
+      return NextResponse.json({
+        success: true,
+        message: `Deleted ${result.deletedCount} pending orders`,
+        deletedCount: result.deletedCount,
+      });
+    }
+  } catch (error) {
+    console.error("Delete order error:", error);
+    return NextResponse.json(
+      { success: false, message: "Failed to delete order" },
+      { status: 500 }
+    );
+  }
+}

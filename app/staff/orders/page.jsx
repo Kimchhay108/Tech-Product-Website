@@ -4,26 +4,7 @@ import { useState } from "react";
 
 export default function StaffOrders() {
     // Sample orders
-    const [orders, setOrders] = useState([
-        {
-            id: 1,
-            customer: "Kimhab",
-            product: "Product A",
-            quantity: 2,
-            total: 50,
-            status: "Pending",
-            date: "2025-12-23",
-        },
-        {
-            id: 2,
-            customer: "Anna Smith",
-            product: "Product B",
-            quantity: 1,
-            total: 30,
-            status: "Pending",
-            date: "2025-12-22",
-        },
-    ]);
+    const [orders, setOrders] = useState([]);
 
     // Approve order
     const approveOrder = (id) => {

@@ -44,48 +44,37 @@ export async function POST(req) {
 
     console.log("📝 Create staff request:", { adminUid, adminRole, roleType: typeof adminRole, roleValue: JSON.stringify(adminRole) });
 
-    // Verify admin authorization - check both localStorage role and Firestore
+    // Verify admin authorization from Firestore (always use Firestore as source of truth)
     let isAdmin = false;
     
-    // Normalize the adminRole value
-    const normalizedRole = adminRole?.toLowerCase?.() || adminRole;
-    console.log("🔍 Checking admin status:", { 
-      adminUid, 
-      adminRole, 
-      normalizedRole, 
-      typeofRole: typeof adminRole 
-    });
-    
-    // First check if the role is passed as "admin" from frontend auth
-    if (normalizedRole === "admin") {
-      console.log("✅ Admin verified from frontend auth role");
-      isAdmin = true;
-    } else {
-      // Otherwise verify from Firestore
-      try {
-        const adminDocRef = doc(db, "users", adminUid);
-        const adminDocSnap = await getDoc(adminDocRef);
-        if (adminDocSnap.exists() && adminDocSnap.data().role === "admin") {
-          console.log("✅ Admin verified from Firestore");
-          isAdmin = true;
-        } else {
-          console.log("❌ Admin not found in Firestore or wrong role:", {
-            exists: adminDocSnap.exists(),
-            role: adminDocSnap.data()?.role,
-          });
-        }
-      } catch (err) {
-        console.log("❌ Could not verify admin from Firestore:", err.message);
+    try {
+      const adminDocRef = doc(db, "users", adminUid);
+      const adminDocSnap = await getDoc(adminDocRef);
+      
+      if (adminDocSnap.exists()) {
+        const adminData = adminDocSnap.data();
+        isAdmin = adminData.role === "admin";
+        console.log("🔍 Admin verification from Firestore:", {
+          uid: adminUid,
+          firestoreRole: adminData.role,
+          isAdmin: isAdmin
+        });
+      } else {
+        console.log("❌ Admin document not found in Firestore for uid:", adminUid);
       }
+    } catch (err) {
+      console.error("❌ Error verifying admin from Firestore:", err.message);
     }
 
     if (!isAdmin) {
-      console.log("❌ Authorization failed for user:", { adminUid, adminRole, isAdmin });
+      console.log("❌ Authorization failed - not an admin:", { adminUid, adminRole });
       return Response.json(
-        { success: false, error: "Only admin can create staff accounts", debug: { adminUid, adminRole, isAdmin } },
+        { success: false, error: "Only admin can create staff accounts. Please ensure you are logged in as an admin." },
         { status: 403 }
       );
     }
+    
+    console.log("✅ Admin verified, proceeding with staff creation");
 
     // Validate inputs
     if (!firstName || !lastName || !email || !password || !position) {
@@ -198,28 +187,37 @@ export async function PUT(req) {
     const { staffUid, adminUid, adminRole, firstName, lastName, position, active } =
       await req.json();
 
-    // Verify admin authorization
+    // Verify admin authorization from Firestore
     let isAdmin = false;
-    if (adminRole === "admin") {
-      isAdmin = true;
-    } else {
-      try {
-        const adminDocRef = doc(db, "users", adminUid);
-        const adminDocSnap = await getDoc(adminDocRef);
-        if (adminDocSnap.exists() && adminDocSnap.data().role === "admin") {
-          isAdmin = true;
-        }
-      } catch (err) {
-        console.log("Could not verify admin from Firestore:", err.message);
+    
+    try {
+      const adminDocRef = doc(db, "users", adminUid);
+      const adminDocSnap = await getDoc(adminDocRef);
+      
+      if (adminDocSnap.exists()) {
+        const adminData = adminDocSnap.data();
+        isAdmin = adminData.role === "admin";
+        console.log("🔍 Admin verification for UPDATE:", {
+          uid: adminUid,
+          firestoreRole: adminData.role,
+          isAdmin: isAdmin
+        });
+      } else {
+        console.log("❌ Admin document not found in Firestore for uid:", adminUid);
       }
+    } catch (err) {
+      console.error("❌ Error verifying admin from Firestore:", err.message);
     }
 
     if (!isAdmin) {
+      console.log("❌ Authorization failed for UPDATE - not an admin:", { adminUid, adminRole });
       return Response.json(
         { success: false, error: "Only admin can update staff" },
         { status: 403 }
       );
     }
+    
+    console.log("✅ Admin verified for UPDATE");
 
     // Update staff
     const updateData = {};
@@ -246,33 +244,73 @@ export async function DELETE(req) {
   try {
     const { staffUid, adminUid, adminRole } = await req.json();
 
-    // Verify admin authorization
+    // Verify admin authorization from Firestore
     let isAdmin = false;
-    if (adminRole === "admin") {
-      isAdmin = true;
-    } else {
-      try {
-        const adminDocRef = doc(db, "users", adminUid);
-        const adminDocSnap = await getDoc(adminDocRef);
-        if (adminDocSnap.exists() && adminDocSnap.data().role === "admin") {
-          isAdmin = true;
-        }
-      } catch (err) {
-        console.log("Could not verify admin from Firestore:", err.message);
+    
+    try {
+      const adminDocRef = doc(db, "users", adminUid);
+      const adminDocSnap = await getDoc(adminDocRef);
+      
+      if (adminDocSnap.exists()) {
+        const adminData = adminDocSnap.data();
+        isAdmin = adminData.role === "admin";
+        console.log("🔍 Admin verification for DELETE:", {
+          uid: adminUid,
+          firestoreRole: adminData.role,
+          isAdmin: isAdmin
+        });
+      } else {
+        console.log("❌ Admin document not found in Firestore for uid:", adminUid);
       }
+    } catch (err) {
+      console.error("❌ Error verifying admin from Firestore:", err.message);
     }
 
     if (!isAdmin) {
+      console.log("❌ Authorization failed for DELETE - not an admin:", { adminUid, adminRole });
       return Response.json(
         { success: false, error: "Only admin can delete staff" },
         { status: 403 }
       );
     }
+    
+    console.log("✅ Admin verified for DELETE");
 
-    // Delete staff document
-    await deleteDoc(doc(db, "users", staffUid));
+    // Validate Firebase Admin SDK
+    if (!adminAuth) {
+      console.error("❌ Firebase Admin SDK not initialized");
+      return Response.json(
+        { 
+          success: false, 
+          error: "Firebase Admin SDK not configured. Cannot delete staff from authentication system."
+        },
+        { status: 500 }
+      );
+    }
 
-    return Response.json({ success: true, message: "Staff deleted successfully" });
+    // First, delete from Firebase Authentication using Admin SDK
+    try {
+      await adminAuth.deleteUser(staffUid);
+      console.log("✅ Deleted user from Firebase Auth:", staffUid);
+    } catch (authError) {
+      console.error("❌ Error deleting from Firebase Auth:", authError.message);
+      // Continue with Firestore deletion even if auth deletion fails
+      // (user might not exist in auth but exists in Firestore)
+    }
+
+    // Then delete from Firestore
+    try {
+      await deleteDoc(doc(db, "users", staffUid));
+      console.log("✅ Deleted user from Firestore:", staffUid);
+    } catch (firestoreError) {
+      console.error("❌ Error deleting from Firestore:", firestoreError.message);
+      throw firestoreError;
+    }
+
+    return Response.json({ 
+      success: true, 
+      message: "Staff account deleted successfully from both authentication and database" 
+    });
   } catch (error) {
     console.error("❌ Error deleting staff:", error);
     return Response.json(

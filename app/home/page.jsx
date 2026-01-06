@@ -89,7 +89,7 @@ export default function HomePage() {
                         <div>
                             <button
                                 onClick={goToProducts}
-                                className="text-white border border-white rounded-md py-3 px-10 my-3 cursor-pointer"
+                                className="text-white border border-white rounded-md py-3 px-10 my-3 cursor-pointer hover:bg-white hover:text-[#211C24] transition-all duration-300 font-medium"
                             >
                                 Shop Now
                             </button>
@@ -192,7 +192,7 @@ export default function HomePage() {
                                 </p>
                                 <button
                                     onClick={goToProducts}
-                                    className="text-sm sm:text-base md:text-lg lg:text-xl text-black border rounded-lg py-3 px-9 my-3 hidden md:block"
+                                    className="text-sm sm:text-base md:text-lg lg:text-xl text-black border border-black rounded-lg py-3 px-9 my-3 hidden md:block hover:bg-black hover:text-white transition-all duration-300 font-medium"
                                 >
                                     Shop Now
                                 </button>
@@ -208,7 +208,7 @@ export default function HomePage() {
                             </div>
                             <button
                                 onClick={goToProducts}
-                                className="text-sm sm:text-base md:text-lg lg:text-xl text-black border rounded-lg py-3 px-9 my-3 md:hidden"
+                                className="text-sm sm:text-base md:text-lg lg:text-xl text-black border border-black rounded-lg py-3 px-9 my-3 md:hidden hover:bg-black hover:text-white transition-all duration-300 font-medium"
                             >
                                 Shop Now
                             </button>
@@ -376,7 +376,7 @@ export default function HomePage() {
                                 Think different, everything different.
                             </h1>
                             <button
-                                className="border-1 border-black-500 px-8 py-3 font-semibold rounded-md cursor-pointer"
+                                className="border border-black px-8 py-3 font-semibold rounded-md cursor-pointer hover:bg-black hover:text-white transition-all duration-300"
                                 onClick={goToProducts}
                             >
                                 Shop Now
@@ -403,7 +403,7 @@ export default function HomePage() {
                                 and ease of use.
                             </h1>
                             <button
-                                className="border-1 border-black-500 px-8 py-3 font-semibold rounded-md cursor-pointer"
+                                className="border border-black px-8 py-3 font-semibold rounded-md cursor-pointer hover:bg-black hover:text-white transition-all duration-300"
                                 onClick={goToProducts}
                             >
                                 Shop Now
@@ -428,7 +428,7 @@ export default function HomePage() {
                                 Introducing Apple Watch Series 9
                             </h1>
                             <button
-                                className="border-1 border-black-500 px-8 py-3 font-semibold rounded-md cursor-pointer"
+                                className="border border-black px-8 py-3 font-semibold rounded-md cursor-pointer hover:bg-black hover:text-white transition-all duration-300"
                                 onClick={goToProducts}
                             >
                                 Shop Now
@@ -455,7 +455,7 @@ export default function HomePage() {
                                 Join the flip side
                             </h1>
                             <button
-                                className="border-1 text-white px-8 py-3 font-semibold rounded-md cursor-pointer"
+                                className="border border-white text-white px-8 py-3 font-semibold rounded-md cursor-pointer hover:bg-white hover:text-[#2C2C2C] transition-all duration-300"
                                 onClick={goToProducts}
                             >
                                 Shop Now

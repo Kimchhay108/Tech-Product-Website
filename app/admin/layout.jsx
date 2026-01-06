@@ -2,15 +2,15 @@
 
 import { useState, useEffect } from "react";
 import {
-    FiChevronRight,
     FiHome,
     FiGrid,
     FiList,
     FiPackage,
     FiUsers,
     FiLogOut,
+    FiMenu,
+    FiChevronDown,
 } from "react-icons/fi";
-import { FaUserCircle } from "react-icons/fa";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
@@ -54,45 +54,49 @@ export default function AdminLayout({ children }) {
 
             {/* SIDEBAR */}
             <aside
-                className={`fixed top-0 left-0 z-40 h-screen w-64 bg-[#2E2E2E] text-white p-5 flex flex-col
+                className={`fixed top-0 left-0 z-40 h-screen w-64 bg-gradient-to-b from-[#2E2E2E] to-[#1a1a1a] text-white p-5 flex flex-col shadow-2xl
                     transform transition-transform duration-300
                     ${openMenu ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
             >
                 <div>
-                    <div className="flex gap-2 items-center mb-6">
+                    <div className="flex gap-3 items-center mb-8 pb-6 border-b border-gray-700">
                         <Image
                             src="/LogoOnlyWhite.png"
-                            alt="Logo only"
+                            alt="Logo"
                             width={40}
                             height={50}
                             className="w-auto h-auto"
                         />
-                        <h2 className="text-xl font-bold">Admin Dashboard</h2>
+                        <div>
+                            <h2 className="text-lg font-bold">Admin Panel</h2>
+                            <p className="text-xs text-gray-400">Management Dashboard</p>
+                        </div>
                     </div>
 
                     <nav>
-                        <ul className="space-y-2">
+                        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 px-3">Menu</p>
+                        <ul className="space-y-1">
                             {[
                                 { href: "/admin", label: "Overview", icon: FiGrid },
-                                { href: "/admin/category", label: "Category", icon: FiList },
-                                { href: "/admin/products", label: "Product", icon: FiPackage },
+                                { href: "/admin/category", label: "Categories", icon: FiList },
+                                { href: "/admin/products", label: "Products", icon: FiPackage },
                                 { href: "/admin/staff", label: "Staff", icon: FiUsers },
                             ].map(({ href, label, icon: Icon }) => (
                                 <li key={href}>
                                     <Link
                                         href={href}
                                         onClick={() => setOpenMenu(false)}
-                                        className={`flex justify-between items-center px-3 py-2 rounded-lg ${
+                                        className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
                                             isActive(href)
-                                                ? "bg-[#3A3A3A] text-white"
-                                                : "hover:bg-[#4A4A4A]"
+                                                ? "bg-white/10 text-white shadow-lg"
+                                                : "text-gray-300 hover:bg-white/5 hover:text-white"
                                         }`}
                                     >
-                                        <div className="flex items-center gap-2">
-                                            <Icon size={20} />
-                                            <span>{label}</span>
-                                        </div>
-                                        <FiChevronRight />
+                                        <Icon size={20} />
+                                        <span className="font-medium">{label}</span>
+                                        {isActive(href) && (
+                                            <div className="ml-auto w-1.5 h-1.5 rounded-full bg-white"></div>
+                                        )}
                                     </Link>
                                 </li>
                             ))}
@@ -100,62 +104,75 @@ export default function AdminLayout({ children }) {
                     </nav>
                 </div>
 
-                <div className="mt-auto pt-4 border-t border-white">
+                <div className="mt-auto pt-4 border-t border-gray-700">
                     <Link
                         href="/"
                         onClick={() => setOpenMenu(false)}
-                        className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-[#4A4A4A] text-white"
+                        className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white/5 hover:text-white transition-all duration-200"
                     >
-                        <FiHome />
-                        <span>Back to Home</span>
+                        <FiHome size={20} />
+                        <span className="font-medium">Back to Store</span>
                     </Link>
                 </div>
             </aside>
 
             {/* MAIN CONTENT */}
-            <div className="flex-1 flex flex-col bg-gray-100 md:ml-64">
-                <header className="h-14 bg-white flex justify-end items-center px-6 shadow-sm">
+            <div className="flex-1 flex flex-col bg-gray-50 md:ml-64">
+                <header className="bg-white border-b border-gray-200 p-4 flex justify-between items-center sticky top-0 z-30">
                     <button
                         onClick={() => setOpenMenu((v) => !v)}
-                        className="md:hidden mr-auto text-2xl"
+                        className="md:hidden text-gray-700 hover:bg-gray-100 p-2 rounded-lg transition-colors"
                     >
-                        ☰
+                        <FiMenu size={24} />
                     </button>
+
+                    <div className="hidden md:flex items-center gap-2">
+                        <div className="h-8 w-1 bg-[#2E2E2E] rounded-full"></div>
+                        <div>
+                            <h1 className="text-xl font-bold text-[#2E2E2E]">Welcome back, Admin</h1>
+                            <p className="text-xs text-gray-500">Manage your store efficiently</p>
+                        </div>
+                    </div>
 
                     <div className="relative">
                         <button
                             onClick={() => setOpenProfile((prev) => !prev)}
-                            className="flex items-center gap-2 hover:bg-gray-100 px-3 py-2 rounded"
+                            className="flex items-center gap-3 hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors border border-gray-200"
                         >
-                            <FaUserCircle className="text-4xl text-gray-700" />
+                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#2E2E2E] to-gray-600 flex items-center justify-center text-white font-semibold text-sm">
+                                A
+                            </div>
+                            <div className="hidden sm:block text-left">
+                                <p className="text-sm font-medium text-gray-700">{getAuth()?.user?.name || "Admin"}</p>
+                                <p className="text-xs text-gray-500">Administrator</p>
+                            </div>
+                            <FiChevronDown size={16} className="text-gray-500" />
                         </button>
 
                         <div
-                            className={`absolute right-0 mt-2 w-56 bg-white shadow-xl rounded z-50 transition-all duration-100 ease-out transform ${
+                            className={`absolute right-0 mt-2 w-56 bg-white shadow-xl rounded-lg border border-gray-200 py-2 z-50 transition-all duration-200 ease-out transform ${
                                 openProfile
                                     ? "opacity-100 scale-100"
                                     : "opacity-0 scale-95 pointer-events-none"
                             }`}
                         >
-                            <div className="flex items-center gap-3 border-gray-300 border-b p-3">
-                                <FaUserCircle size={30} />
-                                <p className="font-medium">{getAuth()?.user?.name || "Admin"}</p>
+                            <div className="px-4 py-3 border-b border-gray-100">
+                                <p className="text-sm font-semibold text-gray-700">Admin Account</p>
+                                <p className="text-xs text-gray-500 mt-0.5">111</p>
                             </div>
-                            <div>
-                                <button
-                                    onClick={handleLogout}
-                                    className="flex items-center gap-2 w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
-                                >
-                                    <FiLogOut />
-                                    Logout
-                                </button>
-                            </div>
+                            <button
+                                onClick={handleLogout}
+                                className="w-full text-left px-4 py-2.5 hover:bg-red-50 flex items-center gap-3 text-red-600 transition-colors mt-1"
+                            >
+                                <FiLogOut size={18} />
+                                <span className="font-medium">Logout</span>
+                            </button>
                         </div>
                     </div>
                 </header>
 
                
-                    <main className="p-4 flex-1">{children}</main>
+                    <main className="p-6 flex-1">{children}</main>
               
             </div>
         </div>
