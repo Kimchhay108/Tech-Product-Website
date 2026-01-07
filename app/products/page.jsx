@@ -89,9 +89,9 @@ function ProductsContent() {
                                 )}
                                 {search && (
                                     <>
-                                        <span className="text-gray-500 mx-1">|</span>
+                                     
                                         <span className="text-black font-medium">
-                                            Search: {search}
+                                            {search}
                                         </span>
                                     </>
                                 )}

@@ -377,9 +377,9 @@ export default function Register({ setSelectedAuth, setAuth }) {
                 <button
                     onClick={handleCreateAccount}
                     disabled={loading}
-                    className="w-full py-2 bg-black text-white rounded font-semibold mb-4 cursor-pointer disabled:bg-gray-400"
+                    className="w-full py-2 bg-black text-white rounded font-semibold mb-4 cursor-pointer disabled:opacity-50"
                 >
-                    {loading ? "Creating Account..." : "REGISTER"}
+                    REGISTER
                 </button>
 
                 <div className="text-center">
@@ -387,14 +387,14 @@ export default function Register({ setSelectedAuth, setAuth }) {
                         onClick={() => setSelectedAuth("login")}
                         className="relative font-medium group cursor-pointer"
                     >
-                        Already have an account? Login
+                        Already have an account? Get Started!
                         <span
                             className="
-      absolute left-0 -bottom-1 h-[1.5px] bg-black
-      w-0
-      transition-all duration-300 ease-out
-      group-hover:w-full
-    "
+                                absolute left-0 -bottom-1 h-[1px] bg-black
+                                w-0
+                                transition-all duration-300 ease-out
+                                group-hover:w-full
+                                "
                         />
                     </button>
                 </div>
@@ -418,8 +418,8 @@ export default function Register({ setSelectedAuth, setAuth }) {
                             and complete registration.
                         </p>
 
-                        <div className="bg-blue-50 border border-blue-200 rounded p-4 mb-6">
-                            <p className="text-sm text-blue-800">
+                        <div className="bg-[#F6F6F6] border border-red-500 rounded p-4 mb-6">
+                            <p className="text-sm">
                                 <strong>Check your spam folder</strong> if you
                                 don&apos;t see the email in your inbox.
                             </p>
@@ -430,7 +430,7 @@ export default function Register({ setSelectedAuth, setAuth }) {
                                 setShowVerificationModal(false);
                                 setSelectedAuth("login");
                             }}
-                            className="w-full py-2 bg-black text-white rounded font-semibold cursor-pointer hover:bg-gray-800"
+                            className="w-full py-2 bg-black text-white rounded font-semibold cursor-pointer"
                         >
                             Go to Login
                         </button>
@@ -439,10 +439,10 @@ export default function Register({ setSelectedAuth, setAuth }) {
                             <button
                                 onClick={handleResendVerification}
                                 disabled={resendLoading || resendCooldown > 0}
-                                className="text-blue-600 hover:underline disabled:text-gray-400 disabled:no-underline"
+                                className="text-black hover:underline disabled:opacity-50 disabled:no-underline"
                             >
                                 {resendLoading
-                                    ? "Sending..."
+                                    ? "Sent"
                                     : resendCooldown > 0
                                     ? `Resend (${resendCooldown}s)`
                                     : "Resend"}

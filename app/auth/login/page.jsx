@@ -22,6 +22,7 @@ export default function Login({ setSelectedAuth, setAuth }) {
     const [showForgotModal, setShowForgotModal] = useState(false);
     const [resetEmail, setResetEmail] = useState("");
     const [resetLoading, setResetLoading] = useState(false);
+    const [resetError, setResetError] = useState("");
 
     const handleLogin = async () => {
         setError("");
@@ -119,18 +120,24 @@ export default function Login({ setSelectedAuth, setAuth }) {
 
     const handleForgotPassword = async () => {
         if (!resetEmail) {
-            alert("Please enter your email");
+            setResetError("Please enter your email");
             return;
         }
 
         setResetLoading(true);
         try {
             await sendPasswordResetEmail(auth, resetEmail);
-            alert("Password reset email sent! Check your inbox.");
             setResetEmail("");
+            setResetError("");
             setShowForgotModal(false);
         } catch (error) {
-            alert(error.message || "Failed to send reset email");
+            if (error.code === "auth/user-not-found") {
+                setResetError("No account found with this email");
+            } else if (error.code === "auth/invalid-email") {
+                setResetError("Please enter a valid email");
+            } else {
+                setResetError("Failed to send reset email");
+            }
         } finally {
             setResetLoading(false);
         }
@@ -187,6 +194,22 @@ export default function Login({ setSelectedAuth, setAuth }) {
                     )}
 
                     {/* Forgot password button stays here */}
+                    <div className="mt-1">
+                        <button
+                            onClick={() => setShowForgotModal(true)}
+                            className="relative text-sm text-gray-700 group"
+                        >
+                            Forgot password?
+                            <span
+                                className="
+                                    absolute left-0 -bottom-0.5 h-[1.5px] bg-black
+                                    w-0
+                                    transition-all duration-300 ease-out
+                                    group-hover:w-full
+                                "
+                            />
+                        </button>
+                    </div>
                 </div>
 
                 <button
@@ -217,12 +240,12 @@ export default function Login({ setSelectedAuth, setAuth }) {
 
             {/* Forgot Password Modal */}
             {showForgotModal && (
-                <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/50">
-                    <div className="bg-white p-8 rounded-lg shadow-xl max-w-md w-full mx-4">
-                        <h2 className="text-2xl font-bold mb-2">
+                <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/50 animate-fadeIn">
+                    <div className="bg-white p-8 rounded-lg shadow-xl max-w-md w-full mx-4 animate-scaleIn">
+                        <h2 className="text-2xl text-center font-bold mb-4">
                             Reset Password
                         </h2>
-                        <p className="text-gray-600 mb-5">
+                        <p className="text-gray-600 mb-4">
                             Enter your email and we&apos;ll send you a link to
                             reset your password.
                         </p>
@@ -234,18 +257,31 @@ export default function Login({ setSelectedAuth, setAuth }) {
                             <input
                                 type="email"
                                 value={resetEmail}
-                                onChange={(e) => setResetEmail(e.target.value)}
-                                className="w-full px-3 py-2 border rounded"
+                                onChange={(e) => {
+                                    setResetEmail(e.target.value);
+                                    setResetError("");
+                                }}
+                                className={`w-full px-3 py-2 border rounded ${
+                                    resetError
+                                        ? "border-red-500"
+                                        : "border-gray-300"
+                                }`}
                                 placeholder="Enter your email"
                             />
+
+                            {resetError && (
+                                <p className="text-red-600 text-sm mt-1">
+                                    {resetError}
+                                </p>
+                            )}
                         </div>
 
                         <button
                             onClick={handleForgotPassword}
                             disabled={resetLoading}
-                            className="w-full py-2 bg-black text-white rounded font-semibold mb-3 cursor-pointer disabled:bg-gray-400"
+                            className="w-full py-2 bg-black text-white rounded font-semibold mb-3 cursor-pointer disabled:opacity-50"
                         >
-                            {resetLoading ? "Sending..." : "Send Reset Email"}
+                            {resetLoading ? "Sent" : "Send Reset Email"}
                         </button>
 
                         <button

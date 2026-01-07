@@ -18,12 +18,16 @@ import {
 import { FaLaptop } from "react-icons/fa6";
 import { getAuth } from "@/lib/auth";
 import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Header() {
     const [open, setOpen] = useState(false);
     const [categories, setCategories] = useState([]);
     const [searchInput, setSearchInput] = useState("");
-    const [suggestions, setSuggestions] = useState({ products: [], categories: [] });
+    const [suggestions, setSuggestions] = useState({
+        products: [],
+        categories: [],
+    });
     const [showSuggestions, setShowSuggestions] = useState(false);
 
     const router = useRouter();
@@ -47,9 +51,9 @@ export default function Header() {
             fetch(`/api/products?search=${encodeURIComponent(searchInput)}`)
                 .then((res) => res.json())
                 .then((data) => {
-                    setSuggestions({ 
+                    setSuggestions({
                         products: Array.isArray(data) ? data : [],
-                        categories: []
+                        categories: [],
                     });
                     setShowSuggestions(true);
                 })
@@ -65,7 +69,9 @@ export default function Header() {
     const handleSearch = (e) => {
         if (e.key === "Enter") {
             if (searchInput.trim()) {
-                router.push(`/products?search=${encodeURIComponent(searchInput)}`);
+                router.push(
+                    `/products?search=${encodeURIComponent(searchInput)}`
+                );
                 setSearchInput("");
                 setSuggestions({ products: [], categories: [] });
                 setShowSuggestions(false);
@@ -143,20 +149,35 @@ export default function Header() {
                         />
                     </div>
 
-                    {/* Search Suggestions Dropdown - Shows ALL matching products */}
-                    {showSuggestions && suggestions.products?.length > 0 && (
-                        <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg mt-1 shadow-lg z-50 max-h-96 overflow-y-auto w-full">
-                            {suggestions.products.map((product, idx) => (
-                                <div
-                                    key={idx}
-                                    onClick={() => handleSuggestionClick(product.name)}
-                                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer border-b last:border-b-0"
+                    {/* Search Suggestions Dropdown */}
+                    <AnimatePresence>
+                        {showSuggestions &&
+                            suggestions.products?.length > 0 && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: -8 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -8 }}
+                                    transition={{ duration: 0.15 }}
+                                    className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg mt-1 shadow-lg z-50 max-h-80 overflow-y-auto"
                                 >
-                                    <p className="text-sm text-gray-900">{product.name}</p>
-                                </div>
-                            ))}
-                        </div>
-                    )}
+                                    {suggestions.products.map(
+                                        (product, idx) => (
+                                            <div
+                                                key={idx}
+                                                onClick={() =>
+                                                    handleSuggestionClick(
+                                                        product.name
+                                                    )
+                                                }
+                                                className="px-4 py-2.5 text-sm hover:bg-gray-100 cursor-pointer transition border-b last:border-b-0"
+                                            >
+                                                {product.name}
+                                            </div>
+                                        )
+                                    )}
+                                </motion.div>
+                            )}
+                    </AnimatePresence>
                 </div>
 
                 {/* Nav Desktop */}
@@ -250,10 +271,14 @@ export default function Header() {
                             {suggestions.products.map((product, idx) => (
                                 <div
                                     key={idx}
-                                    onClick={() => handleSuggestionClick(product.name)}
+                                    onClick={() =>
+                                        handleSuggestionClick(product.name)
+                                    }
                                     className="px-4 py-2 hover:bg-gray-100 cursor-pointer border-b last:border-b-0"
                                 >
-                                    <p className="text-sm text-gray-900">{product.name}</p>
+                                    <p className="text-sm text-gray-900">
+                                        {product.name}
+                                    </p>
                                 </div>
                             ))}
                         </div>

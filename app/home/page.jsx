@@ -310,12 +310,10 @@ export default function HomePage() {
                                     {/* Product Info */}
                                     <div className="p-4 flex flex-col flex-grow bg-white">
                                         {/* Product Name */}
-                                        <h3 className="text-sm md:text-base font-medium text-gray-900 mb-2 line-clamp-2 min-h-[2.5rem] group-hover:text-gray-700 transition-colors">
+                                        <h3 className="text-sm md:text-base font-semibold text-gray-900 line-clamp-2 min-h-[2.5rem] group-hover:text-gray-700 transition-colors">
                                             {product.name}
                                         </h3>
                                         
-                                    
-
                                         {/* Price Section */}
                                         <div className="flex items-baseline gap-2 mb-4 mt-auto">
                                             <span className="text-xl md:text-2xl font-bold text-gray-900">
@@ -373,7 +371,7 @@ export default function HomePage() {
                                 Think different, everything different.
                             </h1>
                             <button
-                                className="border border-black px-8 py-3 font-semibold rounded-md cursor-pointer hover:bg-black hover:text-white transition-all duration-300"
+                                className="border border-black px-8 py-3 font-semibold rounded-md cursor-pointer hover:bg-[#2C2C2C] hover:text-white transition-all duration-300"
                                 onClick={goToProducts}
                             >
                                 Shop Now
@@ -400,7 +398,7 @@ export default function HomePage() {
                                 and ease of use.
                             </h1>
                             <button
-                                className="border border-black px-8 py-3 font-semibold rounded-md cursor-pointer hover:bg-black hover:text-white transition-all duration-300"
+                                className="border border-black px-8 py-3 font-semibold rounded-md cursor-pointer hover:bg-[#2C2C2C] hover:text-white transition-all duration-300"
                                 onClick={goToProducts}
                             >
                                 Shop Now
@@ -425,7 +423,7 @@ export default function HomePage() {
                                 Introducing Apple Watch Series 9
                             </h1>
                             <button
-                                className="border border-black px-8 py-3 font-semibold rounded-md cursor-pointer hover:bg-black hover:text-white transition-all duration-300"
+                                className="border border-black px-8 py-3 font-semibold rounded-md cursor-pointer hover:bg-[#2C2C2C] hover:text-white transition-all duration-300"
                                 onClick={goToProducts}
                             >
                                 Shop Now

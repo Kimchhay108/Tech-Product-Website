@@ -56,14 +56,14 @@ export async function POST(req) {
           message: `User ${userData.firstName} ${userData.lastName} (${userData.role}) synced to Firestore`
         });
         
-        console.log(`✅ Synced user ${phone} to Firestore`);
+        console.log(`Synced user ${phone} to Firestore`);
       } catch (error) {
         results.push({
           phone,
           status: "error",
           message: error.message
         });
-        console.error(`❌ Error syncing user ${phone}:`, error);
+        console.error(`Error syncing user ${phone}:`, error);
       }
     }
     
@@ -73,7 +73,7 @@ export async function POST(req) {
       results
     });
   } catch (error) {
-    console.error("❌ Sync error:", error);
+    console.error("Sync error:", error);
     return NextResponse.json(
       { success: false, error: error.message },
       { status: 500 }
