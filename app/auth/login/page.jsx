@@ -5,7 +5,11 @@ import Link from "next/link";
 import { loginApi } from "../services/loginApi";
 import { useState } from "react";
 import { login, logout } from "@/lib/auth";
-import { sendPasswordResetEmail, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import {
+    sendPasswordResetEmail,
+    signInWithEmailAndPassword,
+    signOut,
+} from "firebase/auth";
 import { auth } from "@/lib/firebaseConfig";
 
 export default function Login({ setSelectedAuth, setAuth }) {
@@ -13,6 +17,7 @@ export default function Login({ setSelectedAuth, setAuth }) {
     const [identifier, setIdentifier] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [errorField, setErrorField] = useState(""); // "identifier" | "password"
     const [loading, setLoading] = useState(false);
     const [showForgotModal, setShowForgotModal] = useState(false);
     const [resetEmail, setResetEmail] = useState("");
@@ -20,9 +25,16 @@ export default function Login({ setSelectedAuth, setAuth }) {
 
     const handleLogin = async () => {
         setError("");
-        
-        if (!identifier || !password) {
-            setError("Please enter email/phone and password");
+
+        if (!identifier) {
+            setError("Please enter your email or phone");
+            setErrorField("identifier");
+            return;
+        }
+
+        if (!password) {
+            setError("Please enter your password");
+            setErrorField("password");
             return;
         }
 
@@ -30,38 +42,61 @@ export default function Login({ setSelectedAuth, setAuth }) {
         try {
             // Clear any existing Firebase session first
             await signOut(auth);
-            
+
             const response = await loginApi(identifier, password);
 
             if (response.success) {
                 // Clear any existing user data first
                 logout();
-                
+
                 // Try to sign in with Firebase if identifier is an email
-                if (identifier.includes('@')) {
+                if (identifier.includes("@")) {
                     try {
-                        const userCredential = await signInWithEmailAndPassword(auth, identifier, password);
+                        const userCredential = await signInWithEmailAndPassword(
+                            auth,
+                            identifier,
+                            password
+                        );
                         const user = userCredential.user;
-                        
+
                         // Check if email is verified - but skip for staff/admin accounts (created by admin)
-                        if (!user.emailVerified && response.user.role === "user") {
-                            setError("Please verify your email before logging in. Check your inbox for the verification link.");
+                        if (
+                            !user.emailVerified &&
+                            response.user.role === "user"
+                        ) {
+                            setError(
+                                "Please verify your email before logging in. Check your inbox for the verification link."
+                            );
                             setLoading(false);
                             await signOut(auth);
                             return;
                         }
                     } catch (firebaseError) {
-                        console.log("Firebase sign in failed, continuing with custom auth:", firebaseError.message);
+                        if (firebaseError.code === "auth/wrong-password") {
+                            setError("Incorrect password");
+                            setErrorField("password");
+                        } else if (
+                            firebaseError.code === "auth/user-not-found"
+                        ) {
+                            setError("Email not found");
+                            setErrorField("identifier");
+                        } else {
+                            setError("Login failed");
+                            setErrorField("identifier");
+                        }
+
+                        setLoading(false);
+                        return;
                     }
                 }
-                
+
                 // Set new user data
                 login(response.user);
                 setAuth({ user: response.user, isLoggedIn: true });
 
                 // Trigger cart reload with custom event
-                window.dispatchEvent(new Event('cart-reload'));
-                window.dispatchEvent(new Event('storage'));
+                window.dispatchEvent(new Event("cart-reload"));
+                window.dispatchEvent(new Event("storage"));
 
                 if (response.user.role === "admin") {
                     router.push("/admin");
@@ -72,6 +107,7 @@ export default function Login({ setSelectedAuth, setAuth }) {
                 }
             } else {
                 setError(response.message || "Login failed");
+                setErrorField("identifier");
             }
         } catch (err) {
             console.error(err);
@@ -103,63 +139,78 @@ export default function Login({ setSelectedAuth, setAuth }) {
     return (
         <div className="md:w-1/2 mx-auto">
             <div className="w-full">
-                {/* Error Message */}
-                {error && (
-                    <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
-                        {error}
-                    </div>
-                )}
-
                 <div className="mb-3">
                     <label className="block mb-1 font-medium">
                         Email or Phone Number
                     </label>
+
                     <input
                         type="text"
-                        className="w-full px-3 py-2 border rounded"
+                        className={`w-full px-3 py-2 border rounded ${
+                            errorField === "identifier" ? "border-red-500" : ""
+                        }`}
                         placeholder="Enter your email or phone"
                         value={identifier}
                         onChange={(e) => {
                             setIdentifier(e.target.value);
                             setError("");
+                            setErrorField("");
                         }}
                     />
+
+                    {errorField === "identifier" && (
+                        <p className="text-red-600 text-sm mt-1">{error}</p>
+                    )}
                 </div>
 
                 <div className="mb-4">
                     <label className="block mb-1 font-medium">Password</label>
+
                     <input
                         type="password"
-                        className="w-full px-3 py-2 border rounded"
+                        className={`w-full px-3 py-2 border rounded ${
+                            errorField === "password"
+                                ? "border-red-500"
+                                : "border-gray-300"
+                        }`}
                         placeholder="Enter your password"
                         value={password}
                         onChange={(e) => {
                             setPassword(e.target.value);
                             setError("");
+                            setErrorField("");
                         }}
                     />
-                    <button
-                        onClick={() => setShowForgotModal(true)}
-                        className="text-sm text-blue-600 hover:underline mt-1"
-                    >
-                        Forgot password?
-                    </button>
+
+                    {errorField === "password" && (
+                        <p className="text-red-600 text-sm mt-1">{error}</p>
+                    )}
+
+                    {/* Forgot password button stays here */}
                 </div>
 
                 <button
                     onClick={handleLogin}
                     disabled={loading}
-                    className="w-full py-2 bg-black text-white rounded font-semibold mb-4 cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed"
+                    className="w-full py-2 bg-black text-white rounded font-semibold mb-4 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                    {loading ? "Logging in..." : "LOGIN"}
+                    LOGIN
                 </button>
 
                 <div className="text-center">
                     <button
                         onClick={() => setSelectedAuth("register")}
-                        className="hover:underline"
+                        className="relative font-medium group cursor-pointer"
                     >
                         New to Cyber? Create an account
+                        <span
+                            className="
+                                absolute left-0 -bottom-1 h-[1.5px] bg-black
+                                w-0
+                                transition-all duration-300 ease-out
+                                group-hover:w-full
+                            "
+                        />
                     </button>
                 </div>
             </div>
@@ -168,13 +219,18 @@ export default function Login({ setSelectedAuth, setAuth }) {
             {showForgotModal && (
                 <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/50">
                     <div className="bg-white p-8 rounded-lg shadow-xl max-w-md w-full mx-4">
-                        <h2 className="text-2xl font-bold mb-2">Reset Password</h2>
+                        <h2 className="text-2xl font-bold mb-2">
+                            Reset Password
+                        </h2>
                         <p className="text-gray-600 mb-5">
-                            Enter your email and we&apos;ll send you a link to reset your password.
+                            Enter your email and we&apos;ll send you a link to
+                            reset your password.
                         </p>
 
                         <div className="mb-4">
-                            <label className="block mb-2 font-medium">Email</label>
+                            <label className="block mb-2 font-medium">
+                                Email
+                            </label>
                             <input
                                 type="email"
                                 value={resetEmail}

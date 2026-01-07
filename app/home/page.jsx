@@ -192,7 +192,7 @@ export default function HomePage() {
                                 </p>
                                 <button
                                     onClick={goToProducts}
-                                    className="text-sm sm:text-base md:text-lg lg:text-xl text-black border border-black rounded-lg py-3 px-9 my-3 hidden md:block hover:bg-black hover:text-white transition-all duration-300 font-medium"
+                                    className="text-sm sm:text-base md:text-lg lg:text-xl text-black border border-black rounded-lg py-3 px-9 my-3 hidden md:block hover:bg-black hover:text-white transition-all duration-300 font-medium cursor-pointer"
                                 >
                                     Shop Now
                                 </button>
@@ -208,7 +208,7 @@ export default function HomePage() {
                             </div>
                             <button
                                 onClick={goToProducts}
-                                className="text-sm sm:text-base md:text-lg lg:text-xl text-black border border-black rounded-lg py-3 px-9 my-3 md:hidden hover:bg-black hover:text-white transition-all duration-300 font-medium"
+                                className="text-sm sm:text-base md:text-lg lg:text-xl text-black border border-black rounded-lg py-3 px-9 my-3 md:hidden hover:bg-black hover:text-white transition-all duration-300 font-medium cursor-pointer"
                             >
                                 Shop Now
                             </button>
@@ -252,9 +252,9 @@ export default function HomePage() {
                     {/* Header Tabs */}
                     <div className="flex space-x-7 justify-center md:justify-start items-center text-start text-lg mb-8">
                         <p
-                            className={`cursor-pointer ${
+                            className={`cursor-pointer relative pb-1 transition-colors ${
                                 activeTab === "newArrival"
-                                    ? "text-black font-semibold border-b-2 border-black"
+                                    ? "text-black font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-black after:origin-center after:animate-underlineGrow"
                                     : "text-[#8B8B8B] hover:text-black"
                             }`}
                             onClick={() => setActiveTab("newArrival")}
@@ -262,9 +262,9 @@ export default function HomePage() {
                             New Arrival
                         </p>
                         <p
-                            className={`cursor-pointer ${
+                            className={`cursor-pointer relative pb-1 transition-colors ${
                                 activeTab === "bestSeller"
-                                    ? "text-black font-semibold border-b-2 border-black"
+                                    ? "text-black font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-black after:origin-center after:animate-underlineGrow"
                                     : "text-[#8B8B8B] hover:text-black"
                             }`}
                             onClick={() => setActiveTab("bestSeller")}
@@ -272,9 +272,9 @@ export default function HomePage() {
                             BestSeller
                         </p>
                         <p
-                            className={`cursor-pointer ${
+                            className={`cursor-pointer relative pb-1 transition-colors ${
                                 activeTab === "specialOffer"
-                                    ? "text-black font-semibold border-b-2 border-black"
+                                    ? "text-black font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-black after:origin-center after:animate-underlineGrow"
                                     : "text-[#8B8B8B] hover:text-black"
                             }`}
                             onClick={() => setActiveTab("specialOffer")}
@@ -330,7 +330,7 @@ export default function HomePage() {
 
                                         {/* Add to Cart Button */}
                                         <button
-                                            className="w-full bg-black text-white py-2.5 px-4 rounded-lg font-medium transition-all duration-300 hover:bg-gray-800 active:scale-95 flex items-center justify-center gap-2 text-sm"
+                                            className="w-full bg-black text-white py-3 px-4 rounded-lg font-medium transition-all flex items-center justify-center gap-2 text-sm cursor-pointer"
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 router.push(`/productDetail/${product._id}`);
@@ -339,10 +339,7 @@ export default function HomePage() {
                                             <FiShoppingCart size={16} />
                                             <span>Add to Cart</span>
                                         </button>
-                                    </div>
-
-                                    {/* Hover Overlay Effect */}
-                                    
+                                    </div>  
                                 </div>
                             ))
                         ) : (

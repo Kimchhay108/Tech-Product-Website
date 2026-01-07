@@ -174,7 +174,7 @@ export default function AdminDashboard() {
     }, [period, rawOrdersData, rawIncomeData]);
 
     return (
-        <div className="p-6 max-w-7xl mx-auto">
+        <div className="p-6">
             {/* Header Section */}
             <div className="mb-8">
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard Overview</h1>

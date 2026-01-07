@@ -530,8 +530,8 @@ export default function UserProfile() {
                                             </div>
 
                                             <div className="space-y-2">
-                                                {order.items?.map((item) => (
-                                                    <div key={`${order._id}-${item.productId}-${item.name}`} className="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-2 text-sm border-b pb-2 last:border-b-0">
+                                                {order.items?.map((item, index) => (
+                                                    <div key={`${order._id}-${index}`} className="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-2 text-sm border-b pb-2 last:border-b-0">
                                                         <span className="font-medium break-words">{item.name}</span>
                                                         <span className="text-gray-700">x{item.quantity}</span>
                                                         <span className="text-gray-700">${(item.price * item.quantity).toFixed(2)}</span>

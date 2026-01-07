@@ -21,17 +21,20 @@ export default function ProfilePage() {
     useEffect(() => {
         const loadAuth = async () => {
             const authData = getAuth();
-            
+
             // If localStorage has different user than Firebase, sign out from Firebase
-            if (firebaseAuth.currentUser && authData?.user?.email && 
-                firebaseAuth.currentUser.email !== authData.user.email) {
+            if (
+                firebaseAuth.currentUser &&
+                authData?.user?.email &&
+                firebaseAuth.currentUser.email !== authData.user.email
+            ) {
                 try {
                     await firebaseAuth.signOut();
                 } catch (err) {
                     console.log("Firebase signout error:", err);
                 }
             }
-            
+
             setAuth(authData);
             setIsLoading(false);
 
@@ -44,7 +47,10 @@ export default function ProfilePage() {
             }
 
             // Check Firebase verification status (only if emails match)
-            if (firebaseAuth.currentUser && authData?.user?.email === firebaseAuth.currentUser.email) {
+            if (
+                firebaseAuth.currentUser &&
+                authData?.user?.email === firebaseAuth.currentUser.email
+            ) {
                 setEmailVerified(firebaseAuth.currentUser.emailVerified);
             }
         };
@@ -56,12 +62,12 @@ export default function ProfilePage() {
             loadAuth();
         };
 
-        window.addEventListener('storage', handleStorageChange);
-        window.addEventListener('cart-reload', handleStorageChange);
+        window.addEventListener("storage", handleStorageChange);
+        window.addEventListener("cart-reload", handleStorageChange);
 
         return () => {
-            window.removeEventListener('storage', handleStorageChange);
-            window.removeEventListener('cart-reload', handleStorageChange);
+            window.removeEventListener("storage", handleStorageChange);
+            window.removeEventListener("cart-reload", handleStorageChange);
         };
     }, [router]);
 
@@ -69,10 +75,10 @@ export default function ProfilePage() {
         logout();
         setAuth(null);
         setSelectedAuth("login");
-        
+
         // Trigger cart reload events
-        window.dispatchEvent(new Event('cart-reload'));
-        window.dispatchEvent(new Event('storage'));
+        window.dispatchEvent(new Event("cart-reload"));
+        window.dispatchEvent(new Event("storage"));
     };
 
     const handleEditProfile = () => {
@@ -90,11 +96,11 @@ export default function ProfilePage() {
             if (firebaseAuth.currentUser) {
                 await sendEmailVerification(firebaseAuth.currentUser);
                 alert("Verification email sent! Check your inbox.");
-                
+
                 // Set cooldown of 60 seconds
                 setResendCooldown(60);
                 const interval = setInterval(() => {
-                    setResendCooldown(prev => {
+                    setResendCooldown((prev) => {
                         if (prev <= 1) {
                             clearInterval(interval);
                             return 0;
@@ -104,9 +110,10 @@ export default function ProfilePage() {
                 }, 1000);
             }
         } catch (error) {
-            const errorMessage = error.code === 'auth/too-many-requests'
-                ? "Too many requests. Please wait a few minutes before trying again."
-                : error.message;
+            const errorMessage =
+                error.code === "auth/too-many-requests"
+                    ? "Too many requests. Please wait a few minutes before trying again."
+                    : error.message;
             alert("Failed to send verification email: " + errorMessage);
         } finally {
             setResendLoading(false);
@@ -123,36 +130,51 @@ export default function ProfilePage() {
                             Welcome to cyber <FiCpu size={20} />
                         </p>
 
-                        <div className="flex gap-5 mb-5">
+                        <div className="flex gap-8 mb-5 relative">
+                            {/* Login */}
                             <button
                                 onClick={() => setSelectedAuth("login")}
-                                className={
-                                    selectedAuth === "login"
-                                        ? "border-b-2 font-bold"
-                                        : ""
-                                }
+                                className="relative font-semibold pb-1 cursor-pointer" 
                             >
                                 Login
+                                <span
+                                    className={`
+                                        absolute left-1/2 -translate-x-1/2 bottom-0 h-[2px] bg-black
+                                        transition-all duration-300
+                                        ${selectedAuth === "login" ? "w-full" : "w-0"}
+                                    `}
+                                ></span>
                             </button>
+
+                            {/* Register */}
                             <button
                                 onClick={() => setSelectedAuth("register")}
-                                className={
-                                    selectedAuth === "register"
-                                        ? "border-b-2 font-bold"
-                                        : ""
-                                }
+                                className="relative font-semibold pb-1 cursor-pointer"
                             >
                                 Register
+                                <span
+                                    className={`
+                                        absolute left-1/2 -translate-x-1/2 bottom-0 h-[2px] bg-black
+                                        transition-all duration-300
+                                        ${selectedAuth === "register" ? "w-full" : "w-0"}
+                                    `}
+                                ></span>
                             </button>
                         </div>
                     </div>
 
                     {/* Content */}
                     {selectedAuth === "login" && (
-                        <Login setSelectedAuth={setSelectedAuth} setAuth={setAuth} />
+                        <Login
+                            setSelectedAuth={setSelectedAuth}
+                            setAuth={setAuth}
+                        />
                     )}
                     {selectedAuth === "register" && (
-                        <Register setSelectedAuth={setSelectedAuth} setAuth={setAuth} />
+                        <Register
+                            setSelectedAuth={setSelectedAuth}
+                            setAuth={setAuth}
+                        />
                     )}
                 </div>
             </div>
