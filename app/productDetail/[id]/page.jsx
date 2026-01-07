@@ -20,9 +20,6 @@ export default function ProductsDetail() {
     const colors = ["#000000", "#E8E8E8", "#781DBC", "#E1B000"];
     const [selectedColor, setSelectedColor] = useState(colors[0]);
 
-    const memories = ["128GB", "256GB", "512GB", "1TB"];
-    const [selectedMemory, setSelectedMemory] = useState(memories[0]);
-
     const [quantity, setQuantity] = useState(1);
     const increase = () => setQuantity((prev) => prev + 1);
     const decrease = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
@@ -200,28 +197,6 @@ export default function ProductsDetail() {
                                 </div>
                             </div>
 
-                            {/* Storage Selection */}
-                            <div>
-                                <label className=" font-semibold text-gray-900 mb-3 block">
-                                    Storage Capacity
-                                </label>
-                                <div className="grid grid-cols-4 gap-3">
-                                    {memories.map((memory) => (
-                                        <button
-                                            key={memory}
-                                            onClick={() => setSelectedMemory(memory)}
-                                            className={`py-3 px-4 rounded-lg text-sm font-medium text-center border-2 transition-all ${
-                                                selectedMemory === memory
-                                                    ? "border-black bg-black text-white"
-                                                    : "border-gray-300 text-gray-700 hover:border-gray-400"
-                                            }`}
-                                        >
-                                            {memory}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
                             {/* Description */}
                             <div className="rounded-lg">
                                 <p className="py-2 font-semibold">Description:</p>
@@ -266,7 +241,6 @@ export default function ProductsDetail() {
                                                 name: product.name,
                                                 price: product.price,
                                                 color: selectedColor,
-                                                memory: selectedMemory,
                                                 quantity,
                                                 image: bigImage,
                                                 category: product.category,

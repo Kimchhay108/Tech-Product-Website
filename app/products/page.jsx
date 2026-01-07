@@ -22,6 +22,7 @@ function ProductsContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const category = searchParams.get("category");
+    const search = searchParams.get("search");
 
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [filter, setFilter] = useState("");
@@ -41,8 +42,17 @@ function ProductsContent() {
         const loadProducts = async () => {
             try {
                 let url = "/api/products";
+                const params = new URLSearchParams();
+                
                 if (category) {
-                    url += `?category=${category.toLowerCase()}`;
+                    params.append("category", category.toLowerCase());
+                }
+                if (search) {
+                    params.append("search", search);
+                }
+
+                if (params.toString()) {
+                    url += `?${params.toString()}`;
                 }
 
                 const res = await fetch(url);
@@ -55,7 +65,7 @@ function ProductsContent() {
         };
 
         loadProducts();
-    }, [category]);
+    }, [category, search]);
 
     return (
         <section className="min-h-screen bg-gray-50">
@@ -74,6 +84,14 @@ function ProductsContent() {
                                     <>
                                         <span className="text-black font-medium">
                                             {category.charAt(0).toUpperCase() + category.slice(1)}
+                                        </span>
+                                    </>
+                                )}
+                                {search && (
+                                    <>
+                                        <span className="text-gray-500 mx-1">|</span>
+                                        <span className="text-black font-medium">
+                                            Search: {search}
                                         </span>
                                     </>
                                 )}

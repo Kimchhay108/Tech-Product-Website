@@ -14,6 +14,14 @@ export async function GET(req) {
     const { searchParams } = new URL(req.url);
     let query = {};
 
+    // Search by product name (partial word matching)
+    const searchTerm = searchParams.get("search");
+    if (searchTerm) {
+      // Escape special regex characters and create pattern for partial matching
+      const escapedTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      query.name = { $regex: escapedTerm, $options: "i" }; // case-insensitive partial search
+    }
+
     // Filter by category slug
     const categorySlug = searchParams.get("category");
     if (categorySlug) {

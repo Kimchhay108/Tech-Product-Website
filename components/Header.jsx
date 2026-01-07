@@ -22,6 +22,9 @@ import { useRouter } from "next/navigation";
 export default function Header() {
     const [open, setOpen] = useState(false);
     const [categories, setCategories] = useState([]);
+    const [searchInput, setSearchInput] = useState("");
+    const [suggestions, setSuggestions] = useState({ products: [], categories: [] });
+    const [showSuggestions, setShowSuggestions] = useState(false);
 
     const router = useRouter();
 
@@ -31,6 +34,51 @@ export default function Header() {
             .then((data) => setCategories(data))
             .catch((err) => console.error("Failed to load categories", err));
     }, []);
+
+    // Debounced search for suggestions
+    useEffect(() => {
+        if (searchInput.trim().length < 2) {
+            setSuggestions({ products: [], categories: [] });
+            setShowSuggestions(false);
+            return;
+        }
+
+        const debounceTimer = setTimeout(() => {
+            fetch(`/api/products?search=${encodeURIComponent(searchInput)}`)
+                .then((res) => res.json())
+                .then((data) => {
+                    setSuggestions({ 
+                        products: Array.isArray(data) ? data : [],
+                        categories: []
+                    });
+                    setShowSuggestions(true);
+                })
+                .catch((err) => {
+                    console.error("Failed to load suggestions:", err);
+                    setSuggestions({ products: [], categories: [] });
+                });
+        }, 300); // 300ms debounce
+
+        return () => clearTimeout(debounceTimer);
+    }, [searchInput]);
+
+    const handleSearch = (e) => {
+        if (e.key === "Enter") {
+            if (searchInput.trim()) {
+                router.push(`/products?search=${encodeURIComponent(searchInput)}`);
+                setSearchInput("");
+                setSuggestions({ products: [], categories: [] });
+                setShowSuggestions(false);
+            }
+        }
+    };
+
+    const handleSuggestionClick = (productName) => {
+        router.push(`/products?search=${encodeURIComponent(productName)}`);
+        setSearchInput("");
+        setSuggestions({ products: [], categories: [] });
+        setShowSuggestions(false);
+    };
 
     const handleProfileClick = () => {
         const auth = getAuth();
@@ -79,16 +127,36 @@ export default function Header() {
                 </Link>
 
                 {/* Search Desktop */}
-                <div className="hidden md:flex bg-gray-100 items-center rounded-lg w-full max-w-md mx-6">
-                    <FiSearch
-                        size={20}
-                        className="ml-2 text-[var(--secondary)]"
-                    />
-                    <input
-                        type="text"
-                        placeholder="Search"
-                        className="px-3 py-2 w-full bg-gray-100 focus:outline-none"
-                    />
+                <div className="hidden md:flex flex-col bg-gray-100 items-center rounded-lg w-full max-w-md mx-6 relative">
+                    <div className="flex items-center w-full">
+                        <FiSearch
+                            size={20}
+                            className="ml-2 text-[var(--secondary)]"
+                        />
+                        <input
+                            type="text"
+                            placeholder="Search"
+                            value={searchInput}
+                            onChange={(e) => setSearchInput(e.target.value)}
+                            onKeyPress={handleSearch}
+                            className="px-3 py-2 w-full bg-gray-100 focus:outline-none rounded-lg"
+                        />
+                    </div>
+
+                    {/* Search Suggestions Dropdown - Shows ALL matching products */}
+                    {showSuggestions && suggestions.products?.length > 0 && (
+                        <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg mt-1 shadow-lg z-50 max-h-96 overflow-y-auto w-full">
+                            {suggestions.products.map((product, idx) => (
+                                <div
+                                    key={idx}
+                                    onClick={() => handleSuggestionClick(product.name)}
+                                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer border-b last:border-b-0"
+                                >
+                                    <p className="text-sm text-gray-900">{product.name}</p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {/* Nav Desktop */}
@@ -160,16 +228,36 @@ export default function Header() {
         `}
             >
                 {/* Search Mobile */}
-                <div className="bg-gray-100 flex items-center rounded-lg">
-                    <FiSearch
-                        size={20}
-                        className="ml-2 text-[var(--secondary)]"
-                    />
-                    <input
-                        type="text"
-                        placeholder="Search"
-                        className="px-3 py-2 w-full bg-gray-100 focus:outline-none"
-                    />
+                <div className="relative mb-4">
+                    <div className="bg-gray-100 flex items-center rounded-lg">
+                        <FiSearch
+                            size={20}
+                            className="ml-2 text-[var(--secondary)]"
+                        />
+                        <input
+                            type="text"
+                            placeholder="Search"
+                            value={searchInput}
+                            onChange={(e) => setSearchInput(e.target.value)}
+                            onKeyPress={handleSearch}
+                            className="px-3 py-2 w-full bg-gray-100 focus:outline-none rounded-lg"
+                        />
+                    </div>
+
+                    {/* Mobile Search Suggestions - Shows ALL matching products */}
+                    {showSuggestions && suggestions.products?.length > 0 && (
+                        <div className="bg-white border border-gray-200 rounded-lg mt-1 shadow-lg z-50 max-h-80 overflow-y-auto">
+                            {suggestions.products.map((product, idx) => (
+                                <div
+                                    key={idx}
+                                    onClick={() => handleSuggestionClick(product.name)}
+                                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer border-b last:border-b-0"
+                                >
+                                    <p className="text-sm text-gray-900">{product.name}</p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {/* Mobile Categories */}
