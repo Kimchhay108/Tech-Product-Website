@@ -84,7 +84,7 @@ ${selectedProvince}, ${selectedCountry}`.trim();
             const authData = getAuth();
             if (!authData || !authData.user) {
                 alert("Please login to continue");
-                router.push("/auth/login");
+                router.push("/profile");
                 return;
             }
 
@@ -299,7 +299,7 @@ ${selectedProvince}, ${selectedCountry}`.trim();
                             </div>
 
                             <button
-                                className="w-full bg-black text-white py-3 rounded font-bold mt-2 cursor-pointer hover:bg-gray-800"
+                                className="w-full bg-black text-white py-3 rounded font-bold mt-2 cursor-pointer"
                                 onClick={handleSaveAddress}
                                 type="button"
                             >
@@ -512,7 +512,7 @@ ${selectedProvince}, ${selectedCountry}`.trim();
                     <button 
                         onClick={handleCheckout}
                         disabled={isProcessing}
-                        className="w-full py-4 px-6 bg-black text-white font-bold rounded cursor-pointer hover:bg-gray-800 disabled:bg-gray-500 disabled:cursor-not-allowed"
+                        className="w-full py-4 px-6 bg-black text-white font-bold rounded cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {isProcessing ? "Processing..." : "Checkout"}
                     </button>

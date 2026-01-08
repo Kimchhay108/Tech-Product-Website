@@ -294,7 +294,7 @@ export default function StaffProducts() {
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Header */}
-            <div >
+            <div>
                 <div className=" px-6 py-6">
                     <h1 className="text-4xl font-bold">My Products</h1>
                     <p className=" mt-2 text-lg">
@@ -435,28 +435,36 @@ export default function StaffProducts() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Product Name <span className="text-red-500">*</span>
+                                        Product Name{" "}
+                                        <span className="text-red-500">*</span>
                                     </label>
                                     <input
                                         type="text"
                                         placeholder="Enter product name"
                                         value={productName}
-                                        onChange={(e) => setProductName(e.target.value)}
+                                        onChange={(e) =>
+                                            setProductName(e.target.value)
+                                        }
                                         className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E2E2E] focus:border-transparent transition-all"
                                         required
                                     />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Price <span className="text-red-500">*</span>
+                                        Price{" "}
+                                        <span className="text-red-500">*</span>
                                     </label>
                                     <div className="relative">
-                                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
+                                            $
+                                        </span>
                                         <input
                                             type="number"
                                             placeholder="0.00"
                                             value={price}
-                                            onChange={(e) => setPrice(e.target.value)}
+                                            onChange={(e) =>
+                                                setPrice(e.target.value)
+                                            }
                                             className="w-full pl-8 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E2E2E] focus:border-transparent transition-all"
                                             step="0.01"
                                             required
@@ -468,11 +476,14 @@ export default function StaffProducts() {
                             {/* Category */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Category <span className="text-red-500">*</span>
+                                    Category{" "}
+                                    <span className="text-red-500">*</span>
                                 </label>
                                 <select
                                     value={selectedCategory}
-                                    onChange={(e) => setSelectedCategory(e.target.value)}
+                                    onChange={(e) =>
+                                        setSelectedCategory(e.target.value)
+                                    }
                                     className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E2E2E] focus:border-transparent transition-all"
                                     required
                                 >
@@ -495,28 +506,42 @@ export default function StaffProducts() {
                                         <input
                                             type="checkbox"
                                             checked={newArrival}
-                                            onChange={(e) => setNewArrival(e.target.checked)}
+                                            onChange={(e) =>
+                                                setNewArrival(e.target.checked)
+                                            }
                                             className="w-4 h-4 text-[#2E2E2E] border-gray-300 rounded focus:ring-[#2E2E2E]"
                                         />
-                                        <span className="text-sm text-gray-700">New Arrival</span>
+                                        <span className="text-sm text-gray-700">
+                                            New Arrival
+                                        </span>
                                     </label>
                                     <label className="flex items-center space-x-2 cursor-pointer">
                                         <input
                                             type="checkbox"
                                             checked={bestSeller}
-                                            onChange={(e) => setBestSeller(e.target.checked)}
+                                            onChange={(e) =>
+                                                setBestSeller(e.target.checked)
+                                            }
                                             className="w-4 h-4 text-[#2E2E2E] border-gray-300 rounded focus:ring-[#2E2E2E]"
                                         />
-                                        <span className="text-sm text-gray-700">Best Seller</span>
+                                        <span className="text-sm text-gray-700">
+                                            Best Seller
+                                        </span>
                                     </label>
                                     <label className="flex items-center space-x-2 cursor-pointer">
                                         <input
                                             type="checkbox"
                                             checked={specialOffer}
-                                            onChange={(e) => setSpecialOffer(e.target.checked)}
+                                            onChange={(e) =>
+                                                setSpecialOffer(
+                                                    e.target.checked
+                                                )
+                                            }
                                             className="w-4 h-4 text-[#2E2E2E] border-gray-300 rounded focus:ring-[#2E2E2E]"
                                         />
-                                        <span className="text-sm text-gray-700">Special Offer</span>
+                                        <span className="text-sm text-gray-700">
+                                            Special Offer
+                                        </span>
                                     </label>
                                 </div>
                             </div>
@@ -525,16 +550,21 @@ export default function StaffProducts() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Available Colors <span className="text-red-500">*</span>
+                                        Available Colors{" "}
+                                        <span className="text-red-500">*</span>
                                     </label>
                                     <input
                                         type="text"
                                         placeholder="e.g., Black, White, Blue"
                                         value={colors}
-                                        onChange={(e) => setColors(e.target.value)}
+                                        onChange={(e) =>
+                                            setColors(e.target.value)
+                                        }
                                         className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E2E2E] focus:border-transparent transition-all"
                                     />
-                                    <p className="text-xs text-gray-500 mt-1">Separate colors with commas</p>
+                                    <p className="text-xs text-gray-500 mt-1">
+                                        Separate colors with commas
+                                    </p>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -544,7 +574,9 @@ export default function StaffProducts() {
                                         type="text"
                                         placeholder="e.g., 128GB, 256GB"
                                         value={memory}
-                                        onChange={(e) => setMemory(e.target.value)}
+                                        onChange={(e) =>
+                                            setMemory(e.target.value)
+                                        }
                                         className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E2E2E] focus:border-transparent transition-all"
                                     />
                                 </div>
@@ -558,7 +590,9 @@ export default function StaffProducts() {
                                 <textarea
                                     placeholder="Enter product description..."
                                     value={description}
-                                    onChange={(e) => setDescription(e.target.value)}
+                                    onChange={(e) =>
+                                        setDescription(e.target.value)
+                                    }
                                     rows={4}
                                     className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E2E2E] focus:border-transparent transition-all resize-none"
                                 />
@@ -572,13 +606,29 @@ export default function StaffProducts() {
                                 <div className="flex items-center justify-center w-full">
                                     <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                            <svg className="w-8 h-8 mb-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                            <svg
+                                                className="w-8 h-8 mb-2 text-gray-500"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                                                />
                                             </svg>
                                             <p className="mb-1 text-sm text-gray-500">
-                                                <span className="font-semibold">Click to upload</span> or drag and drop
+                                                <span className="font-semibold">
+                                                    Click to upload
+                                                </span>{" "}
+                                                or drag and drop
                                             </p>
-                                            <p className="text-xs text-gray-500">Multiple images supported - PNG, JPG or WEBP (MAX. 5MB each)</p>
+                                            <p className="text-xs text-gray-500">
+                                                Multiple images supported - PNG,
+                                                JPG or WEBP (MAX. 5MB each)
+                                            </p>
                                         </div>
                                         <input
                                             type="file"
@@ -598,23 +648,46 @@ export default function StaffProducts() {
                                         </p>
                                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                                             {images.map((file, index) => (
-                                                <div key={index} className="relative group">
+                                                <div
+                                                    key={index}
+                                                    className="relative group"
+                                                >
                                                     <div className="aspect-square rounded-lg overflow-hidden bg-gray-100 border-2 border-gray-200">
                                                         <img
-                                                            src={URL.createObjectURL(file)}
-                                                            alt={`Preview ${index + 1}`}
+                                                            src={URL.createObjectURL(
+                                                                file
+                                                            )}
+                                                            alt={`Preview ${
+                                                                index + 1
+                                                            }`}
                                                             className="w-full h-full object-cover"
                                                         />
                                                     </div>
                                                     <button
                                                         type="button"
                                                         onClick={() => {
-                                                            setImages(images.filter((_, i) => i !== index));
+                                                            setImages(
+                                                                images.filter(
+                                                                    (_, i) =>
+                                                                        i !==
+                                                                        index
+                                                                )
+                                                            );
                                                         }}
                                                         className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg transition-colors"
                                                     >
-                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                                        <svg
+                                                            className="w-4 h-4"
+                                                            fill="none"
+                                                            stroke="currentColor"
+                                                            viewBox="0 0 24 24"
+                                                        >
+                                                            <path
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                strokeWidth={2}
+                                                                d="M6 18L18 6M6 6l12 12"
+                                                            />
                                                         </svg>
                                                     </button>
                                                     <div className="mt-1 text-xs text-gray-500 truncate">
@@ -631,23 +704,58 @@ export default function StaffProducts() {
                             <div className="flex gap-3 pt-5 border-t border-gray-200">
                                 <button
                                     type="submit"
-                                    disabled={loading || !productName || !selectedCategory || !price || !colors}
+                                    disabled={
+                                        loading ||
+                                        !productName ||
+                                        !selectedCategory ||
+                                        !price ||
+                                        !colors
+                                    }
                                     className="inline-flex items-center px-6 py-2.5 bg-[#2E2E2E] hover:bg-[#4A4A4A] text-white font-medium rounded-lg shadow-sm transition-colors duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
                                 >
                                     {loading ? (
                                         <>
-                                            <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            <svg
+                                                className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <circle
+                                                    className="opacity-25"
+                                                    cx="12"
+                                                    cy="12"
+                                                    r="10"
+                                                    stroke="currentColor"
+                                                    strokeWidth="4"
+                                                ></circle>
+                                                <path
+                                                    className="opacity-75"
+                                                    fill="currentColor"
+                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                                ></path>
                                             </svg>
-                                            {editingProduct ? "Updating..." : "Adding..."} Product
+                                            {editingProduct
+                                                ? "Updating..."
+                                                : "Adding..."}{" "}
+                                            Product
                                         </>
                                     ) : (
                                         <>
-                                            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                            <svg
+                                                className="w-5 h-5 mr-2"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                                />
                                             </svg>
-                                            {editingProduct ? "Update" : "Add"} Product
+                                            {editingProduct ? "Update" : "Add"}{" "}
+                                            Product
                                         </>
                                     )}
                                 </button>
@@ -733,11 +841,26 @@ export default function StaffProducts() {
                                                         }
                                                         className="w-full h-full object-cover"
                                                     />
-                                                    {product.newArrival && (
-                                                        <span className="absolute top-3 right-3 bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full">
-                                                            New
-                                                        </span>
-                                                    )}
+
+                                                    <div className="absolute top-3 right-3 flex flex-col gap-1">
+                                                        {product.newArrival && (
+                                                            <span className="bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                                                                New
+                                                            </span>
+                                                        )}
+
+                                                        {product.bestSeller && (
+                                                            <span className="bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                                                                Best 
+                                                            </span>
+                                                        )}
+
+                                                        {product.specialOffer && (
+                                                            <span className="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                                                                Offer
+                                                            </span>
+                                                        )}
+                                                    </div>
                                                 </div>
                                             )}
 

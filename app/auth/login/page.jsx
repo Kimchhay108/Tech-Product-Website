@@ -292,29 +292,6 @@ export default function Login({ setSelectedAuth, setAuth }) {
                 >
                     LOGIN
                 </button>
-
-                <div className="-mt-2 mb-4 text-center">
-                    <button
-                        onClick={() => {
-                            if (identifier && identifier.includes("@")) {
-                                setResetEmail(identifier);
-                            }
-                            setShowForgotModal(true);
-                        }}
-                        className="relative text-sm text-gray-700 group"
-                    >
-                        Forgot password?
-                        <span
-                            className="
-                                absolute left-0 -bottom-0.5 h-[1.5px] bg-black
-                                w-0
-                                transition-all duration-300 ease-out
-                                group-hover:w-full
-                            "
-                        />
-                    </button>
-                </div>
-
                 <button
                     onClick={handleGoogleLogin}
                     disabled={loading}

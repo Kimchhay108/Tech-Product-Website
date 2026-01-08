@@ -95,7 +95,7 @@ export default function CartPage() {
                                         href={`/productDetail/${item.productId}`}
                                         className="flex-shrink-0"
                                     >
-                                        <div className="w-28 h-28 bg-gray-50 rounded-lg overflow-hidden group cursor-pointer">
+                                        <div className="w-28 h-28 rounded-lg overflow-hidden group cursor-pointer">
                                             {item.image && (
                                                 <Image
                                                     src={item.image}
@@ -141,7 +141,7 @@ export default function CartPage() {
                                         </div>
 
                                         {/* Price and Quantity Controls */}
-                                        <div className="flex items-center justify-between mt-4">
+                                       <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-4 mt-4">
                                             <div className="flex items-center gap-4">
                                                 {/* Quantity Selector */}
                                                 <div className="flex items-center border-2 border-gray-200 rounded-lg overflow-hidden">
@@ -173,7 +173,7 @@ export default function CartPage() {
                                             </div>
 
                                             {/* Item Total Price */}
-                                            <div className="text-right">
+                                            <div className="text-left">
                                                 <p className="text-2xl font-bold text-gray-900">
                                                     ${(item.price * item.quantity).toFixed(2)}
                                                 </p>
