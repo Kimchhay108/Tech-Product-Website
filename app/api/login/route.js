@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { userStore } from "@/lib/memoryStore";
 import { db, auth as firebaseAuth } from "@/lib/firebaseConfig";
+import { adminAuth } from "@/lib/firebaseAdmin";
 import { collection, getDocs, query, where, limit } from "firebase/firestore";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
@@ -57,66 +58,71 @@ export async function POST(req) {
 
     console.log("🔍 Login attempt with identifier:", identifier);
 
-    // First, try Firebase Auth if identifier is an email
+    // First, handle email-based login with verification enforcement
     if (identifier.includes("@")) {
       try {
+        // Fetch user record from Firestore first to determine role/active status
+        const usersRef = collection(db, "users");
+        const snap = await getDocs(query(usersRef, where("email", "==", identifier), limit(1)));
+        const hasUserDoc = !snap.empty;
+        const userDoc = hasUserDoc ? snap.docs[0] : null;
+        const userData = hasUserDoc ? userDoc.data() : null;
+
+        // Block deactivated accounts (if record exists)
+        if (userData && userData.active === false) {
+          return NextResponse.json(
+            { success: false, message: "Account is deactivated. Contact admin." },
+            { status: 403 }
+          );
+        }
+
+        // Enforce verification for regular users (admins/staff can bypass)
+        const role = (userData && userData.role) ? userData.role : "user";
+
+        // Prefer Admin SDK to check verification status without signing in
+        if (role === "user" && adminAuth) {
+          try {
+            const userRecord = await adminAuth.getUserByEmail(identifier);
+            if (!userRecord.emailVerified) {
+              return NextResponse.json(
+                { success: false, message: "Please verify your email before logging in. Check your inbox for the verification link." },
+                { status: 403 }
+              );
+            }
+          } catch (adminErr) {
+            // If user not found in Admin or admin not configured, continue to password check
+            console.log("ℹ️ Admin check skipped:", adminErr?.message || "admin not configured");
+          }
+        }
+
+        // Proceed with password authentication
         console.log("🔐 Attempting Firebase Auth login for email:", identifier);
         const userCredential = await signInWithEmailAndPassword(firebaseAuth, identifier, password);
         const firebaseUser = userCredential.user;
-        
+
+        // Fallback verification check if Admin SDK not available
+        if (role === "user" && adminAuth == null && !firebaseUser.emailVerified) {
+          return NextResponse.json(
+            { success: false, message: "Please verify your email before logging in. Check your inbox for the verification link." },
+            { status: 403 }
+          );
+        }
+
         console.log("✅ Firebase Auth successful for:", firebaseUser.email);
 
-        // Now fetch user data from Firestore
-        const usersRef = collection(db, "users");
-        const snap = await getDocs(query(usersRef, where("email", "==", identifier), limit(1)));
-        
-        if (!snap.empty) {
-          const doc = snap.docs[0];
-          const userData = doc.data();
-
-          // Block deactivated accounts
-          if (userData.active === false) {
-            return NextResponse.json(
-              { success: false, message: "Account is deactivated. Contact admin." },
-              { status: 403 }
-            );
-          }
-          
+        if (hasUserDoc) {
           const responseUser = {
-            uid: doc.id,
+            uid: userDoc.id,
             phone: userData.phone || "",
             email: userData.email,
             firstName: userData.firstName || "",
             lastName: userData.lastName || "",
             fullName: `${userData.firstName || ""} ${userData.lastName || ""}`,
             gender: userData.gender || "",
-            password: password, // Store the password they just authenticated with
+            password: password,
             role: userData.role || "user",
             createdAt: userData.createdAt,
-            active: userData.active !== false, // default true
-          };
-
-          console.log("✅ Login successful for:", responseUser.email);
-
-          return NextResponse.json({
-            success: true,
-            message: "Login successful",
-            user: responseUser,
-          });
-        } else {
-          console.log("⚠️ Firebase Auth succeeded but user not in Firestore, creating record");
-          
-          // User exists in Firebase but not in Firestore, create minimal record
-          const responseUser = {
-            uid: firebaseUser.uid,
-            phone: "",
-            email: firebaseUser.email,
-            firstName: "",
-            lastName: "",
-            fullName: "",
-            gender: "",
-            password: password,
-            role: "user",
+            active: userData.active !== false,
           };
 
           return NextResponse.json({
@@ -125,12 +131,35 @@ export async function POST(req) {
             user: responseUser,
           });
         }
+
+        // User exists in Firebase but not in Firestore, return minimal profile
+        const responseUser = {
+          uid: firebaseUser.uid,
+          phone: "",
+          email: firebaseUser.email,
+          firstName: "",
+          lastName: "",
+          fullName: "",
+          gender: "",
+          password: password,
+          role: "user",
+        };
+
+        return NextResponse.json({
+          success: true,
+          message: "Login successful",
+          user: responseUser,
+        });
       } catch (firebaseError) {
         console.log("❌ Firebase Auth failed:", firebaseError.code, firebaseError.message);
-        return NextResponse.json(
-          { success: false, message: "Incorrect email or password" },
-          { status: 401 }
-        );
+        // Provide clearer message for common scenarios
+        const message =
+          firebaseError.code === "auth/user-not-found"
+            ? "Account not found. If you just registered, please verify your email first."
+            : firebaseError.code === "auth/wrong-password"
+            ? "Incorrect email or password"
+            : "Login failed";
+        return NextResponse.json({ success: false, message }, { status: 401 });
       }
     }
 

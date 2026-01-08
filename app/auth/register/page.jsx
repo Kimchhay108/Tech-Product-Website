@@ -125,13 +125,8 @@ export default function Register({ setSelectedAuth, setAuth }) {
                 emailVerified: false,
             };
 
-            // Save to localStorage (persistent storage)
-            login(newUser);
-
-            // Update component state
-            setAuth({ user: newUser, isLoggedIn: true });
-
-            // Show verification modal
+            // Do NOT auto-login; require email verification first
+            // Show verification modal so user can proceed to login after verifying
             setVerificationEmail(email);
             setUserForResend(user);
             setShowVerificationModal(true);
