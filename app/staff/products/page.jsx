@@ -317,7 +317,7 @@ export default function StaffProducts() {
                                     {staffProducts.length}
                                 </p>
                                 <p className="text-xs text-gray-500 mt-2">
-                                    Products you've created
+                                    Products you&apos;ve created
                                 </p>
                             </div>
                             <div className="bg-gradient-to-br from-blue-100 to-blue-50 rounded-xl p-4">

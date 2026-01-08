@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -26,11 +26,7 @@ ChartJS.register(
 );
 
 export default function OverviewChart({ data, title, color = "#2E2E2E" }) {
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
+    const [isClient] = useState(() => typeof window !== "undefined");
 
     if (!isClient) {
         return (

@@ -383,9 +383,9 @@ export default function Register({ setSelectedAuth, setAuth }) {
                         className="relative font-medium group cursor-pointer"
                     >
                         Already have an account? Get Started!
-                        <span
+                            <span
                             className="
-                                absolute left-0 -bottom-1 h-[1px] bg-black
+                                absolute left-0 -bottom-1 h-px bg-black
                                 w-0
                                 transition-all duration-300 ease-out
                                 group-hover:w-full

@@ -4,11 +4,9 @@ import { useState, useEffect } from "react";
 import {
     FiHome,
     FiGrid,
-    FiList,
     FiPackage,
     FiLogOut,
     FiMenu,
-    FiUsers,
     FiChevronDown,
 } from "react-icons/fi";
 import Link from "next/link";
@@ -22,26 +20,19 @@ export default function StaffLayout({ children }) {
 
     const [openProfile, setOpenProfile] = useState(false);
     const [openMenu, setOpenMenu] = useState(false);
-    const [auth, setAuth] = useState(null);
-    const [isReady, setIsReady] = useState(false);
+    const [auth] = useState(() => getAuth());
 
     // --- AUTH & REDIRECT LOGIC ---
     useEffect(() => {
-        const a = getAuth();
-        setAuth(a);
-        setIsReady(true);
-
-        if (!a) {
+        if (!auth) {
             router.replace("/profile");
             return;
         }
-
-        const role = a.user?.role;
-        const isStaff = role === "staff";
-        if (!isStaff) {
+        const role = auth.user?.role;
+        if (role !== "staff") {
             router.replace(role === "admin" ? "/admin" : "/user");
         }
-    }, [router]);
+    }, [auth, router]);
 
     const handleLogout = () => {
         logout();
@@ -50,8 +41,6 @@ export default function StaffLayout({ children }) {
 
     const isActive = (path) =>
         path === "/staff" ? pathname === "/staff" : pathname.startsWith(path);
-
-    if (!isReady) return null;
 
     const role = auth?.user?.role;
     const isStaff = role === "staff";

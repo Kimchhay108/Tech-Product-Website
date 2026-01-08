@@ -12,10 +12,7 @@ import {
     FiChevronLeft,
     FiGrid,
     FiList,
-    FiHeart,
     FiShoppingCart,
-    FiStar,
-    FiEye,
 } from "react-icons/fi";
 
 function ProductsContent() {
@@ -28,7 +25,7 @@ function ProductsContent() {
     const [filter, setFilter] = useState("");
     const [products, setProducts] = useState([]);
     const [viewMode, setViewMode] = useState("grid");
-    const [hoveredProduct, setHoveredProduct] = useState(null);
+    // removed unused hoveredProduct state
 
     const sortedProducts = [...products].sort((a, b) => {
         if (filter === "low-to-high") return a.price - b.price;
@@ -194,8 +191,7 @@ function ProductsContent() {
                                 className={`group relative bg-white border border-gray-200 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:border-gray-300 ${
                                     viewMode === "list" ? "flex" : "flex flex-col"
                                 }`}
-                                onMouseEnter={() => setHoveredProduct(product._id)}
-                                onMouseLeave={() => setHoveredProduct(null)}
+                                
                             >
                                 {viewMode === "grid" ? (
                                     <>
@@ -216,9 +212,9 @@ function ProductsContent() {
                                         </div>
 
                                         {/* Info */}
-                                        <div className="p-4 flex flex-col flex-grow">
+                                        <div className="p-4 flex flex-col grow">
                                             <h2
-                                                className="text-sm md:text-base font-semibold text-gray-900 mb-2 line-clamp-2 min-h-[2.5rem] cursor-pointer hover:text-blue-600 transition-colors"
+                                                className="text-sm md:text-base font-semibold text-gray-900 mb-2 line-clamp-2 min-h-10 cursor-pointer hover:text-blue-600 transition-colors"
                                                 onClick={() => router.push(`/productDetail/${product._id}`)}
                                             >
                                                 {product.name}

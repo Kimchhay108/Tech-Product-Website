@@ -1,17 +1,13 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 export default function ClientWrapper({ children }) {
     const pathname = usePathname();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
+    const [isClient] = useState(() => typeof window !== "undefined");
 
     if (!isClient) {
         return <main>{children}</main>;

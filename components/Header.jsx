@@ -42,8 +42,6 @@ export default function Header() {
     // Debounced search for suggestions
     useEffect(() => {
         if (searchInput.trim().length < 2) {
-            setSuggestions({ products: [], categories: [] });
-            setShowSuggestions(false);
             return;
         }
 
@@ -59,7 +57,6 @@ export default function Header() {
                 })
                 .catch((err) => {
                     console.error("Failed to load suggestions:", err);
-                    setSuggestions({ products: [], categories: [] });
                 });
         }, 300); // 300ms debounce
 
@@ -151,7 +148,7 @@ export default function Header() {
 
                     {/* Search Suggestions Dropdown */}
                     <AnimatePresence>
-                        {showSuggestions &&
+                        {searchInput.trim().length >= 2 && showSuggestions &&
                             suggestions.products?.length > 0 && (
                                 <motion.div
                                     initial={{ opacity: 0, y: -8 }}
