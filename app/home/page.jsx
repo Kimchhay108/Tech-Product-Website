@@ -76,13 +76,13 @@ export default function HomePage() {
                 <div className="container mx-auto px-5 sm:px-10 flex flex-col md:flex-row md:items-end ">
                     {/* Text / Left side */}
                     <div className="md:w-1/2 flex flex-col justify-center md:justify-start py-20 md:py-40 mx-10 text-center md:text-start">
-                        <h1 className="text-[var(--secondary)] text-xl mt-3">
+                        <h1 className="text-(--secondary) text-xl mt-3">
                             Pro.Beyond.
                         </h1>
                         <h1 className="text-white my-2 text-6xl">
                             IPhone 14 <b>Pro</b>
                         </h1>
-                        <p className="text-[var(--secondary)] text-md">
+                        <p className="text-(--secondary) text-md">
                             Created to change everything for the better. For
                             everyone
                         </p>
@@ -129,7 +129,7 @@ export default function HomePage() {
                                 <h1 className="text-xl sm:text-4xl md:text-3xl lg:text-5xl font-bold py-3">
                                     Playstation 5
                                 </h1>
-                                <p className="text-[var(--secondary)] text-base sm:text-base md:text-sm lg:text-base">
+                                <p className="text-(--secondary) text-base sm:text-base md:text-sm lg:text-base">
                                     Incredibly powerful CPUs, GPUs, and an SSD
                                     with integrated I/O will redefine your
                                     PlayStation experience.
@@ -152,7 +152,7 @@ export default function HomePage() {
                                 <h1 className="text-xl sm:text-3xl md:text-2xl lg:text-3xl font-semibold">
                                     Apple AirPods Max
                                 </h1>
-                                <p className="text-[var(--secondary)] text-base sm:text-base md:text-sm lg:text-base">
+                                <p className="text-(--secondary) text-base sm:text-base md:text-sm lg:text-base">
                                     Computational audio. Listen, it&apos;s powerful.
                                 </p>
                             </div>
@@ -173,7 +173,7 @@ export default function HomePage() {
                                 <h1 className="text-white text-xl sm:text-3xl md:text-2xl lg:text-3xl font-semibold">
                                     Apple Macbook Pro
                                 </h1>
-                                <p className="text-[var(--secondary)] text-base sm:text-base md:text-sm lg:text-base">
+                                <p className="text-(--secondary) text-base sm:text-base md:text-sm lg:text-base">
                                     Great ideas start on Mac
                                 </p>
                             </div>
@@ -187,7 +187,7 @@ export default function HomePage() {
                                 <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
                                     Vision <b>Pro</b>
                                 </h1>
-                                <p className="text-[var(--secondary)] text-base sm:text-base md:text-sm lg:text-base py-3">
+                                <p className="text-(--secondary) text-base sm:text-base md:text-sm lg:text-base py-3">
                                     An immersive way to experience entertainment
                                 </p>
                                 <button
@@ -298,6 +298,11 @@ export default function HomePage() {
 
                                     {/* Image Container */}
                                     <div className="relative bg-white p-6 aspect-square flex items-center justify-center overflow-hidden">
+                                        {Number(product?.discountPercent) > 0 && (
+                                            <span className="absolute top-3 right-3 bg-red-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">
+                                                -{Number(product.discountPercent)}%
+                                            </span>
+                                        )}
                                         <Image
                                             src={product.images?.[0] || "/placeholder.png"}
                                             alt={product.name}
@@ -308,21 +313,23 @@ export default function HomePage() {
                                     </div>
 
                                     {/* Product Info */}
-                                    <div className="p-4 flex flex-col flex-grow bg-white">
+                                    <div className="p-4 flex flex-col grow bg-white">
                                         {/* Product Name */}
-                                        <h3 className="text-sm md:text-base font-semibold text-gray-900 line-clamp-2 min-h-[2.5rem] group-hover:text-gray-700 transition-colors">
+                                        <h3 className="text-sm md:text-base font-semibold text-gray-900 line-clamp-2 min-h-10 group-hover:text-gray-700 transition-colors">
                                             {product.name}
                                         </h3>
                                         
                                         {/* Price Section */}
                                         <div className="flex items-baseline gap-2 mb-4 mt-auto">
-                                            <span className="text-xl md:text-2xl font-bold text-gray-900">
-                                                ${product.price}
-                                            </span>
-                                            {activeTab === "specialOffer" && (
-                                                <span className="text-sm text-gray-400 line-through">
-                                                    ${(product.price * 1.25).toFixed(2)}
-                                                </span>
+                                            {Number(product?.discountPercent) > 0 ? (
+                                                <>
+                                                    <span className="text-xl md:text-2xl font-bold text-gray-900">
+                                                        ${ (product.price * (1 - Number(product.discountPercent)/100)).toFixed(2) }
+                                                    </span>
+                                                    <span className="text-sm text-gray-400 line-through">${product.price}</span>
+                                                </>
+                                            ) : (
+                                                <span className="text-xl md:text-2xl font-bold text-gray-900">${product.price}</span>
                                             )}
                                         </div>
 
