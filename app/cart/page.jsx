@@ -93,7 +93,7 @@ export default function CartPage() {
                                     {/* Product Image */}
                                     <Link 
                                         href={`/productDetail/${item.productId}`}
-                                        className="flex-shrink-0"
+                                        className="shrink-0"
                                     >
                                         <div className="w-28 h-28 rounded-lg overflow-hidden group cursor-pointer">
                                             {item.image && (

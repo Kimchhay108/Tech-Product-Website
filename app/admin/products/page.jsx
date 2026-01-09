@@ -226,7 +226,7 @@ export default function AdminProducts() {
 
             {/* Add Product Form */}
             <div className="mb-8 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <div className="bg-gradient-to-r from-[#2E2E2E] to-[#3E3E3E] px-6 py-4">
+                <div className="bg-linear-to-r from-[#2E2E2E] to-[#3E3E3E] px-6 py-4">
                     <h2 className="text-xl font-semibold text-white">
                         Add New Product
                     </h2>

@@ -60,7 +60,7 @@ export default function StaffLayout({ children }) {
 
             {/* SIDEBAR */}
             <aside
-                className={`fixed top-0 left-0 z-40 h-screen w-64 bg-gradient-to-b from-[#2E2E2E] to-[#1a1a1a] text-white p-5 flex flex-col shadow-2xl
+                className={`fixed top-0 left-0 z-40 h-screen w-64 bg-linear-to-b from-[#2E2E2E] to-[#1a1a1a] text-white p-5 flex flex-col shadow-2xl overflow-y-auto
           transform transition-transform duration-300
           ${openMenu ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
             >
@@ -137,7 +137,7 @@ export default function StaffLayout({ children }) {
             </aside>
 
             {/* MAIN CONTENT */}
-            <div className="flex-1 flex flex-col bg-gray-50 md:ml-64">
+            <div className="flex-1 flex flex-col bg-gray-50 md:ml-64 min-w-0">
                 {/* HEADER */}
                 <header className="bg-white border-b border-gray-200 p-4 flex justify-between items-center sticky top-0 z-30">
                     <button
@@ -164,7 +164,7 @@ export default function StaffLayout({ children }) {
                             onClick={() => setOpenProfile((prev) => !prev)}
                             className="flex items-center gap-3 hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors border border-gray-200"
                         >
-                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#2E2E2E] to-gray-600 flex items-center justify-center text-white font-semibold text-sm">
+                            <div className="w-8 h-8 rounded-full bg-linear-to-br from-[#2E2E2E] to-gray-600 flex items-center justify-center text-white font-semibold text-sm">
                                 S
                             </div>
                             <div className="hidden sm:block text-left">
@@ -207,7 +207,7 @@ export default function StaffLayout({ children }) {
                     </div>
                 </header>
 
-                <main className="p-6 flex-1">{children}</main>
+                <main className="p-6 flex-1 min-w-0">{children}</main>
             </div>
         </div>
     );

@@ -335,7 +335,7 @@ export default function StaffProducts() {
                                     Products you&apos;ve created
                                 </p>
                             </div>
-                            <div className="bg-gradient-to-br from-blue-100 to-blue-50 rounded-xl p-4">
+                            <div className="bg-linear-to-br from-blue-100 to-blue-50 rounded-xl p-4">
                                 <FiPackage className="w-6 h-6 text-blue-600" />
                             </div>
                         </div>
@@ -359,7 +359,7 @@ export default function StaffProducts() {
                                     Recently added products
                                 </p>
                             </div>
-                            <div className="bg-gradient-to-br from-emerald-100 to-emerald-50 rounded-xl p-4">
+                            <div className="bg-linear-to-br from-emerald-100 to-emerald-50 rounded-xl p-4">
                                 <FiTrendingUp className="w-6 h-6 text-emerald-600" />
                             </div>
                         </div>
@@ -401,7 +401,7 @@ export default function StaffProducts() {
                                     </label>
                                 </div>
                             </div>
-                            <div className="bg-gradient-to-br from-purple-100 to-purple-50 rounded-xl p-4">
+                            <div className="bg-linear-to-br from-purple-100 to-purple-50 rounded-xl p-4">
                                 <FiStar className="w-6 h-6 text-purple-600" />
                             </div>
                         </div>
@@ -412,7 +412,7 @@ export default function StaffProducts() {
                 {!showForm && (
                     <button
                         onClick={() => setShowForm(true)}
-                        className="flex items-center gap-2 bg-gradient-to-r from-[#2E2E2E] to-[#1a1a1a] hover:from-[#3a3a3a] hover:to-[#2a2a2a] text-white px-6 py-3 rounded-lg transition-all font-medium shadow-md"
+                        className="flex items-center gap-2 bg-linear-to-r from-[#2E2E2E] to-[#1a1a1a] hover:from-[#3a3a3a] hover:to-[#2a2a2a] text-white px-6 py-3 rounded-lg transition-all font-medium shadow-md"
                     >
                         <FiPlus size={20} />
                         Add New Product
@@ -425,7 +425,7 @@ export default function StaffProducts() {
                         ref={formRef}
                         className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
                     >
-                        <div className="bg-gradient-to-r from-[#2E2E2E] to-[#3E3E3E] px-6 py-4">
+                        <div className="bg-linear-to-r from-[#2E2E2E] to-[#3E3E3E] px-6 py-4">
                             <h2 className="text-xl font-semibold text-white">
                                 {editingProduct
                                     ? "Edit Product"
@@ -840,7 +840,7 @@ export default function StaffProducts() {
                             </p>
                             <button
                                 onClick={() => setShowForm(true)}
-                                className="inline-flex items-center gap-2 bg-gradient-to-r from-[#2E2E2E] to-[#1a1a1a] hover:from-[#3a3a3a] hover:to-[#2a2a2a] text-white px-6 py-2.5 rounded-lg transition font-medium"
+                                className="inline-flex items-center gap-2 bg-linear-to-r from-[#2E2E2E] to-[#1a1a1a] hover:from-[#3a3a3a] hover:to-[#2a2a2a] text-white px-6 py-2.5 rounded-lg transition font-medium"
                             >
                                 <FiPlus size={20} />
                                 Create Your First Product

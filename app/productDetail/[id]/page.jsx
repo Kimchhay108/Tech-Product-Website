@@ -228,7 +228,7 @@ export default function ProductsDetail() {
                                             >
                                                 −
                                             </button>
-                                            <span className="px-8 py-3 text-lg font-semibold bg-white min-w-[80px] text-center">
+                                            <span className="px-8 py-3 text-lg font-semibold bg-white min-w-20 text-center">
                                                 {quantity}
                                             </span>
                                             <button

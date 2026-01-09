@@ -201,7 +201,7 @@ export default function StaffDashboard() {
                                     Awaiting review
                                 </p>
                             </div>
-                            <div className="bg-gradient-to-br from-amber-100 to-amber-50 rounded-xl p-4">
+                            <div className="bg-linear-to-br from-amber-100 to-amber-50 rounded-xl p-4">
                                 <FiClock className="w-6 h-6 text-amber-600" />
                             </div>
                         </div>
@@ -221,7 +221,7 @@ export default function StaffDashboard() {
                                     Successfully processed
                                 </p>
                             </div>
-                            <div className="bg-gradient-to-br from-emerald-100 to-emerald-50 rounded-xl p-4">
+                            <div className="bg-linear-to-br from-emerald-100 to-emerald-50 rounded-xl p-4">
                                 <FiCheckCircle className="w-6 h-6 text-emerald-600" />
                             </div>
                         </div>
@@ -241,7 +241,7 @@ export default function StaffDashboard() {
                                     Declined orders
                                 </p>
                             </div>
-                            <div className="bg-gradient-to-br from-red-100 to-red-50 rounded-xl p-4">
+                            <div className="bg-linear-to-br from-red-100 to-red-50 rounded-xl p-4">
                                 <FiXCircle className="w-6 h-6 text-red-600" />
                             </div>
                         </div>
@@ -261,7 +261,7 @@ export default function StaffDashboard() {
                                     Approved orders
                                 </p>
                             </div>
-                            <div className="bg-gradient-to-br from-[#2E2E2E] to-gray-700 rounded-xl p-4">
+                            <div className="bg-linear-to-br from-[#2E2E2E] to-gray-700 rounded-xl p-4">
                                 <FiDollarSign className="w-6 h-6 text-white" />
                             </div>
                         </div>
@@ -333,20 +333,20 @@ export default function StaffDashboard() {
                                 {filteredOrders.map((order) => (
                                     <div
                                         key={order._id}
-                                        className="border border-gray-200 rounded-lg hover:shadow-md transition-all p-4 bg-gradient-to-r from-white to-gray-50/50"
+                                        className="border border-gray-200 rounded-lg hover:shadow-md transition-all p-4 bg-linear-to-r from-white to-gray-50/50"
                                     >
                                         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-2 h-2 rounded-full bg-[#2E2E2E] flex-shrink-0"></div>
+                                                    <div className="w-2 h-2 rounded-full bg-[#2E2E2E] shrink-0"></div>
                                                     <h3 className="font-semibold text-gray-900">
                                                         Order #
                                                         {order._id
                                                             ?.slice(-8)
                                                             .toUpperCase()}
                                                     </h3>
-                                                    <span
-                                                        className={`px-2.5 py-1 rounded-full text-xs font-semibold flex-shrink-0 ${
+                                                                                                        <span
+                                                        className={`px-2.5 py-1 rounded-full text-xs font-semibold shrink-0 ${
                                                             order.status ===
                                                             "pending"
                                                                 ? "bg-amber-100 text-amber-700"
@@ -472,7 +472,7 @@ export default function StaffDashboard() {
                 {selectedOrder && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
                         <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-xl border border-gray-200">
-                            <div className="sticky top-0 bg-gradient-to-r from-[#2E2E2E] to-[#1a1a1a] text-white px-6 py-4 flex items-center justify-between rounded-t-xl">
+                            <div className="sticky top-0 bg-linear-to-r from-[#2E2E2E] to-[#1a1a1a] text-white px-6 py-4 flex items-center justify-between rounded-t-xl">
                                 <h2 className="text-xl font-bold">
                                     Order #
                                     {selectedOrder._id?.slice(-8).toUpperCase()}
@@ -608,7 +608,7 @@ export default function StaffDashboard() {
                                 </div>
 
                                 {/* Total */}
-                                <div className="border-t pt-4 bg-gradient-to-r from-[#2E2E2E]/5 to-gray-100/50 p-4 rounded-lg">
+                                <div className="border-t pt-4 bg-linear-to-r from-[#2E2E2E]/5 to-gray-100/50 p-4 rounded-lg">
                                     <div className="flex justify-between items-center">
                                         <span className="font-semibold text-gray-900 text-lg">
                                             Total Amount
