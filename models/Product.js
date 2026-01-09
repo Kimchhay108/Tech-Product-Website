@@ -7,6 +7,7 @@ const ProductSchema = new mongoose.Schema({
     productName: { type: String }, // alias for name
     category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
     price: { type: Number, required: true },
+    discountPercent: { type: Number, default: 0 },
     colors: { type: [String], required: true },
     memory: { type: String },
     description: { type: String },

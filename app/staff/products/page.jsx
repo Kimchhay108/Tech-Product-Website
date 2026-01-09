@@ -22,6 +22,20 @@ export default function StaffProducts() {
     const [loading, setLoading] = useState(false);
     const [autoPostFacebook, setAutoPostFacebook] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
+    const [editOpen, setEditOpen] = useState(false);
+    const [editProductId, setEditProductId] = useState("");
+    const [editName, setEditName] = useState("");
+    const [editCategory, setEditCategory] = useState("");
+    const [editPrice, setEditPrice] = useState("");
+    const [editDiscountPercent, setEditDiscountPercent] = useState("0");
+    const [editColors, setEditColors] = useState("");
+    const [editMemory, setEditMemory] = useState("");
+    const [editDescription, setEditDescription] = useState("");
+    const [editNewArrival, setEditNewArrival] = useState(false);
+    const [editBestSeller, setEditBestSeller] = useState(false);
+    const [editSpecialOffer, setEditSpecialOffer] = useState(false);
+    const [editExistingImages, setEditExistingImages] = useState([]);
+    const [editNewFiles, setEditNewFiles] = useState([]);
     const formRef = useRef(null);
 
     // Form state
@@ -30,6 +44,7 @@ export default function StaffProducts() {
     const [description, setDescription] = useState("");
     const [colors, setColors] = useState("");
     const [price, setPrice] = useState("");
+    const [discountPercent, setDiscountPercent] = useState("0");
     const [memory, setMemory] = useState("");
     const [images, setImages] = useState([]);
     const [newArrival, setNewArrival] = useState(false);
@@ -105,6 +120,7 @@ export default function StaffProducts() {
             formData.append("description", description);
             formData.append("colors", colors);
             formData.append("price", price);
+            formData.append("discountPercent", discountPercent);
             formData.append("memory", memory);
             formData.append("newArrival", newArrival);
             formData.append("bestSeller", bestSeller);
@@ -182,27 +198,25 @@ export default function StaffProducts() {
     };
 
     const handleEditProduct = (product) => {
+        // Populate modal edit fields similar to admin
+        const catId = typeof product.category === 'string' ? product.category : (product.category?._id || product.category?.id || "");
+        setEditProductId(product._id);
+        setEditName(product.productName || product.name || "");
+        setEditCategory(String(catId));
+        setEditPrice(String(product.price ?? ""));
+        setEditDiscountPercent(String(product.discountPercent ?? 0));
+        const colorList = Array.isArray(product.colors) ? product.colors : (product.colors ? [product.colors] : []);
+        setEditColors(colorList.join(", "));
+        setEditMemory(product.memory || "");
+        setEditDescription(product.description || "");
+        setEditNewArrival(Boolean(product.newArrival));
+        setEditBestSeller(Boolean(product.bestSeller));
+        setEditSpecialOffer(Boolean(product.specialOffer));
+        setEditExistingImages(Array.isArray(product.images) ? product.images : []);
+        setEditNewFiles([]);
+        setShowForm(false);
         setEditingProduct(product);
-        setProductName(product.productName || product.name);
-        // Handle category more robustly
-        const categoryId =
-            typeof product.category === "string"
-                ? product.category
-                : product.category?._id || product.category?.id || "";
-        setSelectedCategory(categoryId);
-        setDescription(product.description || "");
-        setColors(
-            Array.isArray(product.colors)
-                ? product.colors.join(", ")
-                : product.colors || ""
-        );
-        setPrice(product.price.toString());
-        setMemory(product.memory || "");
-        setNewArrival(product.newArrival || false);
-        setBestSeller(product.bestSeller || false);
-        setSpecialOffer(product.specialOffer || false);
-        setImages([]);
-        setShowForm(true);
+        setEditOpen(true);
     };
 
     useEffect(() => {
@@ -234,6 +248,7 @@ export default function StaffProducts() {
                     description,
                     colors,
                     price,
+                    discountPercent,
                     memory,
                     newArrival,
                     bestSeller,
@@ -469,6 +484,21 @@ export default function StaffProducts() {
                                             step="0.01"
                                             required
                                         />
+                                    </div>
+                                    <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">Discount (%)</label>
+                                            <input type="number" min={0} max={100} value={discountPercent} onChange={(e) => setDiscountPercent(e.target.value)} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E2E2E] focus:border-transparent transition-all" />
+                                        </div>
+                                        <div className="flex items-end">
+                                            <div className="text-sm text-gray-700">
+                                                {Number(discountPercent) > 0 && Number(price) > 0 ? (
+                                                    <>After discount: <span className="font-semibold">${(Number(price) * (1 - Number(discountPercent)/100)).toFixed(2)}</span></>
+                                                ) : (
+                                                    <span className="text-gray-500">No discount applied</span>
+                                                )}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -860,6 +890,11 @@ export default function StaffProducts() {
                                                                 Offer
                                                             </span>
                                                         )}
+                                                        {Number(product?.discountPercent) > 0 && (
+                                                            <span className="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                                                                -{Number(product.discountPercent)}%
+                                                            </span>
+                                                        )}
                                                     </div>
                                                 </div>
                                             )}
@@ -877,9 +912,16 @@ export default function StaffProducts() {
                                             </p>
 
                                             <div className="flex items-center justify-between pt-2">
-                                                <span className="text-2xl font-bold text-[#2E2E2E]">
-                                                    ${product.price}
-                                                </span>
+                                                {Number(product?.discountPercent) > 0 ? (
+                                                    <div className="flex items-baseline gap-2">
+                                                        <span className="text-2xl font-bold text-[#2E2E2E]">
+                                                            ${(product.price * (1 - Number(product.discountPercent)/100)).toFixed(2)}
+                                                        </span>
+                                                        <span className="text-sm text-gray-400 line-through">${product.price}</span>
+                                                    </div>
+                                                ) : (
+                                                    <span className="text-2xl font-bold text-[#2E2E2E]">${product.price}</span>
+                                                )}
                                             </div>
 
                                             {product.colors && (
@@ -950,8 +992,207 @@ export default function StaffProducts() {
                             })}
                         </div>
                     )}
+                {/* Edit Modal - mirrors admin editor */}
+                {editOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+                    <div className="bg-white w-full max-w-2xl max-h-[90vh] rounded-xl shadow-lg border border-gray-200 flex flex-col">
+                        <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between shrink-0">
+                            <h3 className="text-lg font-semibold text-gray-900">Edit Product</h3>
+                            <button onClick={() => setEditOpen(false)} className="text-gray-500 hover:text-gray-700">✕</button>
+                        </div>
+                        <div className="p-6 space-y-5 overflow-y-auto flex-1 min-h-0">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Product Name <span className="text-red-500">*</span></label>
+                                    <input value={editName} onChange={(e) => setEditName(e.target.value)} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E2E2E] focus:border-transparent" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Price <span className="text-red-500">*</span></label>
+                                    <input type="number" value={editPrice} onChange={(e) => setEditPrice(e.target.value)} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E2E2E] focus:border-transparent" />
+                                    <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">Discount (%)</label>
+                                            <input type="number" min={0} max={100} value={editDiscountPercent} onChange={(e) => setEditDiscountPercent(e.target.value)} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E2E2E] focus:border-transparent" />
+                                        </div>
+                                        <div className="flex items-end">
+                                            <div className="text-sm text-gray-700">
+                                                {Number(editDiscountPercent) > 0 && Number(editPrice) > 0 ? (
+                                                    <>After discount: <span className="font-semibold">${(Number(editPrice) * (1 - Number(editDiscountPercent)/100)).toFixed(2)}</span></>
+                                                ) : (
+                                                    <span className="text-gray-500">No discount applied</span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Category <span className="text-red-500">*</span></label>
+                                <select value={editCategory} onChange={(e) => setEditCategory(e.target.value)} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E2E2E] focus:border-transparent">
+                                    <option value="">Select a category</option>
+                                    {categories.map((c) => (
+                                        <option key={c._id} value={c._id}>{c.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Colors <span className="text-red-500">*</span></label>
+                                    <input value={editColors} onChange={(e) => setEditColors(e.target.value)} placeholder="e.g., Black, White" className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E2E2E] focus:border-transparent" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Memory</label>
+                                    <input value={editMemory} onChange={(e) => setEditMemory(e.target.value)} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E2E2E] focus:border-transparent" />
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                                <textarea rows={4} value={editDescription} onChange={(e) => setEditDescription(e.target.value)} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E2E2E] focus:border-transparent resize-none" />
+                            </div>
+                            {/* Images management in Edit */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Images</label>
+                                <div className="space-y-3">
+                                    {Array.isArray(editExistingImages) && editExistingImages.length > 0 && (
+                                        <div>
+                                            <p className="text-xs text-gray-500 mb-2">Existing ({editExistingImages.length})</p>
+                                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                                                {editExistingImages.map((url, idx) => (
+                                                    <div key={idx} className="relative group">
+                                                        <div className="aspect-square rounded-lg overflow-hidden bg-gray-100 border">
+                                                            <img src={url} alt={`Image ${idx + 1}`} className="w-full h-full object-cover" />
+                                                        </div>
+                                                        <button type="button" onClick={() => setEditExistingImages(editExistingImages.filter((_, i) => i !== idx))} className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow">✕</button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                    <div>
+                                        <label className="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+                                            <div className="flex flex-col items-center justify-center pt-4 pb-5">
+                                                <svg className="w-7 h-7 mb-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                                                <p className="text-xs text-gray-500">Click to add more images</p>
+                                            </div>
+                                            <input type="file" multiple accept="image/*" onChange={(e) => setEditNewFiles([...(editNewFiles || []), ...Array.from(e.target.files || [])])} className="hidden" />
+                                        </label>
+                                        {Array.isArray(editNewFiles) && editNewFiles.length > 0 && (
+                                            <div className="mt-3">
+                                                <p className="text-xs text-gray-500 mb-2">New ({editNewFiles.length})</p>
+                                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                                                    {editNewFiles.map((file, idx) => (
+                                                        <div key={idx} className="relative group">
+                                                            <div className="aspect-square rounded-lg overflow-hidden bg-gray-100 border">
+                                                                <img src={URL.createObjectURL(file)} alt={`New ${idx + 1}`} className="w-full h-full object-cover" />
+                                                            </div>
+                                                            <button type="button" onClick={() => setEditNewFiles(editNewFiles.filter((_, i) => i !== idx))} className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow">✕</button>
+                                                            <div className="mt-1 text-[10px] text-gray-500 truncate">{file.name}</div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-3">Product Badges</label>
+                                <div className="flex flex-wrap gap-4">
+                                    <label className="flex items-center gap-2">
+                                        <input type="checkbox" checked={editNewArrival} onChange={(e) => setEditNewArrival(e.target.checked)} />
+                                        <span className="text-sm text-gray-700">New Arrival</span>
+                                    </label>
+                                    <label className="flex items-center gap-2">
+                                        <input type="checkbox" checked={editBestSeller} onChange={(e) => setEditBestSeller(e.target.checked)} />
+                                        <span className="text-sm text-gray-700">Best Seller</span>
+                                    </label>
+                                    <label className="flex items-center gap-2">
+                                        <input type="checkbox" checked={editSpecialOffer} onChange={(e) => setEditSpecialOffer(e.target.checked)} />
+                                        <span className="text-sm text-gray-700">Special Offer</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-end gap-3 shrink-0">
+                            <button onClick={() => setEditOpen(false)} className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700">Cancel</button>
+                            <button
+                                onClick={async () => {
+                                    if (!editProductId || !editName || !editCategory || editPrice === "") {
+                                        alert("Name, Category and Price are required");
+                                        return;
+                                    }
+                                    try {
+                                        // Upload newly added files first
+                                        let uploadedUrls = [];
+                                        if (Array.isArray(editNewFiles) && editNewFiles.length > 0) {
+                                            const base64Images = await Promise.all(
+                                                editNewFiles.map((file) => new Promise((resolve, reject) => {
+                                                    const reader = new FileReader();
+                                                    reader.onload = () => resolve(String(reader.result));
+                                                    reader.onerror = (err) => reject(err);
+                                                    reader.readAsDataURL(file);
+                                                }))
+                                            );
+                                            const uploadRes = await fetch('/api/upload', {
+                                                method: 'POST',
+                                                headers: { 'Content-Type': 'application/json' },
+                                                body: JSON.stringify({ images: base64Images })
+                                            });
+                                            const uploadData = await uploadRes.json().catch(() => ({}));
+                                            if (!uploadRes.ok || !uploadData.success) {
+                                                throw new Error(uploadData.message || 'Failed to upload images');
+                                            }
+                                            uploadedUrls = Array.isArray(uploadData.urls) ? uploadData.urls : [];
+                                        }
+
+                                        const finalImages = [
+                                            ...(Array.isArray(editExistingImages) ? editExistingImages : []),
+                                            ...uploadedUrls,
+                                        ];
+
+                                        const payload = {
+                                            productId: editProductId,
+                                            productName: editName,
+                                            category: editCategory,
+                                            description: editDescription,
+                                            colors: editColors,
+                                            price: Number(editPrice),
+                                            discountPercent: Number(editDiscountPercent) || 0,
+                                            memory: editMemory,
+                                            newArrival: editNewArrival,
+                                            bestSeller: editBestSeller,
+                                            specialOffer: editSpecialOffer,
+                                            images: finalImages,
+                                        };
+                                        const res = await fetch('/api/products', {
+                                            method: 'PUT',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify(payload),
+                                        });
+                                        const data = await res.json().catch(() => ({}));
+                                        if (!res.ok || !data.success) {
+                                            throw new Error(data.message || 'Failed to update product');
+                                        }
+                                        const updated = data.product || data;
+                                        setProducts(prev => prev.map(row => ((row._id || row.id) === (updated._id) ? { ...updated, id: updated._id } : row)));
+                                        setStaffProducts(prev => prev.map(row => ((row._id || row.id) === (updated._id) ? { ...updated, id: updated._id } : row)));
+                                        setEditOpen(false);
+                                    } catch (err) {
+                                        console.error(err);
+                                        alert(err.message || 'Update failed');
+                                    }
+                                }}
+                                className="px-5 py-2 rounded-lg bg-[#2E2E2E] hover:bg-[#4A4A4A] text-white font-medium"
+                            >
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
                 </div>
+                )}
             </div>
         </div>
+        {/* Close outer min-h-screen wrapper */}
+    </div>
     );
 }

@@ -22,8 +22,8 @@ export default function AdminDashboard() {
         }
     }, [router]);
 
-    const periods = ["Today", "This Week", "This Month", "This Year"];
-    const [period, setPeriod] = useState("Today");
+    const periods = ["This Week", "This Month", "This Year"];
+    const [period, setPeriod] = useState("This Week");
 
     // Stats
     const [totalOrders, setTotalOrders] = useState(0);
@@ -45,12 +45,6 @@ export default function AdminDashboard() {
         return data.filter((d) => {
             const date = new Date(d.date);
             switch (period) {
-                case "Today":
-                    return (
-                        date.getDate() === now.getDate() &&
-                        date.getMonth() === now.getMonth() &&
-                        date.getFullYear() === now.getFullYear()
-                    );
                 case "This Week":
                     const firstDayOfWeek = new Date(
                         now.setDate(now.getDate() - now.getDay())
@@ -81,12 +75,6 @@ export default function AdminDashboard() {
             let key = "";
 
             switch (period) {
-                case "Today":
-                    key = date.toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                    });
-                    break;
                 case "This Week":
                     key = date.toLocaleDateString("en-US", {
                         weekday: "short",

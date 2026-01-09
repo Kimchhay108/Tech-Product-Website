@@ -128,6 +128,11 @@ export default function ProductsDetail() {
 
                             {/* Main Image */}
                             <div className="flex-1 relative rounded-2xl overflow-hidden group">
+                                {Number(product?.discountPercent) > 0 && (
+                                    <span className="absolute top-3 right-3 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full z-10">
+                                        -{Number(product.discountPercent)}%
+                                    </span>
+                                )}
                                 <div className="aspect-square flex items-center justify-center p-4">
                                     <Image
                                         src={bigImage}
@@ -154,15 +159,21 @@ export default function ProductsDetail() {
                             {/* Price */}
                             <div className="border-y border-gray-200 py-4">
                                 <div className="flex items-baseline gap-3">
-                                    <span className="text-4xl font-bold text-gray-900">
-                                        ${product.price}
-                                    </span>
-                                    <span className="text-xl text-gray-400 line-through">
-                                        ${(product.price * 1.15).toFixed(2)}
-                                    </span>
-                                  
+                                    {Number(product?.discountPercent) > 0 ? (
+                                        <>
+                                            <span className="text-4xl font-bold text-gray-900">
+                                                ${(product.price * (1 - Number(product.discountPercent)/100)).toFixed(2)}
+                                            </span>
+                                            <span className="text-xl text-gray-400 line-through">
+                                                ${product.price}
+                                            </span>
+                                        </>
+                                    ) : (
+                                        <span className="text-4xl font-bold text-gray-900">
+                                            ${product.price}
+                                        </span>
+                                    )}
                                 </div>
-                                
                             </div>
 
                             {/* Color Selection */}
@@ -233,13 +244,15 @@ export default function ProductsDetail() {
                                 <button
                                     className="w-full py-4 bg-black text-white font-semibold rounded-xl shadow-md hover:shadow-xl flex items-center justify-center gap-2 cursor-pointer"
                                     onClick={() => {
+                                        const discountedPrice = Number(product.price) * (1 - Number(product.discountPercent || 0) / 100);
+                                        const finalPrice = Number(product?.discountPercent) > 0 ? Number(discountedPrice.toFixed(2)) : Number(product.price);
                                         dispatch({
                                             type: CartActions.ADD,
                                             payload: {
                                                 cartItemId: Date.now(),
                                                 productId: product._id,
                                                 name: product.name,
-                                                price: product.price,
+                                                price: finalPrice,
                                                 color: selectedColor,
                                                 quantity,
                                                 image: bigImage,

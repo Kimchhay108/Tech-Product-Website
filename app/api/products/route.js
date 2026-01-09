@@ -66,6 +66,7 @@ export async function POST(req) {
         name: formData.get("productName"),
         category: formData.get("selectedCategory"),
         price: formData.get("price"),
+        discountPercent: formData.get("discountPercent"),
         colors: formData.get("colors"),
         memory: formData.get("memory") || "",
         description: formData.get("description") || "",
@@ -95,6 +96,7 @@ export async function POST(req) {
         name: body.name || body.productName,
         category: body.category || body.selectedCategory,
         price: body.price,
+        discountPercent: body.discountPercent,
         colors: body.colors,
         memory: body.memory || "",
         description: body.description || "",
@@ -130,6 +132,12 @@ export async function POST(req) {
           .map((c) => c.trim())
           .filter(Boolean);
 
+    // Validate discountPercent
+    let discountPercentNum = Number(productData.discountPercent);
+    if (!Number.isFinite(discountPercentNum)) discountPercentNum = 0;
+    if (discountPercentNum < 0) discountPercentNum = 0;
+    if (discountPercentNum > 100) discountPercentNum = 100;
+
     if (!colorsArray.length) {
       return NextResponse.json({ message: "colors cannot be empty" }, { status: 400 });
     }
@@ -139,6 +147,7 @@ export async function POST(req) {
       productName: productData.name.trim(),
       category: categoryId,
       price: Number(productData.price),
+      discountPercent: discountPercentNum,
       colors: colorsArray,
       memory: String(productData.memory),
       description: String(productData.description),
@@ -176,7 +185,7 @@ export async function PUT(req) {
         { status: 400 }
       );
 
-    const { productId, productName, category, description, colors, price, memory, newArrival } = body;
+    const { productId, productName, category, description, colors, price, memory, newArrival, bestSeller, specialOffer, images, discountPercent } = body;
 
     if (!productId || !productName || !category || price === undefined) {
       return NextResponse.json(
@@ -206,6 +215,19 @@ export async function PUT(req) {
           .map((c) => c.trim())
           .filter(Boolean);
 
+    // Validate discountPercent if provided
+    let discountPercentNum;
+    if (typeof discountPercent !== 'undefined') {
+      const dp = Number(discountPercent);
+      if (!Number.isFinite(dp)) {
+        return NextResponse.json({ message: "discountPercent must be a number" }, { status: 400 });
+      }
+      if (dp < 0 || dp > 100) {
+        return NextResponse.json({ message: "discountPercent must be between 0 and 100" }, { status: 400 });
+      }
+      discountPercentNum = dp;
+    }
+
     const updateData = {
       name: productName.trim(),
       productName: productName.trim(),
@@ -216,7 +238,21 @@ export async function PUT(req) {
       memory: String(memory || ""),
       description: String(description || ""),
       newArrival: Boolean(newArrival),
+      ...(typeof bestSeller !== 'undefined' ? { bestSeller: Boolean(bestSeller) } : {}),
+      ...(typeof specialOffer !== 'undefined' ? { specialOffer: Boolean(specialOffer) } : {}),
     };
+
+    if (typeof discountPercentNum !== 'undefined') {
+      updateData.discountPercent = discountPercentNum;
+    }
+
+    // If images is provided in the payload, replace the product images
+    if (Object.prototype.hasOwnProperty.call(body, 'images')) {
+      const imagesArray = Array.isArray(images)
+        ? images.filter(Boolean).map((u) => String(u))
+        : [];
+      updateData.images = imagesArray;
+    }
 
     const updated = await Product.findByIdAndUpdate(productId, updateData, {
       new: true,

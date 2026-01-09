@@ -226,6 +226,11 @@ function ProductsContent() {
                                                 )
                                             }
                                         >
+                                            {Number(product?.discountPercent) > 0 && (
+                                                <span className="absolute top-3 right-3 bg-red-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">
+                                                    -{Number(product.discountPercent)}%
+                                                </span>
+                                            )}
                                             <Image
                                                 src={
                                                     product.images?.[0] ||
@@ -253,9 +258,20 @@ function ProductsContent() {
 
                                             {/* Price */}
                                             <div className="flex items-baseline gap-2 mb-4 mt-auto">
-                                                <span className="text-xl md:text-2xl font-bold text-gray-900">
-                                                    ${product.price}
-                                                </span>
+                                                {Number(product?.discountPercent) > 0 ? (
+                                                    <>
+                                                        <span className="text-xl md:text-2xl font-bold text-gray-900">
+                                                            ${(product.price * (1 - Number(product.discountPercent)/100)).toFixed(2)}
+                                                        </span>
+                                                        <span className="text-sm md:text-base text-gray-400 line-through">
+                                                            ${product.price}
+                                                        </span>
+                                                    </>
+                                                ) : (
+                                                    <span className="text-xl md:text-2xl font-bold text-gray-900">
+                                                        ${product.price}
+                                                    </span>
+                                                )}
                                             </div>
 
                                             {/* Button */}
@@ -283,6 +299,11 @@ function ProductsContent() {
                                                 )
                                             }
                                         >
+                                            {Number(product?.discountPercent) > 0 && (
+                                                <span className="absolute top-3 right-3 bg-red-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">
+                                                    -{Number(product.discountPercent)}%
+                                                </span>
+                                            )}
                                             <Image
                                                 src={
                                                     product.images?.[0] ||
@@ -315,9 +336,18 @@ function ProductsContent() {
                                             </div>
 
                                             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                                                <span className="text-2xl sm:text-3xl font-bold text-gray-900">
-                                                    ${product.price}
-                                                </span>
+                                                {Number(product?.discountPercent) > 0 ? (
+                                                    <div className="flex items-baseline gap-2">
+                                                        <span className="text-2xl sm:text-3xl font-bold text-gray-900">
+                                                            ${(product.price * (1 - Number(product.discountPercent)/100)).toFixed(2)}
+                                                        </span>
+                                                        <span className="text-base sm:text-lg text-gray-400 line-through">
+                                                            ${product.price}
+                                                        </span>
+                                                    </div>
+                                                ) : (
+                                                    <span className="text-2xl sm:text-3xl font-bold text-gray-900">${product.price}</span>
+                                                )}
 
                                                 <button
                                                     className="bg-black text-white py-3 px-8 rounded-lg font-medium transition-all cursor-pointer duration-300 active:scale-95 flex items-center justify-center gap-2"
