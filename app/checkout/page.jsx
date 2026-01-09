@@ -6,6 +6,8 @@ import { useCartState } from "../context/CartContext";
 import { getAuth } from "@/lib/auth";
 import { FiChevronDown, FiSend, FiPhone, FiDollarSign } from "react-icons/fi";
 import Image from "next/image";
+import Swal from 'sweetalert2';
+
 
 
 export default function CheckoutPage() {
@@ -145,7 +147,14 @@ ${selectedProvince}, ${selectedCountry}`.trim();
             }
 
             // Order created successfully
-            alert("Order placed successfully! Status: Pending approval by staff");
+            Swal.fire({
+                        icon: 'success',
+                        title: 'Thank you!',
+                        text: 'Your order has been placed successfully.',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
+
             
             // Clear cart and redirect
             localStorage.removeItem("cart");

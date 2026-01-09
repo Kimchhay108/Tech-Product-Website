@@ -20,19 +20,23 @@ export default function StaffLayout({ children }) {
 
     const [openProfile, setOpenProfile] = useState(false);
     const [openMenu, setOpenMenu] = useState(false);
-    const [auth] = useState(() => getAuth());
+    const [auth, setAuth] = useState(null);
+    const [mounted, setMounted] = useState(false); // ✅ client-only render
 
-    // --- AUTH & REDIRECT LOGIC ---
     useEffect(() => {
-        if (!auth) {
+        setMounted(true); // mark mounted
+        const currentAuth = getAuth();
+        if (!currentAuth) {
             router.replace("/profile");
             return;
         }
-        const role = auth.user?.role;
+        const role = currentAuth.user?.role;
         if (role !== "staff") {
             router.replace(role === "admin" ? "/admin" : "/user");
+            return;
         }
-    }, [auth, router]);
+        setAuth(currentAuth);
+    }, [router]);
 
     const handleLogout = () => {
         logout();
@@ -42,9 +46,7 @@ export default function StaffLayout({ children }) {
     const isActive = (path) =>
         path === "/staff" ? pathname === "/staff" : pathname.startsWith(path);
 
-    const role = auth?.user?.role;
-    const isStaff = role === "staff";
-    if (!isStaff) return null;
+    if (!mounted || !auth) return null; // ✅ render only on client after auth
 
     return (
         <div className="flex min-h-screen">
@@ -59,8 +61,8 @@ export default function StaffLayout({ children }) {
             {/* SIDEBAR */}
             <aside
                 className={`fixed top-0 left-0 z-40 h-screen w-64 bg-gradient-to-b from-[#2E2E2E] to-[#1a1a1a] text-white p-5 flex flex-col shadow-2xl
-                    transform transition-transform duration-300
-                    ${openMenu ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
+          transform transition-transform duration-300
+          ${openMenu ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
             >
                 <div>
                     <div className="flex gap-3 items-center mb-8 pb-6 border-b border-gray-700">
@@ -72,8 +74,12 @@ export default function StaffLayout({ children }) {
                             className="w-auto h-auto"
                         />
                         <div>
-                            <h2 className="text-lg font-bold">Staff Dashboard</h2>
-                            <p className="text-xs text-gray-400">Manage your tasks</p>
+                            <h2 className="text-lg font-bold">
+                                Staff Dashboard
+                            </h2>
+                            <p className="text-xs text-gray-400">
+                                Manage your tasks
+                            </p>
                         </div>
                     </div>
 
@@ -83,8 +89,16 @@ export default function StaffLayout({ children }) {
                         </p>
                         <ul className="space-y-1">
                             {[
-                                { href: "/staff", label: "Overview", icon: FiGrid },
-                                { href: "/staff/products", label: "My Products", icon: FiPackage },
+                                {
+                                    href: "/staff",
+                                    label: "Overview",
+                                    icon: FiGrid,
+                                },
+                                {
+                                    href: "/staff/products",
+                                    label: "My Products",
+                                    icon: FiPackage,
+                                },
                             ].map(({ href, label, icon: Icon }) => (
                                 <li key={href}>
                                     <Link
@@ -97,7 +111,9 @@ export default function StaffLayout({ children }) {
                                         }`}
                                     >
                                         <Icon size={20} />
-                                        <span className="font-medium">{label}</span>
+                                        <span className="font-medium">
+                                            {label}
+                                        </span>
                                         {isActive(href) && (
                                             <div className="ml-auto w-1.5 h-1.5 rounded-full bg-white"></div>
                                         )}
@@ -134,8 +150,12 @@ export default function StaffLayout({ children }) {
                     <div className="hidden md:flex items-center gap-2">
                         <div className="h-8 w-1 bg-[#2E2E2E] rounded-full"></div>
                         <div>
-                            <h1 className="text-xl font-bold text-[#2E2E2E]">Welcome back, Staff</h1>
-                            <p className="text-xs text-gray-500">Manage your products efficiently</p>
+                            <h1 className="text-xl font-bold text-[#2E2E2E]">
+                                Welcome back, Staff
+                            </h1>
+                            <p className="text-xs text-gray-500">
+                                Manage your products efficiently
+                            </p>
                         </div>
                     </div>
 
@@ -148,10 +168,17 @@ export default function StaffLayout({ children }) {
                                 S
                             </div>
                             <div className="hidden sm:block text-left">
-                                <p className="text-sm font-medium text-gray-700">{auth.user?.name || "Staff"}</p>
-                                <p className="text-xs text-gray-500">Staff Account</p>
+                                <p className="text-sm font-medium text-gray-700">
+                                    {auth.user?.name || "Staff"}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                    Staff Account
+                                </p>
                             </div>
-                            <FiChevronDown size={16} className="text-gray-500" />
+                            <FiChevronDown
+                                size={16}
+                                className="text-gray-500"
+                            />
                         </button>
 
                         <div
@@ -162,8 +189,12 @@ export default function StaffLayout({ children }) {
                             }`}
                         >
                             <div className="px-4 py-3 border-b border-gray-100">
-                                <p className="text-sm font-semibold text-gray-700">Staff Account</p>
-                                <p className="text-xs text-gray-500">{auth.user?.email}</p>
+                                <p className="text-sm font-semibold text-gray-700">
+                                    Staff Account
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                    {auth.user?.email}
+                                </p>
                             </div>
                             <button
                                 onClick={handleLogout}

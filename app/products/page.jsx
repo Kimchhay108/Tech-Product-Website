@@ -276,7 +276,7 @@ function ProductsContent() {
                                     <>
                                         {/* List View */}
                                         <div
-                                            className="w-48 shrink-0 bg-gray-50 p-6 flex items-center justify-center cursor-pointer"
+                                            className="w-48 shrink-0 bg-white p-6 flex items-center justify-center cursor-pointer"
                                             onClick={() =>
                                                 router.push(
                                                     `/productDetail/${product._id}`
